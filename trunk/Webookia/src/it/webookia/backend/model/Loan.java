@@ -21,7 +21,7 @@ public class Loan implements Serializable {
 
     public Loan() {
 
-        borrower = new ModelRef<>(UserEntity.class);
+        borrower = new ModelRef<UserEntity>(UserEntity.class);
         lentBook = new ModelRef<ConcreteBook>(ConcreteBook.class);
 
         messages =
