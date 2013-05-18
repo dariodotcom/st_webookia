@@ -1,17 +1,20 @@
 package it.webookia.backend.model;
 
+import it.webookia.backend.utils.storage.Storable;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 
 import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Datastore;
 import org.slim3.datastore.Model;
 
 @Model(schemaVersion = 1)
-public class DetailedBook implements Serializable {
+public class DetailedBook implements Serializable, Storable {
 
     private static final long serialVersionUID = 1L;
 
@@ -36,6 +39,12 @@ public class DetailedBook implements Serializable {
     private List<String> authors;
     private String publisher;
     private String thumbnail;
+
+    // Storable
+    @Override
+    public String getId() {
+        return KeyFactory.keyToString(key);
+    }
 
     // Getters and setters
     public String getIsbn() {

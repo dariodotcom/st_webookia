@@ -1,11 +1,13 @@
 package it.webookia.backend.model;
 
 import it.webookia.backend.enums.LoanStatus;
+import it.webookia.backend.utils.storage.Storable;
 
 import java.io.Serializable;
 import java.util.Date;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Query.SortDirection;
 
 import org.slim3.datastore.Attribute;
@@ -15,7 +17,7 @@ import org.slim3.datastore.ModelRef;
 import org.slim3.datastore.Sort;
 
 @Model(schemaVersion = 1)
-public class Loan implements Serializable {
+public class Loan implements Serializable, Storable {
 
     private static final long serialVersionUID = 1L;
 
@@ -49,6 +51,12 @@ public class Loan implements Serializable {
 
     @Attribute(persistent = false)
     private InverseModelListRef<Message, Loan> messages;
+
+    // Storable
+    @Override
+    public String getId() {
+        return KeyFactory.keyToString(key);
+    }
 
     // Getters and setters
     public LoanStatus getStatus() {

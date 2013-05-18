@@ -2,17 +2,19 @@ package it.webookia.backend.model;
 
 import it.webookia.backend.enums.BookStatus;
 import it.webookia.backend.enums.PrivacyLevel;
+import it.webookia.backend.utils.storage.Storable;
 
 import java.io.Serializable;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 
 import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Model;
 import org.slim3.datastore.ModelRef;
 
 @Model(schemaVersion = 1)
-public class ConcreteBook implements Serializable {
+public class ConcreteBook implements Serializable, Storable {
 
     private static final long serialVersionUID = 1L;
 
@@ -41,8 +43,10 @@ public class ConcreteBook implements Serializable {
     // Inverse relationship
     // TODO add loan inverse relationship
 
+    //Storable
+    @Override
     public String getId() {
-        return key.getName();
+        return KeyFactory.keyToString(key);
     }
 
     public PrivacyLevel getPrivacy() {

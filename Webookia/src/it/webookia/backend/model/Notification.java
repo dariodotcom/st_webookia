@@ -1,18 +1,20 @@
 package it.webookia.backend.model;
 
 import it.webookia.backend.enums.NotificationType;
+import it.webookia.backend.utils.storage.Storable;
 
 import java.io.Serializable;
 import java.util.Date;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 
 import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Model;
 import org.slim3.datastore.ModelRef;
 
 @Model(schemaVersion = 1)
-public class Notification implements Serializable {
+public class Notification implements Serializable, Storable {
 
     private static final long serialVersionUID = 1L;
 
@@ -37,6 +39,12 @@ public class Notification implements Serializable {
     // Relationships
     private ModelRef<UserEntity> sender;
     private ModelRef<UserEntity> receiver;
+
+    // Storable
+    @Override
+    public String getId() {
+        return KeyFactory.keyToString(key);
+    }
 
     // Getters and Setters
     public Date getDate() {

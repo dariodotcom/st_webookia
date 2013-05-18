@@ -9,7 +9,7 @@ import com.google.appengine.api.datastore.KeyFactory;
  * Encapsulates the process of storing elements of generic type in the storage.
  * Elements must implements {@link Storable}.
  * */
-public class StorageFacade<T> {
+public class StorageFacade<T extends Storable> {
 
     private Class<T> type;
 
