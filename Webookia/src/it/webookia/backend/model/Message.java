@@ -1,6 +1,7 @@
 package it.webookia.backend.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import com.google.appengine.api.datastore.Key;
 
@@ -18,16 +19,48 @@ public class Message implements Serializable {
 
     @Attribute(version = true)
     private Long version;
-    
-    //Fields
-    
-    
-    //Relationship
-    private ModelRef <Loan> relativeLoan ;
+
+    public Message() {
+        relativeLoan = new ModelRef<Loan>(Loan.class);
+        author = new ModelRef<UserEntity>(UserEntity.class);
+    }
+
+    // Fields
+    private Date date;
+    private String text;
+
+    // Relationship
+    private ModelRef<Loan> relativeLoan;
+    private ModelRef<UserEntity> author;
+
+    // Getters and setters
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public ModelRef<Loan> getRelativeLoan() {
+        return relativeLoan;
+    }
+
+    public ModelRef<UserEntity> getAuthor() {
+        return author;
+    }
 
     /**
      * Returns the key.
-     *
+     * 
      * @return the key
      */
     public Key getKey() {
@@ -36,7 +69,7 @@ public class Message implements Serializable {
 
     /**
      * Sets the key.
-     *
+     * 
      * @param key
      *            the key
      */
@@ -46,7 +79,7 @@ public class Message implements Serializable {
 
     /**
      * Returns the version.
-     *
+     * 
      * @return the version
      */
     public Long getVersion() {
@@ -55,7 +88,7 @@ public class Message implements Serializable {
 
     /**
      * Sets the version.
-     *
+     * 
      * @param version
      *            the version
      */
@@ -91,13 +124,5 @@ public class Message implements Serializable {
             return false;
         }
         return true;
-    }
-
-    public ModelRef <Loan> getRelativeLoan() {
-        return relativeLoan;
-    }
-
-    public void setRelativeLoan(ModelRef <Loan> relativeLoan) {
-        this.relativeLoan = relativeLoan;
     }
 }
