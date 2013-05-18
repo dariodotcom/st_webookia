@@ -18,6 +18,9 @@ public class Loan implements Serializable {
     @Attribute(version = true)
     private Long version;
 
+    //Fields
+    private LoanStatus status ;
+    
     /**
      * Returns the key.
      *
