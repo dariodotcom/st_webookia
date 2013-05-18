@@ -46,11 +46,11 @@ public class NotificationResource {
                 Review relatedReview = comment.getReview().getModel();
                 ConcreteBook relatedBook =
                     relatedReview.getReviewedBook().getModel();
-                entityID = relatedBook.getKey().getName();
+                entityID = relatedBook.getId();
             } else {
                 LoanResource loan = (LoanResource) context;
                 notificationSender = loan.getEntity().getBorrower().getModel();
-                entityID = loan.getEntity().getKey().getName();
+                entityID = loan.getEntity().getId();
             }
         } catch (ClassCastException e) {
             throw new ResourceException(ResourceErrorType.SERVER_FAULT, e);
