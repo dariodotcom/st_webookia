@@ -7,7 +7,10 @@ import java.io.Serializable;
 import com.google.appengine.api.datastore.Key;
 
 import org.slim3.datastore.Attribute;
+import org.slim3.datastore.InverseModelListRef;
+import org.slim3.datastore.InverseModelRef;
 import org.slim3.datastore.Model;
+import org.slim3.datastore.ModelRef;
 
 @Model(schemaVersion = 1)
 public class Loan implements Serializable {
@@ -22,6 +25,12 @@ public class Loan implements Serializable {
 
     //Fields
     private LoanStatus status ;
+    
+    //Relationships
+    private ModelRef <Message> sentMsg ;
+    private ModelRef <Message> receivedMsg ;
+    @Attribute(persistent = false)
+    private InverseModelRef <Message, Loan> relativeMsg;
     
     /**
      * Returns the key.
@@ -89,5 +98,37 @@ public class Loan implements Serializable {
             return false;
         }
         return true;
+    }
+
+    public LoanStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(LoanStatus status) {
+        this.status = status;
+    }
+
+    public ModelRef <Message> getSentMsg() {
+        return sentMsg;
+    }
+
+    public void setSentMsg(ModelRef <Message> sentMsg) {
+        this.sentMsg = sentMsg;
+    }
+
+    public ModelRef <Message> getReceivedMsg() {
+        return receivedMsg;
+    }
+
+    public void setReceivedMsg(ModelRef <Message> receivedMsg) {
+        this.receivedMsg = receivedMsg;
+    }
+
+    public InverseModelRef <Message, Loan> getRelativeMsg() {
+        return relativeMsg;
+    }
+
+    public void setRelativeMsg(InverseModelRef <Message, Loan> relativeMsg) {
+        this.relativeMsg = relativeMsg;
     }
 }

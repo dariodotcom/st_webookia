@@ -6,6 +6,7 @@ import com.google.appengine.api.datastore.Key;
 
 import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Model;
+import org.slim3.datastore.ModelRef;
 
 @Model(schemaVersion = 1)
 public class Message implements Serializable {
@@ -17,6 +18,12 @@ public class Message implements Serializable {
 
     @Attribute(version = true)
     private Long version;
+    
+    //Fields
+    
+    
+    //Relationship
+    private ModelRef <Loan> relativeLoan ;
 
     /**
      * Returns the key.
@@ -84,5 +91,13 @@ public class Message implements Serializable {
             return false;
         }
         return true;
+    }
+
+    public ModelRef <Loan> getRelativeLoan() {
+        return relativeLoan;
+    }
+
+    public void setRelativeLoan(ModelRef <Loan> relativeLoan) {
+        this.relativeLoan = relativeLoan;
     }
 }
