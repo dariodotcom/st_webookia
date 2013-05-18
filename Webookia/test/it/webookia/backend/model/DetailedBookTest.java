@@ -5,9 +5,9 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
-public class BookDetailsTest extends AppEngineTestCase {
+public class DetailedBookTest extends AppEngineTestCase {
 
-    private BookDetails model = new BookDetails();
+    private DetailedBook model = new DetailedBook();
 
     @Test
     public void test() throws Exception {
