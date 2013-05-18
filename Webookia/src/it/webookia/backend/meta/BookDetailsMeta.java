@@ -1,6 +1,6 @@
 package it.webookia.backend.meta;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-05-18 11:20:50")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2013-05-18 12:52:48")
 /** */
 public final class BookDetailsMeta extends org.slim3.datastore.ModelMeta<it.webookia.backend.model.BookDetails> {
 
