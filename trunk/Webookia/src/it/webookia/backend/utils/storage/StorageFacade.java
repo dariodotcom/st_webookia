@@ -4,13 +4,12 @@ import org.slim3.datastore.Datastore;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
-import com.google.apphosting.api.DatastorePb.GetResponse.Entity;
 
 /**
  * Encapsulates the process of storing elements of generic type in the storage.
  * Elements must implements {@link Storable}.
  * */
-public class StorageFacade<T extends Entity> {
+public class StorageFacade<T> {
 
     private Class<T> type;
 

@@ -32,6 +32,7 @@ public class Notification implements Serializable {
     private Date date;
     private NotificationType type;
     private String targetId;
+    private boolean read;
 
     // Relationships
     private ModelRef<UserEntity> sender;
@@ -68,6 +69,14 @@ public class Notification implements Serializable {
 
     public ModelRef<UserEntity> getReceiver() {
         return receiver;
+    }
+
+    public boolean isRead() {
+        return read;
+    }
+
+    public void setRead(boolean read) {
+        this.read = read;
     }
 
     /**

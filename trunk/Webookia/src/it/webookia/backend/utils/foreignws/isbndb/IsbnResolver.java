@@ -1,6 +1,6 @@
 package it.webookia.backend.utils.foreignws.isbndb;
 
-import it.webookia.backend.model.BookDetails;
+import it.webookia.backend.model.DetailedBook;
 import it.webookia.backend.utils.foreignws.isbndb.model.BookData;
 import it.webookia.backend.utils.foreignws.isbndb.model.BookList;
 import it.webookia.backend.utils.foreignws.isbndb.model.ISBNdb;
@@ -20,7 +20,7 @@ public class IsbnResolver {
         "http://isbndb.com/api/books.xml?access_key=%s&index1=isbn&value1=%s";
 
     private String isbn = null;
-    private BookDetails result = null;
+    private DetailedBook result = null;
 
     /**
      * Creates a new resolver
@@ -40,7 +40,7 @@ public class IsbnResolver {
      * @throws IsbnDBException
      *             if the service request has failed.
      * */
-    public BookDetails resolve() throws IsbnDBException {
+    public DetailedBook resolve() throws IsbnDBException {
         if (result != null) {
             return result;
         }
@@ -52,7 +52,7 @@ public class IsbnResolver {
             throw new IsbnDBException("Request returned null element");
         }
 
-        result = new BookDetails();
+        result = new DetailedBook();
         BookData data = bookList.getBookData();
 
         fillResultData(data);
