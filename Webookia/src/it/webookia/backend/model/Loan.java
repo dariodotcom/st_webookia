@@ -1,5 +1,7 @@
 package it.webookia.backend.model;
 
+import it.webookia.backend.enums.LoanStatus;
+
 import java.io.Serializable;
 
 import com.google.appengine.api.datastore.Key;
