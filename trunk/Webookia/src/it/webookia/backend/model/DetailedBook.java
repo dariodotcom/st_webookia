@@ -10,7 +10,6 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
 import org.slim3.datastore.Attribute;
-import org.slim3.datastore.Datastore;
 import org.slim3.datastore.Model;
 
 @Model(schemaVersion = 1)
@@ -23,11 +22,6 @@ public class DetailedBook implements Serializable, Storable {
         this.authors = new ArrayList<String>();
     }
 
-    public DetailedBook(String isbn) {
-        this();
-        this.key = Datastore.createKey(this.getClass(), isbn);
-    }
-
     @Attribute(primaryKey = true)
     private Key key;
 
@@ -35,6 +29,7 @@ public class DetailedBook implements Serializable, Storable {
     private Long version;
 
     // Attributes
+    private String isbn;
     private String title;
     private List<String> authors;
     private String publisher;
@@ -48,7 +43,11 @@ public class DetailedBook implements Serializable, Storable {
 
     // Getters and setters
     public String getIsbn() {
-        return key.getName();
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
 
     public String getTitle() {

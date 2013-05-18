@@ -12,6 +12,7 @@ import it.webookia.backend.model.UserEntity;
 import it.webookia.backend.utils.foreignws.isbndb.IsbnDBException;
 import it.webookia.backend.utils.foreignws.isbndb.IsbnResolver;
 import it.webookia.backend.utils.storage.StorageFacade;
+import it.webookia.backend.utils.storage.StorageQuery;
 
 /**
  * Class to manage Book entities
@@ -45,7 +46,7 @@ public class BookResource {
             throws ResourceException {
         // TODO check that user does not already have this book.
 
-        DetailedBook details = detailedBookStorage.get(isbn);
+        DetailedBook details = StorageQuery.getDetailedBookByISBN(isbn);
 
         if (details == null) {
             try {
@@ -59,7 +60,7 @@ public class BookResource {
 
         ConcreteBook book = new ConcreteBook();
         book.getDetailedBook().setModel(details);
-        
+
         concreteBookStorage.persist(book);
 
         return book;
