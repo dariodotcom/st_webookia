@@ -8,6 +8,7 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 
 import org.slim3.datastore.Attribute;
 import org.slim3.datastore.InverseModelListRef;
+import org.slim3.datastore.InverseModelRef;
 import org.slim3.datastore.Model;
 import org.slim3.datastore.Sort;
 
@@ -19,12 +20,19 @@ public class Review implements Serializable {
     // Default constructor
     public Review() {
         this.date = new Date();
+
         this.comments =
             new InverseModelListRef<Comment, Review>(
                 Comment.class,
                 "review",
                 this,
                 new Sort("date", SortDirection.DESCENDING));
+
+        this.reviewedBook =
+            new InverseModelRef<ConcreteBook, Review>(
+                ConcreteBook.class,
+                "review",
+                this);
     }
 
     @Attribute(primaryKey = true)
@@ -41,6 +49,9 @@ public class Review implements Serializable {
     // Relationships
     @Attribute(persistent = false)
     private InverseModelListRef<Comment, Review> comments;
+
+    @Attribute(persistent = false)
+    private InverseModelRef<ConcreteBook, Review> reviewedBook;
 
     // Getters and setters
     public int getMark() {
@@ -69,6 +80,10 @@ public class Review implements Serializable {
 
     public InverseModelListRef<Comment, Review> getComments() {
         return comments;
+    }
+
+    public InverseModelRef<ConcreteBook, Review> getReviewedBook() {
+        return reviewedBook;
     }
 
     /**
