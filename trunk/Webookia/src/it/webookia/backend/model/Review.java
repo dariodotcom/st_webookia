@@ -1,9 +1,12 @@
 package it.webookia.backend.model;
 
+import it.webookia.backend.utils.storage.Storable;
+
 import java.io.Serializable;
 import java.util.Date;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Query.SortDirection;
 
 import org.slim3.datastore.Attribute;
@@ -13,7 +16,7 @@ import org.slim3.datastore.Model;
 import org.slim3.datastore.Sort;
 
 @Model(schemaVersion = 1)
-public class Review implements Serializable {
+public class Review implements Serializable, Storable {
 
     private static final long serialVersionUID = 1L;
 
@@ -52,6 +55,12 @@ public class Review implements Serializable {
 
     @Attribute(persistent = false)
     private InverseModelRef<ConcreteBook, Review> reviewedBook;
+
+    // Storable
+    @Override
+    public String getId() {
+        return KeyFactory.keyToString(key);
+    }
 
     // Getters and setters
     public int getMark() {

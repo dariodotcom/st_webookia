@@ -1,16 +1,19 @@
 package it.webookia.backend.model;
 
+import it.webookia.backend.utils.storage.Storable;
+
 import java.io.Serializable;
 import java.util.Date;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 
 import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Model;
 import org.slim3.datastore.ModelRef;
 
 @Model(schemaVersion = 1)
-public class Message implements Serializable {
+public class Message implements Serializable, Storable {
 
     private static final long serialVersionUID = 1L;
 
@@ -33,6 +36,12 @@ public class Message implements Serializable {
     // Relationship
     private ModelRef<Loan> relativeLoan;
     private ModelRef<UserEntity> author;
+
+    // Storable
+    @Override
+    public String getId() {
+        return KeyFactory.keyToString(key);
+    }
 
     // Getters and setters
     public Date getDate() {

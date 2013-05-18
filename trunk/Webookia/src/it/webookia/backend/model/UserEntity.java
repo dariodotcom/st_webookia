@@ -1,10 +1,12 @@
 package it.webookia.backend.model;
 
 import it.webookia.backend.utils.foreignws.facebook.AccessToken;
+import it.webookia.backend.utils.storage.Storable;
 
 import java.io.Serializable;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Query.SortDirection;
 
 import org.slim3.datastore.Attribute;
@@ -14,7 +16,7 @@ import org.slim3.datastore.Model;
 import org.slim3.datastore.Sort;
 
 @Model(schemaVersion = 1)
-public class UserEntity implements Serializable {
+public class UserEntity implements Serializable, Storable {
 
     private static final long serialVersionUID = 1L;
 
@@ -56,11 +58,13 @@ public class UserEntity implements Serializable {
     @Attribute(persistent = false)
     private InverseModelListRef<Notification, UserEntity> notifications;
 
-    // Getters and setters
+    // Storable
+    @Override
     public String getId() {
-        return this.key.getName();
+        return KeyFactory.keyToString(key);
     }
 
+    // Getters and setters
     public AccessToken getToken() {
         return token;
     }
