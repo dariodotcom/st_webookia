@@ -20,8 +20,8 @@ public class Notification implements Serializable, Storable {
 
     // Default constructor
     public Notification() {
-        this.sender = new ModelRef<UserEntity>(UserEntity.class);
-        this.receiver = new ModelRef<UserEntity>(UserEntity.class);
+        this.senderRef = new ModelRef<UserEntity>(UserEntity.class);
+        this.receiverRef = new ModelRef<UserEntity>(UserEntity.class);
     }
 
     @Attribute(primaryKey = true)
@@ -37,8 +37,8 @@ public class Notification implements Serializable, Storable {
     private boolean read;
 
     // Relationships
-    private ModelRef<UserEntity> sender;
-    private ModelRef<UserEntity> receiver;
+    private ModelRef<UserEntity> senderRef;
+    private ModelRef<UserEntity> receiverRef;
 
     // Storable
     @Override
@@ -71,20 +71,37 @@ public class Notification implements Serializable, Storable {
         this.targetId = targetId;
     }
 
-    public ModelRef<UserEntity> getSender() {
-        return sender;
-    }
-
-    public ModelRef<UserEntity> getReceiver() {
-        return receiver;
-    }
-
     public boolean isRead() {
         return read;
     }
 
     public void setRead(boolean read) {
         this.read = read;
+    }
+
+    public ModelRef<UserEntity> getSenderRef() {
+        return senderRef;
+    }
+
+    public ModelRef<UserEntity> getReceiverRef() {
+        return receiverRef;
+    }
+
+    // Relationships setters and getters
+    public UserEntity getReceiver() {
+        return receiverRef.getModel();
+    }
+
+    public void setReceiver(UserEntity receiver) {
+        receiverRef.setModel(receiver);
+    }
+
+    public UserEntity getSender() {
+        return senderRef.getModel();
+    }
+
+    public void setSender(UserEntity sender) {
+        senderRef.setModel(sender);
     }
 
     /**

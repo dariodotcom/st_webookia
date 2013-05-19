@@ -5,6 +5,7 @@ import it.webookia.backend.utils.storage.Storable;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
@@ -24,10 +25,10 @@ public class Loan implements Serializable, Storable {
     // Default constructor
     public Loan() {
 
-        borrower = new ModelRef<UserEntity>(UserEntity.class);
-        lentBook = new ModelRef<ConcreteBook>(ConcreteBook.class);
+        borrowerRef = new ModelRef<UserEntity>(UserEntity.class);
+        lentBookRef = new ModelRef<ConcreteBook>(ConcreteBook.class);
 
-        messages =
+        messagesRef =
             new InverseModelListRef<Message, Loan>(
                 Message.class,
                 "relativeLoan",
@@ -46,11 +47,11 @@ public class Loan implements Serializable, Storable {
     private Date date;
 
     // Relationships
-    private ModelRef<ConcreteBook> lentBook;
-    private ModelRef<UserEntity> borrower;
+    private ModelRef<ConcreteBook> lentBookRef;
+    private ModelRef<UserEntity> borrowerRef;
 
     @Attribute(persistent = false)
-    private InverseModelListRef<Message, Loan> messages;
+    private InverseModelListRef<Message, Loan> messagesRef;
 
     // Storable
     @Override
@@ -75,16 +76,37 @@ public class Loan implements Serializable, Storable {
         this.date = date;
     }
 
-    public InverseModelListRef<Message, Loan> getMessages() {
-        return messages;
+    public ModelRef<ConcreteBook> getLentBookRef() {
+        return lentBookRef;
     }
 
-    public ModelRef<ConcreteBook> getLentBook() {
-        return lentBook;
+    public ModelRef<UserEntity> getBorrowerRef() {
+        return borrowerRef;
     }
 
-    public ModelRef<UserEntity> getBorrower() {
-        return borrower;
+    public InverseModelListRef<Message, Loan> getMessagesRef() {
+        return messagesRef;
+    }
+
+    // Relationships getters and setters
+    public UserEntity getBorrower() {
+        return borrowerRef.getModel();
+    }
+
+    public void setBorrower(UserEntity borrower) {
+        borrowerRef.setModel(borrower);
+    }
+
+    public ConcreteBook getLentBook() {
+        return lentBookRef.getModel();
+    }
+
+    public void setLentBook(ConcreteBook lentBook) {
+        lentBookRef.setModel(lentBook);
+    }
+
+    public List<Message> getMessages() {
+        return messagesRef.getModelList();
     }
 
     /**

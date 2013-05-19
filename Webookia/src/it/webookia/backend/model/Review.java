@@ -4,6 +4,7 @@ import it.webookia.backend.utils.storage.Storable;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
@@ -24,14 +25,14 @@ public class Review implements Serializable, Storable {
     public Review() {
         this.date = new Date();
 
-        this.comments =
+        this.commentsRef =
             new InverseModelListRef<Comment, Review>(
                 Comment.class,
                 "review",
                 this,
                 new Sort("date", SortDirection.DESCENDING));
 
-        this.reviewedBook =
+        this.reviewedBookRef =
             new InverseModelRef<ConcreteBook, Review>(
                 ConcreteBook.class,
                 "review",
@@ -51,10 +52,10 @@ public class Review implements Serializable, Storable {
 
     // Relationships
     @Attribute(persistent = false)
-    private InverseModelListRef<Comment, Review> comments;
+    private InverseModelListRef<Comment, Review> commentsRef;
 
     @Attribute(persistent = false)
-    private InverseModelRef<ConcreteBook, Review> reviewedBook;
+    private InverseModelRef<ConcreteBook, Review> reviewedBookRef;
 
     // Storable
     @Override
@@ -87,12 +88,21 @@ public class Review implements Serializable, Storable {
         this.date = date;
     }
 
-    public InverseModelListRef<Comment, Review> getComments() {
-        return comments;
+    public InverseModelListRef<Comment, Review> getCommentsRef() {
+        return commentsRef;
     }
 
-    public InverseModelRef<ConcreteBook, Review> getReviewedBook() {
-        return reviewedBook;
+    public InverseModelRef<ConcreteBook, Review> getReviewedBookRef() {
+        return reviewedBookRef;
+    }
+
+    // Relationships getters and setters
+    public List<Comment> getComments() {
+        return commentsRef.getModelList();
+    }
+
+    public ConcreteBook getReviewedBook() {
+        return reviewedBookRef.getModel();
     }
 
     /**
