@@ -10,7 +10,6 @@ import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Query.SortDirection;
 
 import org.slim3.datastore.Attribute;
-import org.slim3.datastore.Datastore;
 import org.slim3.datastore.InverseModelListRef;
 import org.slim3.datastore.Model;
 import org.slim3.datastore.Sort;
@@ -36,11 +35,6 @@ public class UserEntity implements Serializable, Storable {
                 new Sort("date", SortDirection.DESCENDING));
     }
 
-    public UserEntity(String userId) {
-        this();
-        this.key = Datastore.createKey(this.getClass(), userId);
-    }
-
     @Attribute(primaryKey = true)
     private Key key;
 
@@ -48,6 +42,7 @@ public class UserEntity implements Serializable, Storable {
     private Long version;
 
     // Fields
+    private String userId;
     @Attribute(lob = true)
     private AccessToken token;
 
@@ -79,6 +74,14 @@ public class UserEntity implements Serializable, Storable {
 
     public InverseModelListRef<Notification, UserEntity> getNotifications() {
         return notifications;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     /**
