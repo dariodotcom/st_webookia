@@ -11,6 +11,7 @@ import it.webookia.backend.model.Review;
 import it.webookia.backend.model.UserEntity;
 import it.webookia.backend.utils.foreignws.isbndb.IsbnDBException;
 import it.webookia.backend.utils.foreignws.isbndb.IsbnResolver;
+import it.webookia.backend.utils.storage.Mark;
 import it.webookia.backend.utils.storage.StorageFacade;
 import it.webookia.backend.utils.storage.StorageQuery;
 
@@ -59,7 +60,7 @@ public class BookResource {
         }
 
         ConcreteBook book = new ConcreteBook();
-        book.getDetailedBook().setModel(details);
+        book.setDetailedBook(details);
 
         concreteBookStorage.persist(book);
 
@@ -83,16 +84,13 @@ public class BookResource {
             throw new ResourceException(ResourceErrorType.NOT_FOUND, null);
         }
 
-        UserEntity owner = book.getOwner().getModel();
+        BookResource bookResource = new BookResource(book);
 
-        if (book.getPrivacy() == PrivacyLevel.PRIVATE
-            && !requestor.matches(owner)) {
+        if (!bookResource.canBeSeenBy(requestor)) {
             throw new ResourceException(ResourceErrorType.UNAUTHORIZED_ACTION);
         }
 
-        // TODO check for friendship in case of privacy set to friends.
-
-        return new BookResource(book);
+        return bookResource;
     }
 
     // Book that this instance is managing
@@ -103,6 +101,7 @@ public class BookResource {
         this.decoratedBook = book;
     }
 
+    // Public methods
     /**
      * Change book status.
      * 
@@ -133,19 +132,27 @@ public class BookResource {
      *            to see if they match.
      * @param text
      *            - the review text.
-     * @param mark
+     * @param intMark
      *            - the review mark.
      * */
-    public void addReview(UserResource author, String text, int mark)
+    public void addReview(UserResource author, String text, int intMark)
             throws ResourceException {
-        UserEntity bookOwner = decoratedBook.getOwner().getModel();
+        UserEntity bookOwner = decoratedBook.getOwner();
+        Mark mark;
+
         if (!author.matches(bookOwner)) {
             throw new ResourceException(
                 ResourceErrorType.UNAUTHORIZED_ACTION,
                 null);
         }
 
-        Review bookReview = decoratedBook.getReview().getModel();
+        try {
+            mark = Mark.create(intMark);
+        } catch (IllegalArgumentException e) {
+            throw new ResourceException(ResourceErrorType.BAD_REQUEST, e);
+        }
+
+        Review bookReview = decoratedBook.getReview();
         if (bookReview != null) {
             throw new ResourceException(ResourceErrorType.ALREADY_EXSISTING);
         }
@@ -155,7 +162,7 @@ public class BookResource {
         bookReview.setText(text);
         reviewStorage.persist(bookReview);
 
-        decoratedBook.getReview().setModel(bookReview);
+        decoratedBook.setReview(bookReview);
         concreteBookStorage.persist(decoratedBook);
     }
 
@@ -170,15 +177,52 @@ public class BookResource {
      * */
     public void addComment(UserResource author, String text)
             throws ResourceException {
-        Review bookReview = decoratedBook.getReview().getModel();
+        Review bookReview = decoratedBook.getReview();
 
         if (bookReview == null) {
             throw new ResourceException(ResourceErrorType.NOT_FOUND);
         }
 
         Comment comment = new Comment();
-        comment.getAuthor().setModel(author.getEntity());
+        comment.setAuthor(author.getEntity());
         comment.setText(text);
         commentStorage.persist(comment);
+    }
+
+    // Resource methods
+    boolean canBeSeenBy(UserResource user) {
+        PrivacyLevel privacy = decoratedBook.getPrivacy();
+        UserEntity owner = decoratedBook.getOwner();
+
+        if (privacy.equals(PrivacyLevel.PUBLIC)) {
+            return true;
+        } else if (user.matches(owner)) {
+            return true;
+        } else if (privacy.equals(PrivacyLevel.FRIENDS_ONLY)
+            && user.isFriendWith(owner)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    boolean canBeLentBy(UserResource user) {
+        UserEntity owner = decoratedBook.getOwner();
+        BookStatus status = decoratedBook.getStatus();
+
+        if (user.matches(owner)) {
+            return false;
+        } else if (!canBeSeenBy(user)) {
+            return false;
+        } else if (!status.equals(BookStatus.AVAILABLE)) {
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+    ConcreteBook getEntity() {
+        return decoratedBook;
     }
 }

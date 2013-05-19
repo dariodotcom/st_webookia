@@ -1,7 +1,12 @@
 package it.webookia.backend.controller.resources;
 
+import it.webookia.backend.controller.resources.exception.ResourceErrorType;
+import it.webookia.backend.controller.resources.exception.ResourceException;
 import it.webookia.backend.model.UserEntity;
+import it.webookia.backend.utils.foreignws.facebook.AccessToken;
+import it.webookia.backend.utils.foreignws.facebook.FacebookConnector;
 import it.webookia.backend.utils.storage.StorageFacade;
+import it.webookia.backend.utils.storage.StorageQuery;
 
 public class UserResource {
 
@@ -9,57 +14,56 @@ public class UserResource {
     private static StorageFacade<UserEntity> userStorage =
         new StorageFacade<UserEntity>(UserEntity.class);
 
+    // Class Methods
+    /**
+     * Creates a new user given its Facebook {@link AccessToken}.
+     * 
+     * @param token
+     *            - the user Facebook {@link AccessToken}
+     * @return an {@link UserResource} to manage created user.
+     * @throws {@link ResourceException} if a user with the same username as the
+     *         one represented by the access token already exists.
+     */
+    public static UserResource createUser(AccessToken token)
+            throws ResourceException {
+        UserEntity user = new FacebookConnector(token).createUserEntity();
+
+        String username = user.getId();
+        if (StorageQuery.getUserByUsername(username) != null) {
+            throw new ResourceException(ResourceErrorType.ALREADY_EXSISTING);
+        }
+
+        userStorage.persist(user);
+        return new UserResource(user);
+    }
+
+    /**
+     * Returns an user given its username.
+     * 
+     * @param username
+     *            - the username of the user.
+     * @return an instance of UserResource which allows to manage selected user,
+     *         null if user doesn't exist.
+     * @throws ResourceException
+     *             if an user with given username doesn't exist.
+     * */
+    public static UserResource getUser(String username)
+            throws ResourceException {
+        UserEntity user = StorageQuery.getUserByUsername(username);
+        if (user == null) {
+            throw new ResourceException(ResourceErrorType.NOT_FOUND);
+        }
+
+        return new UserResource(user);
+    }
+
     // User accessed through this instance of UserResource
     private UserEntity decoratedUser;
-
-    /**
-     * Returns an user given it's id.
-     * 
-     * @param id
-     *            - the id of the user.
-     * @return an instance of UserResource which allows to manage selected user,
-     *         null if user doesn't exsist.
-     * */
-    public static UserResource getUser(String id) {
-        // UserEntity result = userStorage.get(id);
-        // if (result == null) {
-        // throw new ResourceException(ResourceErrorType.NOT_FOUND);
-        // } else {
-        // return new UserResource(result);
-        // }
-        return null;
-    }
-
-    /**
-     * Creates an user given an id and accessToken
-     * 
-     * @param id
-     *            - the user id
-     * @param accessToken
-     *            - the accessToken used to access user informations.
-     * */
-    public static UserResource createUser(String id, String fbAccessToken) {
-        // UserEntity user = userStorage.get(id);
-        //
-        // if (user != null) {
-        // /*
-        // * If this happens the cause is a bad implementation of the
-        // * application interface
-        // */
-        // throw new ResourceException(ResourceErrorType.SERVER_FAULT);
-        // }
-        //
-        // UserEntity newUser = new UserEntity(id, fbAccessToken);
-        // userStorage.persist(newUser);
-        //
-        // return new UserResource(newUser);
-        return null;
-    }
 
     // Only other resources can create directly instances. Higher level
     // components can't manage entities directly so constructors are useless for
     // them.
-    protected UserResource(UserEntity u) {
+    UserResource(UserEntity u) {
         this.decoratedUser = u;
     }
 
@@ -70,6 +74,14 @@ public class UserResource {
     UserEntity getEntity() {
         return decoratedUser;
     }
+
+    boolean isFriendWith(UserEntity user) {
+        FacebookConnector connector =
+            new FacebookConnector(decoratedUser.getToken());
+        return connector.getFriends().contains(user);
+    }
+
+    // Public methods
 
     @Override
     public int hashCode() {
