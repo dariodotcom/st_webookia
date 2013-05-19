@@ -27,6 +27,8 @@ public class Loan implements Serializable, Storable {
 
         borrowerRef = new ModelRef<UserEntity>(UserEntity.class);
         lentBookRef = new ModelRef<ConcreteBook>(ConcreteBook.class);
+        borrowerFeedbackRef = new ModelRef<Feedback>(Feedback.class);
+        ownerFeedbackRef = new ModelRef<Feedback>(Feedback.class);
 
         messagesRef =
             new InverseModelListRef<Message, Loan>(
@@ -49,6 +51,8 @@ public class Loan implements Serializable, Storable {
     // Relationships
     private ModelRef<ConcreteBook> lentBookRef;
     private ModelRef<UserEntity> borrowerRef;
+    private ModelRef<Feedback> borrowerFeedbackRef;
+    private ModelRef<Feedback> ownerFeedbackRef;
 
     @Attribute(persistent = false)
     private InverseModelListRef<Message, Loan> messagesRef;
@@ -88,6 +92,14 @@ public class Loan implements Serializable, Storable {
         return messagesRef;
     }
 
+    public ModelRef<Feedback> getBorrowerFeedbackRef() {
+        return borrowerFeedbackRef;
+    }
+
+    public ModelRef<Feedback> getOwnerFeedbackRef() {
+        return ownerFeedbackRef;
+    }
+
     // Relationships getters and setters
     public UserEntity getBorrower() {
         return borrowerRef.getModel();
@@ -107,6 +119,22 @@ public class Loan implements Serializable, Storable {
 
     public List<Message> getMessages() {
         return messagesRef.getModelList();
+    }
+
+    public Feedback getBorrowerFeedback() {
+        return borrowerFeedbackRef.getModel();
+    }
+
+    public void setBorrowerFeedback(Feedback feedback) {
+        borrowerFeedbackRef.setModel(feedback);
+    }
+
+    public Feedback getOwnerFeedback() {
+        return ownerFeedbackRef.getModel();
+    }
+
+    public void setOwnerFeedback(Feedback feedback) {
+        ownerFeedbackRef.setModel(feedback);
     }
 
     /**
