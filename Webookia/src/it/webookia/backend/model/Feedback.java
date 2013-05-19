@@ -1,5 +1,6 @@
 package it.webookia.backend.model;
 
+import it.webookia.backend.utils.storage.Mark;
 import it.webookia.backend.utils.storage.Storable;
 
 import java.io.Serializable;
@@ -27,7 +28,8 @@ public class Feedback implements Serializable, Storable {
         return KeyFactory.keyToString(key);
     }
 
-    private int mark;
+    @Attribute(lob = true)
+    private Mark mark;
     private Date date;
     private String text;
 
@@ -48,8 +50,12 @@ public class Feedback implements Serializable, Storable {
         this.text = text;
     }
 
-    public static long getSerialversionuid() {
-        return serialVersionUID;
+    public Mark getMark() {
+        return mark;
+    }
+
+    public void setMark(Mark mark) {
+        this.mark = mark;
     }
 
     /**
@@ -118,13 +124,5 @@ public class Feedback implements Serializable, Storable {
             return false;
         }
         return true;
-    }
-
-    public int getMark() {
-        return mark;
-    }
-
-    public void setMark(int mark) {
-        this.mark = mark;
     }
 }
