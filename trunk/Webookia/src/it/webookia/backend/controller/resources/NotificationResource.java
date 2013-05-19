@@ -33,7 +33,7 @@ public class NotificationResource {
     public static NotificationResource createNotification(UserResource target,
             NotificationType type, Object context) throws ResourceException {
         Notification notification = new Notification();
-        notification.getReceiver().setModel(target.getEntity());
+        notification.setReceiver(target.getEntity());
         notification.setType(type);
 
         UserEntity notificationSender;
@@ -42,21 +42,20 @@ public class NotificationResource {
         try {
             if (type == NotificationType.NEW_REVIEW_COMMENT) {
                 Comment comment = (Comment) context;
-                notificationSender = comment.getAuthor().getModel();
-                Review relatedReview = comment.getReview().getModel();
-                ConcreteBook relatedBook =
-                    relatedReview.getReviewedBook().getModel();
+                notificationSender = comment.getAuthor();
+                Review relatedReview = comment.getReview();
+                ConcreteBook relatedBook = relatedReview.getReviewedBook();
                 entityID = relatedBook.getId();
             } else {
                 LoanResource loan = (LoanResource) context;
-                notificationSender = loan.getEntity().getBorrower().getModel();
+                notificationSender = loan.getEntity().getBorrower();
                 entityID = loan.getEntity().getId();
             }
         } catch (ClassCastException e) {
             throw new ResourceException(ResourceErrorType.SERVER_FAULT, e);
         }
 
-        notification.getSender().setModel(notificationSender);
+        notification.setSender(notificationSender);
         notification.setTargetId(entityID);
 
         notificationStorage.persist(notification);
