@@ -1,5 +1,5 @@
 package it.webookia.backend.enums;
 
 public enum LoanStatus {
-    INITIAL, ACCEPTED, RETURNED, FINISHED
+    INITIAL, ACCEPTED, SHIPPED, GIVEN_BACK;
 }
