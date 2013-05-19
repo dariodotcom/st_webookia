@@ -1,5 +1,6 @@
 package it.webookia.backend.model;
 
+import it.webookia.backend.utils.storage.Mark;
 import it.webookia.backend.utils.storage.Storable;
 
 import java.io.Serializable;
@@ -46,7 +47,8 @@ public class Review implements Serializable, Storable {
     private Long version;
 
     // Fields
-    private int mark;
+    @Attribute(lob = true)
+    private Mark mark;
     private String text;
     private Date date;
 
@@ -64,11 +66,11 @@ public class Review implements Serializable, Storable {
     }
 
     // Getters and setters
-    public int getMark() {
+    public Mark getMark() {
         return mark;
     }
 
-    public void setMark(int mark) {
+    public void setMark(Mark mark) {
         this.mark = mark;
     }
 
