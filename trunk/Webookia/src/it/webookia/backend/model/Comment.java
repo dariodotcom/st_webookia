@@ -20,8 +20,8 @@ public class Comment implements Serializable, Storable {
     // Default constructor
     public Comment() {
         this.date = new Date();
-        this.review = new ModelRef<Review>(Review.class);
-        this.author = new ModelRef<UserEntity>(UserEntity.class);
+        this.reviewRef = new ModelRef<Review>(Review.class);
+        this.authorRef = new ModelRef<UserEntity>(UserEntity.class);
     }
 
     @Attribute(primaryKey = true)
@@ -35,15 +35,15 @@ public class Comment implements Serializable, Storable {
     private Date date;
 
     // Relationships
-    private ModelRef<Review> review;
-    private ModelRef<UserEntity> author;
+    private ModelRef<Review> reviewRef;
+    private ModelRef<UserEntity> authorRef;
 
-    //Storable
+    // Storable
     @Override
     public String getId() {
         return KeyFactory.keyToString(key);
     }
-    
+
     // Getters and setters
     public String getText() {
         return text;
@@ -61,12 +61,29 @@ public class Comment implements Serializable, Storable {
         this.date = date;
     }
 
-    public ModelRef<Review> getReview() {
-        return review;
+    public ModelRef<Review> getReviewRef() {
+        return reviewRef;
     }
 
-    public ModelRef<UserEntity> getAuthor() {
-        return author;
+    public ModelRef<UserEntity> getAuthorRef() {
+        return authorRef;
+    }
+
+    // Relationship getter and setters
+    public Review getReview() {
+        return reviewRef.getModel();
+    }
+
+    public void setReview(Review review) {
+        reviewRef.setModel(review);
+    }
+
+    public UserEntity getAuthor() {
+        return authorRef.getModel();
+    }
+
+    public void setAuthor(UserEntity author) {
+        authorRef.setModel(author);
     }
 
     /**

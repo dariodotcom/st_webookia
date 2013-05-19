@@ -19,8 +19,8 @@ public class Message implements Serializable, Storable {
 
     // Default constructor
     public Message() {
-        relativeLoan = new ModelRef<Loan>(Loan.class);
-        author = new ModelRef<UserEntity>(UserEntity.class);
+        relativeLoanRef = new ModelRef<Loan>(Loan.class);
+        authorRef = new ModelRef<UserEntity>(UserEntity.class);
     }
 
     @Attribute(primaryKey = true)
@@ -34,8 +34,8 @@ public class Message implements Serializable, Storable {
     private String text;
 
     // Relationship
-    private ModelRef<Loan> relativeLoan;
-    private ModelRef<UserEntity> author;
+    private ModelRef<Loan> relativeLoanRef;
+    private ModelRef<UserEntity> authorRef;
 
     // Storable
     @Override
@@ -60,12 +60,29 @@ public class Message implements Serializable, Storable {
         this.text = text;
     }
 
-    public ModelRef<Loan> getRelativeLoan() {
-        return relativeLoan;
+    public ModelRef<Loan> getRelativeLoanRef() {
+        return relativeLoanRef;
     }
 
-    public ModelRef<UserEntity> getAuthor() {
-        return author;
+    public ModelRef<UserEntity> getAuthorRef() {
+        return authorRef;
+    }
+
+    // Relationships getters and setters
+    public Loan getRelativeLoan() {
+        return relativeLoanRef.getModel();
+    }
+
+    public void setLoan(Loan loan) {
+        relativeLoanRef.setModel(loan);
+    }
+
+    public UserEntity getAuthor() {
+        return authorRef.getModel();
+    }
+
+    public void setAuthor(UserEntity author) {
+        authorRef.setModel(author);
     }
 
     /**

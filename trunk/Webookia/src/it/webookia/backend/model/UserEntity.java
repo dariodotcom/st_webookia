@@ -4,6 +4,7 @@ import it.webookia.backend.utils.foreignws.facebook.AccessToken;
 import it.webookia.backend.utils.storage.Storable;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
@@ -21,13 +22,13 @@ public class UserEntity implements Serializable, Storable {
 
     // Default constructor
     public UserEntity() {
-        this.books =
+        this.booksRef =
             new InverseModelListRef<ConcreteBook, UserEntity>(
                 ConcreteBook.class,
                 "owner",
                 this);
 
-        this.notifications =
+        this.notificationsRef =
             new InverseModelListRef<Notification, UserEntity>(
                 Notification.class,
                 "receiver",
@@ -48,10 +49,10 @@ public class UserEntity implements Serializable, Storable {
 
     // Relationships
     @Attribute(persistent = false)
-    private InverseModelListRef<ConcreteBook, UserEntity> books;
+    private InverseModelListRef<ConcreteBook, UserEntity> booksRef;
 
     @Attribute(persistent = false)
-    private InverseModelListRef<Notification, UserEntity> notifications;
+    private InverseModelListRef<Notification, UserEntity> notificationsRef;
 
     // Storable
     @Override
@@ -68,20 +69,29 @@ public class UserEntity implements Serializable, Storable {
         this.token = token;
     }
 
-    public InverseModelListRef<ConcreteBook, UserEntity> getBooks() {
-        return books;
-    }
-
-    public InverseModelListRef<Notification, UserEntity> getNotifications() {
-        return notifications;
-    }
-
     public String getUserId() {
         return userId;
     }
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public InverseModelListRef<ConcreteBook, UserEntity> getBooksRef() {
+        return booksRef;
+    }
+
+    public InverseModelListRef<Notification, UserEntity> getNotificationsRef() {
+        return notificationsRef;
+    }
+
+    // Relationships getters
+    public List<ConcreteBook> getOwnedBooks() {
+        return booksRef.getModelList();
+    }
+
+    public List<Notification> getNotifications() {
+        return notificationsRef.getModelList();
     }
 
     /**

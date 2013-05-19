@@ -20,9 +20,9 @@ public class ConcreteBook implements Serializable, Storable {
 
     // Default constructors
     public ConcreteBook() {
-        detailedBook = new ModelRef<DetailedBook>(DetailedBook.class);
-        review = new ModelRef<Review>(Review.class);
-        owner = new ModelRef<UserEntity>(UserEntity.class);
+        detailedBookRef = new ModelRef<DetailedBook>(DetailedBook.class);
+        reviewRef = new ModelRef<Review>(Review.class);
+        ownerRef = new ModelRef<UserEntity>(UserEntity.class);
     }
 
     @Attribute(primaryKey = true)
@@ -36,14 +36,14 @@ public class ConcreteBook implements Serializable, Storable {
     private BookStatus status;
 
     // Relationship
-    private ModelRef<DetailedBook> detailedBook;
-    private ModelRef<Review> review;
-    private ModelRef<UserEntity> owner;
+    private ModelRef<DetailedBook> detailedBookRef;
+    private ModelRef<Review> reviewRef;
+    private ModelRef<UserEntity> ownerRef;
 
     // Inverse relationship
     // TODO add loan inverse relationship
 
-    //Storable
+    // Storable
     @Override
     public String getId() {
         return KeyFactory.keyToString(key);
@@ -65,20 +65,41 @@ public class ConcreteBook implements Serializable, Storable {
         this.status = status;
     }
 
-    public ModelRef<DetailedBook> getDetailedBook() {
-        return detailedBook;
+    public ModelRef<DetailedBook> getDetailedBookRef() {
+        return detailedBookRef;
     }
 
-    public ModelRef<Review> getReview() {
-        return review;
+    public ModelRef<Review> getReviewRef() {
+        return reviewRef;
     }
 
-    public ModelRef<UserEntity> getOwner() {
-        return owner;
+    public ModelRef<UserEntity> getOwnerRef() {
+        return ownerRef;
     }
 
-    public static long getSerialversionuid() {
-        return serialVersionUID;
+    // Relationships getters and setters
+    public DetailedBook getDetailedBook() {
+        return detailedBookRef.getModel();
+    }
+
+    public void setDetailedBook(DetailedBook detailedBook) {
+        detailedBookRef.setModel(detailedBook);
+    }
+
+    public UserEntity getOwner() {
+        return ownerRef.getModel();
+    }
+
+    public void setOwner(UserEntity owner) {
+        ownerRef.setModel(owner);
+    }
+
+    public Review getReview() {
+        return reviewRef.getModel();
+    }
+
+    public void setReview(Review review) {
+        reviewRef.setModel(review);
     }
 
     /**
