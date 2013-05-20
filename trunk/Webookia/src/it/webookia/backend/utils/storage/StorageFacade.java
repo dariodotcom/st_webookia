@@ -13,6 +13,12 @@ public class StorageFacade<T extends Storable> {
 
     private Class<T> type;
 
+    /**
+     * Constructs a new instance of {@link StorageFacade} that handles entities
+     * of given type.
+     * 
+     * @param type
+     */
     public StorageFacade(Class<T> type) {
         this.type = type;
     }
@@ -32,7 +38,7 @@ public class StorageFacade<T extends Storable> {
     /**
      * Persists an element into the storage. The key is automatically retrieved
      * from the given object as it implements the {@link Storable} interface.
-     * Already exsisting objects are replaced.
+     * Already existing objects are replaced.
      * 
      * @param value
      *            - the value to store.
