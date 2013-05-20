@@ -15,9 +15,11 @@ import javax.xml.bind.Unmarshaller;
 /** Class to perform requests to isbndb.com to resolve a book's isbn */
 public class IsbnResolver {
 
-    private final String accessKey = "K5GL85FQ";
-    private final String serviceURI =
+    private final static String accessKey = "K5GL85FQ";
+    private final static String serviceURI =
         "http://isbndb.com/api/books.xml?access_key=%s&index1=isbn&value1=%s";
+    private final static String contextPath =
+        "it.mybooksharing.backend.model.book.isbndb";
 
     private String isbn = null;
     private DetailedBook result = null;
@@ -26,14 +28,14 @@ public class IsbnResolver {
      * Creates a new resolver
      * 
      * @param isbn
-     *            - the isbn to resolve.
+     *            - the ISBN to resolve.
      * */
     public IsbnResolver(String isbn) {
         this.isbn = isbn;
     }
 
     /**
-     * Resolve the given isbn
+     * Resolve the given ISBN
      * 
      * @return - the BookDetail containing information about the book whose isbn
      *         was passed in the constructor.
@@ -67,9 +69,7 @@ public class IsbnResolver {
         String uri = String.format(serviceURI, accessKey, isbn);
 
         try {
-            context =
-                JAXBContext
-                    .newInstance("it.mybooksharing.backend.model.book.isbndb");
+            context = JAXBContext.newInstance(contextPath);
             um = context.createUnmarshaller();
             return (ISBNdb) um.unmarshal(new URL(uri));
         } catch (JAXBException | MalformedURLException e) {
