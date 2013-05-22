@@ -2,19 +2,32 @@ package it.webookia.backend.utils.foreignws.facebook;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.restfb.Connection;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
 import com.restfb.types.User;
 import com.restfb.Parameter;
+import com.sun.jersey.api.client.Client;
 
 import it.webookia.backend.model.UserEntity;
 import it.webookia.backend.utils.storage.StorageQuery;
 
 public class FacebookConnector {
 
-    private AccessToken token;
+    private final static String appID = "497944510260906";
+    private final static String appSecret = "390ee5c96bcac601213ee28cc1915ddb";
+    private final static String redirectUri =
+        "http://webookia.appspot.com/authentication/landing";
+
+    private final static Pattern successfulResponsePattern = Pattern
+        .compile("access_token=([a-z|A-Z|0-9]+)&expires=([0-9]+)");
+    private final static String authEndpoint =
+        "https://graph.facebook.com/oauth/access_token?client_id=%s&redirect_uri=%s&client_secret=%s&code=%s";
+
+    //private AccessToken token;
     private FacebookClient graphAPIClient;
 
     /**
@@ -27,10 +40,26 @@ public class FacebookConnector {
      *            right to access his data.
      * @return the {@link AccessToken} corresponding to the user who has just
      *         logged in.
+     * @throws OAuthException
+     *             if authorization fails.
      */
-    public static AccessToken performOauthValidation(String oauthCode) {
-        // TODO - implement parsing of response
-        return null;
+    public static AccessToken performOauthValidation(String oauthCode)
+            throws OAuthException {
+        Client client = Client.create();
+        String url =
+            String.format(
+                authEndpoint,
+                appID,
+                redirectUri,
+                appSecret,
+                oauthCode);
+        String response = client.resource(url).get(String.class);
+        Matcher matcher = successfulResponsePattern.matcher(response);
+        if (matcher.matches()) {
+            return AccessToken.create(matcher.group(1));
+        } else {
+            throw new OAuthException(response);
+        }
     }
 
     /**
@@ -42,28 +71,21 @@ public class FacebookConnector {
      *            - the {@link AccessToken} of user to handle.
      */
     public FacebookConnector(AccessToken token) {
-        this.token = token;
+        //this.token = token;
         this.graphAPIClient = new DefaultFacebookClient(token.toString());
     }
 
     /**
-     * Creates a {@link UserEntity} corresponding to the {@link AccessToken}
-     * that this instance is managing.
-     * 
-     * @return the created {@link UserEntity}
+     * Returns the username linked with given access token.
+     * @return the username linked with given access token.
      */
-    public UserEntity createUserEntity() {
+    public String getUsername() {
         User self =
             graphAPIClient.fetchObject(
                 "me",
                 User.class,
                 Parameter.with("fields", "username"));
-
-        UserEntity user = new UserEntity();
-        user.setToken(token);
-        user.setUserId(self.getUsername());
-
-        return user;
+        return self.getUsername();
     }
 
     /**

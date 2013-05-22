@@ -16,25 +16,26 @@ public class UserResource {
 
     // Class Methods
     /**
-     * Creates a new user given its Facebook {@link AccessToken}.
+     * Authenticates an user by its Access Token. If no user corresponding to
+     * given access token exists, a new user is created.
      * 
      * @param token
      *            - the user Facebook {@link AccessToken}
-     * @return an {@link UserResource} to manage created user.
-     * @throws {@link ResourceException} if a user with the same username as the
-     *         one represented by the access token already exists.
+     * @return an {@link UserResource} to manage the authenticated user.
      */
-    public static UserResource createUser(AccessToken token)
-            throws ResourceException {
-        UserEntity user = new FacebookConnector(token).createUserEntity();
+    public static UserResource authenticateUser(AccessToken token){
+        FacebookConnector connector = new FacebookConnector(token);
+        String username = connector.getUsername();
+        UserEntity entity = StorageQuery.getUserByUsername(username);
 
-        String username = user.getId();
-        if (StorageQuery.getUserByUsername(username) != null) {
-            throw new ResourceException(ResourceErrorType.ALREADY_EXSISTING);
+        if (entity == null) {
+            entity = new UserEntity();
+            entity.setUserId(username);
+            entity.setToken(token);
+            userStorage.persist(entity);
         }
 
-        userStorage.persist(user);
-        return new UserResource(user);
+        return new UserResource(entity);
     }
 
     /**
@@ -82,7 +83,11 @@ public class UserResource {
     }
 
     // Public methods
-
+    public String getId(){
+        return decoratedUser.getId();
+    }
+    
+    
     @Override
     public int hashCode() {
         final int prime = 31;
