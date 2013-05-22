@@ -8,7 +8,7 @@ import java.io.Serializable;
  */
 public class AccessToken implements Serializable {
 
-    private static final int tokenLenght = 0;
+    private static final int tokenLenght = 151;
     private static final long serialVersionUID = 8012334240294160332L;
     private static final String errorMessage =
         "AccessToken must be %s characters long.";
@@ -24,10 +24,10 @@ public class AccessToken implements Serializable {
      * @return the newly created instance.
      */
     public static AccessToken create(String accessToken) {
-        if (accessToken.length() != tokenLenght) {
-            String message = String.format(errorMessage, tokenLenght);
-            throw new IllegalArgumentException(message);
-        }
+//        if (accessToken.length() != tokenLenght) {
+//            String message = String.format(errorMessage, tokenLenght);
+//            throw new IllegalArgumentException(message);
+//        }
 
         return new AccessToken(accessToken);
     }
@@ -38,6 +38,7 @@ public class AccessToken implements Serializable {
 
     /**
      * Returns the {@code String} representation of the hold access token.
+     * 
      * @return the {@code String} representation of the access token.
      */
     @Override

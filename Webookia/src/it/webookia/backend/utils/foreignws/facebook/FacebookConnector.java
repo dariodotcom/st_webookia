@@ -20,14 +20,14 @@ public class FacebookConnector {
     private final static String appID = "497944510260906";
     private final static String appSecret = "390ee5c96bcac601213ee28cc1915ddb";
     private final static String redirectUri =
-        "http://webookia.appspot.com/authentication/landing";
+        "http://95.249.44.11:8888/authentication/landing";
 
     private final static Pattern successfulResponsePattern = Pattern
         .compile("access_token=([a-z|A-Z|0-9]+)&expires=([0-9]+)");
     private final static String authEndpoint =
         "https://graph.facebook.com/oauth/access_token?client_id=%s&redirect_uri=%s&client_secret=%s&code=%s";
 
-    //private AccessToken token;
+    // private AccessToken token;
     private FacebookClient graphAPIClient;
 
     /**
@@ -55,7 +55,9 @@ public class FacebookConnector {
                 oauthCode);
         String response = client.resource(url).get(String.class);
         Matcher matcher = successfulResponsePattern.matcher(response);
+
         if (matcher.matches()) {
+            System.out.println(matcher.group(1).length());
             return AccessToken.create(matcher.group(1));
         } else {
             throw new OAuthException(response);
@@ -71,12 +73,13 @@ public class FacebookConnector {
      *            - the {@link AccessToken} of user to handle.
      */
     public FacebookConnector(AccessToken token) {
-        //this.token = token;
+        // this.token = token;
         this.graphAPIClient = new DefaultFacebookClient(token.toString());
     }
 
     /**
      * Returns the username linked with given access token.
+     * 
      * @return the username linked with given access token.
      */
     public String getUsername() {
