@@ -23,7 +23,7 @@ public class UserResource {
      *            - the user Facebook {@link AccessToken}
      * @return an {@link UserResource} to manage the authenticated user.
      */
-    public static UserResource authenticateUser(AccessToken token){
+    public static UserResource authenticateUser(AccessToken token) {
         FacebookConnector connector = new FacebookConnector(token);
         String username = connector.getUsername();
         UserEntity entity = StorageQuery.getUserByUsername(username);
@@ -83,11 +83,10 @@ public class UserResource {
     }
 
     // Public methods
-    public String getId(){
+    public String getId() {
         return decoratedUser.getId();
     }
-    
-    
+
     @Override
     public int hashCode() {
         final int prime = 31;
