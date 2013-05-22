@@ -3,6 +3,8 @@ package it.webookia.backend.controller.servlets;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 public class ServiceServlet extends HttpServlet {
 
     private static final long serialVersionUID = -6364544534456443497L;
+    private static final Pattern requestPattern = Pattern
+        .compile("/([a-z|A-Z]+)/([a-z|A-Z]*)[.]*");
 
     private Map<String, Service> getServices;
     private Map<String, Service> postServices;
@@ -41,7 +45,7 @@ public class ServiceServlet extends HttpServlet {
                 actionName,
                 contextName));
         }
-        
+
         ServiceContext context = new ServiceContext(req, resp);
         getServices.get(actionName).service(context);
     }
@@ -63,19 +67,22 @@ public class ServiceServlet extends HttpServlet {
 
     private String getAction(HttpServletRequest request)
             throws ServletException {
-        String requestAction =
-            request.getRequestURI().replace(request.getContextPath(), "");
-        String[] components = requestAction.split("/");
+        String requestURI = request.getRequestURI();
+        String contextPath = request.getContextPath();
+        String relativePath = requestURI.replace(contextPath, "");
 
-        if (!components[0].equals(this.contextName)) {
-            String message = "Service context error. Managed: %s, received: %s";
-            throw new ServletException(String.format(
-                message,
-                components[0],
-                this.contextName));
+        Matcher m = requestPattern.matcher(relativePath);
+
+        if (!m.matches()) {
+            throw new ServletException("Bad Request: " + relativePath);
         }
 
-        return components[1];
-    }
+        String context = m.group(1), action = m.group(2);
 
+        if (!context.equals(this.contextName)) {
+            throw new ServletException("Service context error: " + context);
+        }
+
+        return action;
+    }
 }

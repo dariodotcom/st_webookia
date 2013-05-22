@@ -21,7 +21,7 @@ public class ServiceContext {
         return (String) request.getSession().getAttribute(loggedUserAttribute);
     }
 
-    public void setLoggedUserId(String userID) {
+    public void setAuthenticatedUserId(String userID) {
         request.getSession().setAttribute(loggedUserAttribute, userID);
     }
 
