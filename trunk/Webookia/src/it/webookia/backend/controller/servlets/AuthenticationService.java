@@ -10,42 +10,50 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 
 public class AuthenticationService extends ServiceServlet {
-    
+
     private static final long serialVersionUID = 4703628228514306116L;
 
-    protected AuthenticationService() {
+    public AuthenticationService() {
         super("authentication");
         super.registerGetService("landing", new LoginLanding());
     }
 
-    private class LoginLanding implements Service{
-
+    private class LoginLanding implements Service {
         @Override
         public void service(ServiceContext context) throws ServletException,
                 IOException {
-            
+
             String code = context.getParameter("code");
             String error = context.getParameter("error");
-            
-            if(code != null){
+            String userId = context.getAuthenticatedUserId();
+
+            if (userId != null) {
+                // TODO: redirect to homepage
+                context
+                    .getResponse()
+                    .getWriter()
+                    .println("Already logged in, " + userId);
+            } else if (code != null) {
                 AccessToken token;
                 try {
                     token = FacebookConnector.performOauthValidation(code);
-                } catch(OAuthException o){
+                } catch (OAuthException o) {
                     throw new ServletException(o);
                 }
-                
+
                 UserResource userRes = UserResource.authenticateUser(token);
-                context.setLoggedUserId(userRes.getId());
+                context
+                    .getResponse()
+                    .getWriter()
+                    .println("Welcome back, " + userRes.getId());
+                context.setAuthenticatedUserId(userRes.getId());
                 // Redirect
-                
-            } else if(error != null){
+
+            } else if (error != null) {
                 throw new ServletException("Error from oauth dialog: " + error);
             } else {
                 throw new ServletException("Not a response from facebook");
             }
-        }        
+        }
     }
-    
-    
 }
