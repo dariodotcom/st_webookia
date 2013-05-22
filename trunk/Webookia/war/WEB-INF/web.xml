@@ -54,24 +54,12 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
-	<!-- <servlet> <servlet-name>GWTServiceServlet</servlet-name> <servlet-class>org.slim3.gwt.server.rpc.GWTServiceServlet</servlet-class> 
-		<load-on-startup>1</load-on-startup> </servlet> -->
-
 	<servlet>
 		<servlet-name>KtrWjrServiceServlet</servlet-name>
 		<servlet-class>bufferings.ktr.wjr.server.service.KtrWjrServiceServlet
 		</servlet-class>
 	</servlet>
 
-	<servlet-mapping>
-		<servlet-name>GlobalTransactionServlet</servlet-name>
-		<url-pattern>/slim3/gtx</url-pattern>
-	</servlet-mapping>
-
-	<!-- <servlet-mapping> <servlet-name>GWTServiceServlet</servlet-name> <url-pattern>*.s3gwt</url-pattern> 
-		</servlet-mapping> -->
-
-	<!-- Jersey servlet -->
 	<servlet>
 		<description>JAX-RS Tools Generated - Do not modify</description>
 		<servlet-name>JAX-RS Servlet</servlet-name>
@@ -79,6 +67,17 @@
 		</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+
+	<servlet>
+		<servlet-name>Authentication</servlet-name>
+		<servlet-class>it.webookia.backend.controller.servlets.AuthenticationService
+		</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>GlobalTransactionServlet</servlet-name>
+		<url-pattern>/slim3/gtx</url-pattern>
+	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>KtrWjrServiceServlet</servlet-name>
@@ -88,6 +87,11 @@
 	<servlet-mapping>
 		<servlet-name>JAX-RS Servlet</servlet-name>
 		<url-pattern>/api/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Authentication</servlet-name>
+		<url-pattern>/authentication/*</url-pattern>
 	</servlet-mapping>
 
 	<security-constraint>
