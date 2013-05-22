@@ -41,8 +41,9 @@ public class ServiceServlet extends HttpServlet {
                 actionName,
                 contextName));
         }
-
-        getServices.get(actionName).service(req, resp);
+        
+        ServiceContext context = new ServiceContext(req, resp);
+        getServices.get(actionName).service(context);
     }
 
     @Override
@@ -56,7 +57,8 @@ public class ServiceServlet extends HttpServlet {
                 contextName));
         }
 
-        postServices.get(actionName).service(req, resp);
+        ServiceContext context = new ServiceContext(req, resp);
+        postServices.get(actionName).service(context);
     }
 
     private String getAction(HttpServletRequest request)
