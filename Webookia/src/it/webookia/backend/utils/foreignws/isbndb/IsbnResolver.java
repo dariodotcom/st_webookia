@@ -19,7 +19,7 @@ public class IsbnResolver {
     private final static String serviceURI =
         "http://isbndb.com/api/books.xml?access_key=%s&index1=isbn&value1=%s";
     private final static String contextPath =
-        "it.mybooksharing.backend.model.book.isbndb";
+        "it.webookia.backend.utils.foreignws.isbndb.model";
 
     private String isbn = null;
     private DetailedBook result = null;
@@ -80,6 +80,8 @@ public class IsbnResolver {
 
     private void fillResultData(BookData data) {
         result.setTitle(data.getTitle());
+        result.setIsbn(data.getIsbn13());
+        result.setPublisher(data.getPublisherText().getPublisherId());
         String[] authors = data.getAuthorsText().split(",");
         for (String author : authors) {
             String trimmed = author.trim();

@@ -12,6 +12,7 @@ import com.restfb.types.User;
 import com.restfb.Parameter;
 import com.sun.jersey.api.client.Client;
 
+import it.webookia.backend.descriptor.UserDescriptor;
 import it.webookia.backend.model.UserEntity;
 import it.webookia.backend.utils.storage.StorageQuery;
 
@@ -20,7 +21,7 @@ public class FacebookConnector {
     private final static String appID = "497944510260906";
     private final static String appSecret = "390ee5c96bcac601213ee28cc1915ddb";
     private final static String redirectUri =
-        "http://95.249.44.11:8888/authentication/landing";
+        "http://87.4.49.248:8888/authentication/landing";
 
     private final static Pattern successfulResponsePattern = Pattern
         .compile("access_token=([a-z|A-Z|0-9]+)&expires=([0-9]+)");
@@ -108,6 +109,16 @@ public class FacebookConnector {
         }
 
         return StorageQuery.getUsersByUsername(friendsID);
+    }
+
+    public UserDescriptor getUserDescriptor() {
+        UserDescriptor descriptor = new UserDescriptor();
+        User self = graphAPIClient.fetchObject("me", User.class);
+        descriptor.setUsername(self.getUsername());
+        descriptor.setName(self.getFirstName());
+        descriptor.setSurname(self.getLastName());
+        //descriptor.setLocation(self.getLocation().getName());
+        return descriptor;
     }
 
 }
