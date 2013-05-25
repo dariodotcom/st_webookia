@@ -38,7 +38,7 @@ public class StorageQuery {
         UserEntityMeta user = UserEntityMeta.get();
         return Datastore
             .query(user)
-            .filter(user.userId.equal(username))
+            .filter(user.userName.equal(username))
             .asSingle();
     }
 
@@ -52,6 +52,9 @@ public class StorageQuery {
      */
     public static List<UserEntity> getUsersByUsername(List<String> usernames) {
         UserEntityMeta user = UserEntityMeta.get();
-        return Datastore.query(user).filter(user.userId.in(usernames)).asList();
+        return Datastore
+            .query(user)
+            .filter(user.userName.in(usernames))
+            .asList();
     }
 }
