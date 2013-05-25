@@ -43,7 +43,7 @@ public class UserEntity implements Serializable, Storable {
     private Long version;
 
     // Fields
-    private String userId;
+    private String userName;
     @Attribute(lob = true)
     private AccessToken token;
 
@@ -69,12 +69,12 @@ public class UserEntity implements Serializable, Storable {
         this.token = token;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public InverseModelListRef<ConcreteBook, UserEntity> getBooksRef() {
