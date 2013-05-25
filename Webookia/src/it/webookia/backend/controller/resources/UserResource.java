@@ -2,6 +2,7 @@ package it.webookia.backend.controller.resources;
 
 import it.webookia.backend.controller.resources.exception.ResourceErrorType;
 import it.webookia.backend.controller.resources.exception.ResourceException;
+import it.webookia.backend.descriptor.UserDescriptor;
 import it.webookia.backend.model.UserEntity;
 import it.webookia.backend.utils.foreignws.facebook.AccessToken;
 import it.webookia.backend.utils.foreignws.facebook.FacebookConnector;
@@ -30,7 +31,7 @@ public class UserResource {
 
         if (entity == null) {
             entity = new UserEntity();
-            entity.setUserId(username);
+            entity.setUserName(username);
             entity.setToken(token);
             userStorage.persist(entity);
         }
@@ -82,9 +83,15 @@ public class UserResource {
         return connector.getFriends().contains(user);
     }
 
+    // Descriptor
+    public UserDescriptor getDescriptor() {
+        return new FacebookConnector(decoratedUser.getToken())
+            .getUserDescriptor();
+    }
+
     // Public methods
-    public String getId() {
-        return decoratedUser.getId();
+    public String getUserName() {
+        return decoratedUser.getUserName();
     }
 
     @Override
