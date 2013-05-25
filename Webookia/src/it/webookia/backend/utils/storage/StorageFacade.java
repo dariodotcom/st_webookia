@@ -31,7 +31,13 @@ public class StorageFacade<T extends Storable> {
      * @return the retrieved object, null if the object does not exsist.
      * */
     public T get(String key) {
-        Key k = KeyFactory.stringToKey(key);
+        Key k;
+
+        try {
+            k = KeyFactory.stringToKey(key);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
         return Datastore.get(type, k);
     }
 
