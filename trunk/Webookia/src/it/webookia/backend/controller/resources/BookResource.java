@@ -2,6 +2,8 @@ package it.webookia.backend.controller.resources;
 
 import it.webookia.backend.controller.resources.exception.ResourceErrorType;
 import it.webookia.backend.controller.resources.exception.ResourceException;
+import it.webookia.backend.descriptor.BookDescriptor;
+import it.webookia.backend.descriptor.DescriptorFactory;
 import it.webookia.backend.enums.BookStatus;
 import it.webookia.backend.enums.PrivacyLevel;
 import it.webookia.backend.model.Comment;
@@ -43,7 +45,7 @@ public class BookResource {
      * @return the newly created book
      * @throws {@link ResourceException} if the creation fails.
      * */
-    public static ConcreteBook createBook(String isbn, UserResource user)
+    public static BookResource createBook(String isbn, UserResource user)
             throws ResourceException {
         // TODO check that user does not already have this book.
 
@@ -54,17 +56,19 @@ public class BookResource {
                 details = new IsbnResolver(isbn).resolve();
                 detailedBookStorage.persist(details);
             } catch (IsbnDBException e) {
-                // TODO - improve error reporting
                 throw new ResourceException(ResourceErrorType.SERVER_FAULT, e);
             }
         }
 
         ConcreteBook book = new ConcreteBook();
         book.setDetailedBook(details);
+        book.setOwner(user.getEntity());
+        book.setStatus(BookStatus.getDefault());
+        book.setPrivacy(PrivacyLevel.getDefault());
 
         concreteBookStorage.persist(book);
 
-        return book;
+        return new BookResource(book);
     }
 
     /**
@@ -187,6 +191,16 @@ public class BookResource {
         comment.setAuthor(author.getEntity());
         comment.setText(text);
         commentStorage.persist(comment);
+    }
+
+    /**
+     * Retrieves a representation of managed book that can be distributed to end
+     * users.
+     * 
+     * @return a {@link BookDescriptor} that describes managed book.
+     */
+    public BookDescriptor getDescriptor() {
+        return DescriptorFactory.createFullBookDescriptor(decoratedBook);
     }
 
     // Resource methods
