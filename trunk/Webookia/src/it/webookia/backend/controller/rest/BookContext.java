@@ -37,9 +37,15 @@ public class BookContext {
         ResourceException ex = null;
 
         if (isbn == null) {
-            ex = new ResourceException(ResourceErrorType.BAD_REQUEST);
+            ex =
+                new ResourceException(
+                    ResourceErrorType.BAD_REQUEST,
+                    "isbn is null");
         } else if (authUserName == null) {
-            ex = new ResourceException(ResourceErrorType.UNAUTHORIZED_ACTION);
+            String message = "Login required to perform this action";
+            ex = new ResourceException(
+                    ResourceErrorType.UNAUTHORIZED_ACTION,
+                    message);
         }
 
         if (ex != null) {
