@@ -76,7 +76,8 @@ public class NotificationResource {
             throws ResourceException {
         Notification notification = notificationStorage.get(id);
         if (notification == null) {
-            throw new ResourceException(ResourceErrorType.NOT_FOUND);
+            String message = "notification " + id + "not found";
+            throw new ResourceException(ResourceErrorType.NOT_FOUND, message);
         } else {
             return new NotificationResource(notification);
         }

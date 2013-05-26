@@ -53,7 +53,8 @@ public class UserResource {
             throws ResourceException {
         UserEntity user = StorageQuery.getUserByUsername(username);
         if (user == null) {
-            throw new ResourceException(ResourceErrorType.NOT_FOUND);
+            String message = "User " + username + " not found";
+            throw new ResourceException(ResourceErrorType.NOT_FOUND, message);
         }
 
         return new UserResource(user);
