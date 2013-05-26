@@ -85,13 +85,19 @@ public class BookResource {
         ConcreteBook book = concreteBookStorage.get(id);
 
         if (book == null) {
-            throw new ResourceException(ResourceErrorType.NOT_FOUND, null);
+            String message = "book %s not found";
+            throw new ResourceException(
+                ResourceErrorType.NOT_FOUND,
+                String.format(message, id));
         }
 
         BookResource bookResource = new BookResource(book);
 
         if (!bookResource.canBeSeenBy(requestor)) {
-            throw new ResourceException(ResourceErrorType.UNAUTHORIZED_ACTION);
+            String message = "not authorized to access requested book";
+            throw new ResourceException(
+                ResourceErrorType.UNAUTHORIZED_ACTION,
+                message);
         }
 
         return bookResource;
@@ -107,12 +113,22 @@ public class BookResource {
 
     // Public methods
     /**
-     * Change book status.
+     * Change book status. It is only possible to change the status meanwhile a
+     * book is not lent and it can't be changed into lent directly by the user.
      * 
      * @param newStatus
      *            - the new status
+     * @throws ResourceException
+     *             when trying to change the status illegally.
      * */
-    public void changeStatus(BookStatus newStatus) {
+    public void changeStatus(BookStatus newStatus) throws ResourceException {
+        BookStatus actualStatus = decoratedBook.getStatus();
+
+        if (newStatus.equals(BookStatus.LENT)
+            || actualStatus.equals(BookStatus.LENT)) {
+            String message = "Cannot change the status to LENT directly";
+            throw new ResourceException(ResourceErrorType.BAD_REQUEST, message);
+        }
         decoratedBook.setStatus(newStatus);
         concreteBookStorage.persist(decoratedBook);
     }
@@ -145,9 +161,10 @@ public class BookResource {
         Mark mark;
 
         if (!author.matches(bookOwner)) {
+            String message = "Only the author can add a review";
             throw new ResourceException(
                 ResourceErrorType.UNAUTHORIZED_ACTION,
-                null);
+                message);
         }
 
         try {
@@ -158,7 +175,10 @@ public class BookResource {
 
         Review bookReview = decoratedBook.getReview();
         if (bookReview != null) {
-            throw new ResourceException(ResourceErrorType.ALREADY_EXSISTING);
+            String message = "Book already has a review";
+            throw new ResourceException(
+                ResourceErrorType.ALREADY_EXSISTING,
+                message);
         }
 
         bookReview = new Review();
@@ -184,7 +204,8 @@ public class BookResource {
         Review bookReview = decoratedBook.getReview();
 
         if (bookReview == null) {
-            throw new ResourceException(ResourceErrorType.NOT_FOUND);
+            String message = "book doesn't have a review";
+            throw new ResourceException(ResourceErrorType.NOT_FOUND, message);
         }
 
         Comment comment = new Comment();
@@ -220,7 +241,7 @@ public class BookResource {
         }
     }
 
-    boolean canBeLentBy(UserResource user) {
+    boolean canBeLentTo(UserResource user) {
         UserEntity owner = decoratedBook.getOwner();
         BookStatus status = decoratedBook.getStatus();
 

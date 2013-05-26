@@ -2,6 +2,8 @@ package it.webookia.backend.controller.resources;
 
 import it.webookia.backend.controller.resources.exception.ResourceErrorType;
 import it.webookia.backend.controller.resources.exception.ResourceException;
+import it.webookia.backend.descriptor.Descriptor;
+import it.webookia.backend.descriptor.DescriptorFactory;
 import it.webookia.backend.enums.BookStatus;
 import it.webookia.backend.enums.LoanStatus;
 import it.webookia.backend.model.ConcreteBook;
@@ -37,12 +39,20 @@ public class LoanResource {
      */
     public static LoanResource createLoan(UserResource requestor,
             BookResource book) throws ResourceException {
+        String bookId = book.getEntity().getId();
+
         if (!book.canBeSeenBy(requestor)) {
-            throw new ResourceException(ResourceErrorType.UNAUTHORIZED_ACTION);
+            String message = "you cannot ask for a loan of " + bookId;
+            throw new ResourceException(
+                ResourceErrorType.UNAUTHORIZED_ACTION,
+                message);
         }
 
-        if (!book.canBeLentBy(requestor)) {
-            throw new ResourceException(ResourceErrorType.RESOURCE_UNAVAILABLE);
+        if (!book.canBeLentTo(requestor)) {
+            String message = "book " + bookId + " is not available for leaning";
+            throw new ResourceException(
+                ResourceErrorType.RESOURCE_UNAVAILABLE,
+                message);
         }
 
         Loan loan = new Loan();
@@ -63,14 +73,23 @@ public class LoanResource {
      * @throws ResourceException
      *             if no corresponding loan is found.
      */
-    public static LoanResource getLoan(String id) throws ResourceException {
+    public static LoanResource getLoan(UserResource requestor, String id)
+            throws ResourceException {
         Loan loan = loanStorage.get(id);
 
         if (loan == null) {
-            throw new ResourceException(ResourceErrorType.NOT_FOUND);
+            String message = "loan " + id + " not found";
+            throw new ResourceException(ResourceErrorType.NOT_FOUND, message);
         }
 
-        return new LoanResource(loan);
+        LoanResource loanRes = new LoanResource(loan);
+        if (!loanRes.isUserInvolved(requestor)) {
+            String message = "you can't access this loan";
+            throw new ResourceException(
+                ResourceErrorType.UNAUTHORIZED_ACTION,
+                message);
+        }
+        return loanRes;
     }
 
     private Loan decoratedLoan;
@@ -81,30 +100,44 @@ public class LoanResource {
 
     // Public methods
     /**
-     * Accepts a loan request. Only the book owner can perform this action. The
-     * {@link LoanStatus} is set to ACCEPTED and the {@link BookStatus} is set
-     * to LENT, preventing further loans of the same book as long as the book
-     * isn't returned.
+     * Responds to a loan request. Only the book owner can perform this action.
+     * If he accepts, the {@link LoanStatus} is set to ACCEPTED and the
+     * {@link BookStatus} is set to LENT, preventing further loans of the same
+     * book as long as the book isn't returned. If the owner refuses, the loan
+     * is marked as REFUSED.
      * 
      * @param requestor
      *            - a {@link UserResource} that manages the user who took this
      *            action.
+     * @param response
+     *            - the owner's response
      * @throws ResourceException
      *             if an error occurs.
      */
-    public void accept(UserResource requestor) throws ResourceException {
+    public void respond(UserResource requestor, boolean response)
+            throws ResourceException {
         UserEntity bookOwner = decoratedLoan.getLentBook().getOwner();
         ConcreteBook lentBook = decoratedLoan.getLentBook();
         BookResource lentBookRes = new BookResource(lentBook);
 
         if (!requestor.matches(bookOwner)) {
-            throw new ResourceException(ResourceErrorType.UNAUTHORIZED_ACTION);
+            String message = "You must be the book owner to accept";
+            throw new ResourceException(
+                ResourceErrorType.UNAUTHORIZED_ACTION,
+                message);
         }
 
+        // Assert statuses
         assertBookStatus(lentBook, BookStatus.AVAILABLE);
         assertLoanStatus(decoratedLoan, LoanStatus.INITIAL);
-        lentBookRes.changeStatus(BookStatus.LENT);
-        decoratedLoan.setStatus(LoanStatus.ACCEPTED);
+
+        // Modify resource statuses
+        if (response == true) {
+            lentBookRes.changeStatus(BookStatus.LENT);
+            decoratedLoan.setStatus(LoanStatus.ACCEPTED);
+        } else {
+            decoratedLoan.setStatus(LoanStatus.REFUSED);
+        }
         loanStorage.persist(decoratedLoan);
     }
 
@@ -124,7 +157,10 @@ public class LoanResource {
         ConcreteBook lentBook = decoratedLoan.getLentBook();
 
         if (!requestor.matches(borrower)) {
-            throw new ResourceException(ResourceErrorType.UNAUTHORIZED_ACTION);
+            String message = "you must be the borrower to do this";
+            throw new ResourceException(
+                ResourceErrorType.UNAUTHORIZED_ACTION,
+                message);
         }
 
         assertBookStatus(lentBook, BookStatus.LENT);
@@ -150,7 +186,10 @@ public class LoanResource {
         BookResource lentBookRes = new BookResource(lentBook);
 
         if (!requestor.matches(bookOwner)) {
-            throw new ResourceException(ResourceErrorType.UNAUTHORIZED_ACTION);
+            String message = "You must be the book owner to accept";
+            throw new ResourceException(
+                ResourceErrorType.UNAUTHORIZED_ACTION,
+                message);
         }
 
         assertBookStatus(lentBook, BookStatus.LENT);
@@ -171,21 +210,19 @@ public class LoanResource {
      * @throws ResourceException
      *             if an error occurs.
      */
-    public void sendContextMessage(UserResource author, String message)
+    public void sendContextMessage(UserResource author, String messageText)
             throws ResourceException {
-        Message msg = null;
-        ConcreteBook lentBook = decoratedLoan.getLentBook();
-        UserEntity bookOwner = lentBook.getOwner();
-
-        if (!author.equals(bookOwner)
-            || !author.equals(decoratedLoan.getBorrower())) {
-            throw new ResourceException(ResourceErrorType.UNAUTHORIZED_ACTION);
+        if (!isUserInvolved(author)) {
+            String message = "You must be involved in the loan to do this";
+            throw new ResourceException(
+                ResourceErrorType.UNAUTHORIZED_ACTION,
+                message);
         }
 
-        msg = new Message();
+        Message msg = new Message();
         msg.setAuthor(author.getEntity());
         msg.setLoan(decoratedLoan);
-        msg.setText(message);
+        msg.setText(messageText);
         messageStorage.persist(msg);
     }
 
@@ -224,11 +261,23 @@ public class LoanResource {
         } else if (requestor.matches(owner)) {
             decoratedLoan.setBorrowerFeedback(feedback);
         } else {
-            throw new ResourceException(ResourceErrorType.UNAUTHORIZED_ACTION);
+            String message = "You must be involved in the load to do this";
+            throw new ResourceException(
+                ResourceErrorType.UNAUTHORIZED_ACTION,
+                message);
         }
 
         feedbackStorage.persist(feedback);
         loanStorage.persist(decoratedLoan);
+    }
+
+    /**
+     * Creates a descriptor for managed book.
+     * 
+     * @return a {@link Descriptor} that describes the managed book.
+     */
+    public Descriptor getDescriptor() {
+        return DescriptorFactory.createLoanDescriptor(decoratedLoan);
     }
 
     // Resource methods
@@ -237,17 +286,40 @@ public class LoanResource {
     }
 
     // Helpers
+    private boolean isUserInvolved(UserResource user) {
+        ConcreteBook lentBook = decoratedLoan.getLentBook();
+        UserEntity owner = lentBook.getOwner();
+        UserEntity borrower = decoratedLoan.getBorrower();
+        return user.matches(borrower) || user.matches(owner);
+    }
+
     private void assertBookStatus(ConcreteBook book, BookStatus status)
             throws ResourceException {
-        if (!book.getStatus().equals(status)) {
-            throw new ResourceException(ResourceErrorType.ILLEGAL_STATE);
+        BookStatus actualStatus = book.getStatus();
+        if (!actualStatus.equals(status)) {
+            String message =
+                "Book status assertion failed, "
+                    + status
+                    + " / "
+                    + actualStatus;
+            throw new ResourceException(
+                ResourceErrorType.ILLEGAL_STATE,
+                message);
         }
     }
 
     private void assertLoanStatus(Loan loan, LoanStatus status)
             throws ResourceException {
-        if (!loan.getStatus().equals(status)) {
-            throw new ResourceException(ResourceErrorType.ILLEGAL_STATE);
+        LoanStatus actualStatus = loan.getStatus();
+        if (!actualStatus.equals(status)) {
+            String message =
+                "Book status assertion failed, "
+                    + status
+                    + " / "
+                    + actualStatus;
+            throw new ResourceException(
+                ResourceErrorType.ILLEGAL_STATE,
+                message);
         }
     }
 }

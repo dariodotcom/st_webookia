@@ -19,8 +19,8 @@ public class ResourceException extends Exception {
      *            - the {@link ResourceErrorType} that describes the cause of
      *            the error.
      */
-    public ResourceException(ResourceErrorType errorType) {
-        super(errorType.getFriendlyText());
+    public ResourceException(ResourceErrorType errorType, String message) {
+        super(errorType.getFriendlyText() + " - " + message);
         this.errorType = errorType;
     }
 
