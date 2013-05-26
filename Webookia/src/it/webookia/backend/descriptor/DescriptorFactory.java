@@ -2,6 +2,7 @@ package it.webookia.backend.descriptor;
 
 import it.webookia.backend.model.ConcreteBook;
 import it.webookia.backend.model.DetailedBook;
+import it.webookia.backend.model.Loan;
 
 public class DescriptorFactory {
 
@@ -20,6 +21,20 @@ public class DescriptorFactory {
         descriptor.setPrivacy(book.getPrivacy());
 
         System.out.println("Book id: " + descriptor.getId());
+
+        return descriptor;
+    }
+
+    public static LoanDescriptor createLoanDescriptor(Loan loan) {
+        LoanDescriptor descriptor = new LoanDescriptor();
+        ConcreteBook lentBook = loan.getLentBook();
+
+        descriptor.setId(loan.getId());
+        descriptor.setBookId(loan.getId());
+        descriptor.setBorrowerId(loan.getBorrower().getUserName());
+        descriptor.setOwnerId(lentBook.getOwner().getUserName());
+        descriptor.setStatus(loan.getStatus());
+        descriptor.setStartDate(loan.getDate());
 
         return descriptor;
     }
