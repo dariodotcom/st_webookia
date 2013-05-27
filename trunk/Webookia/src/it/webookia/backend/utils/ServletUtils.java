@@ -7,8 +7,7 @@ public class ServletUtils {
     private static final String AUTH_USER = "AUTH_USER";
 
     public static String getAuthenticatedUsername(HttpServletRequest req) {
-        // return (String) req.getSession().getAttribute(AUTH_USER);
-        return "dario.archetti";
+        return (String) req.getSession().getAttribute(AUTH_USER);
     }
 
     public static void setAuthenticatedUsername(HttpServletRequest req,

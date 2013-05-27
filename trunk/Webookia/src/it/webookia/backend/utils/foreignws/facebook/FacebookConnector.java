@@ -14,14 +14,17 @@ import com.sun.jersey.api.client.Client;
 
 import it.webookia.backend.descriptor.UserDescriptor;
 import it.webookia.backend.model.UserEntity;
+import it.webookia.backend.utils.Settings;
 import it.webookia.backend.utils.storage.StorageQuery;
 
 public class FacebookConnector {
 
+    private final static String oauthDialogPattern =
+        "https://www.facebook.com/dialog/oauth?client_id=%s&redirect_uri=%s";
     private final static String appID = "497944510260906";
     private final static String appSecret = "390ee5c96bcac601213ee28cc1915ddb";
-    private final static String redirectUri =
-        "http://87.4.49.248:8888/authentication/landing";
+    private final static String redirectUri = Settings.CURRENT_HOST
+        + "/authentication/landing";
 
     private final static Pattern successfulResponsePattern = Pattern
         .compile("access_token=([a-z|A-Z|0-9]+)&expires=([0-9]+)");
@@ -30,6 +33,10 @@ public class FacebookConnector {
 
     // private AccessToken token;
     private FacebookClient graphAPIClient;
+
+    public static String getOauthDialogUrl() {
+        return String.format(oauthDialogPattern, appID, redirectUri);
+    }
 
     /**
      * Performs the validation of access code against Facebook service and
@@ -58,7 +65,6 @@ public class FacebookConnector {
         Matcher matcher = successfulResponsePattern.matcher(response);
 
         if (matcher.matches()) {
-            System.out.println(matcher.group(1).length());
             return AccessToken.create(matcher.group(1));
         } else {
             throw new OAuthException(response);
@@ -117,7 +123,7 @@ public class FacebookConnector {
         descriptor.setUsername(self.getUsername());
         descriptor.setName(self.getFirstName());
         descriptor.setSurname(self.getLastName());
-        //descriptor.setLocation(self.getLocation().getName());
+        // descriptor.setLocation(self.getLocation().getName());
         return descriptor;
     }
 
