@@ -1,8 +1,12 @@
 package it.webookia.backend.descriptor;
 
+import java.util.List;
+
 import it.webookia.backend.model.ConcreteBook;
 import it.webookia.backend.model.DetailedBook;
+import it.webookia.backend.model.Feedback;
 import it.webookia.backend.model.Loan;
+import it.webookia.backend.model.Message;
 
 public class DescriptorFactory {
 
@@ -20,8 +24,6 @@ public class DescriptorFactory {
         descriptor.setStatus(book.getStatus());
         descriptor.setPrivacy(book.getPrivacy());
 
-        System.out.println("Book id: " + descriptor.getId());
-
         return descriptor;
     }
 
@@ -36,6 +38,49 @@ public class DescriptorFactory {
         descriptor.setStatus(loan.getStatus());
         descriptor.setStartDate(loan.getDate());
 
+        return descriptor;
+    }
+
+    public static ListDescriptor<MessageDescriptor> createMessageList(
+            List<Message> inputList) {
+
+        ListDescriptor<MessageDescriptor> list =
+            new ListDescriptor<MessageDescriptor>();
+
+        for (Message m : inputList) {
+            MessageDescriptor d = new MessageDescriptor();
+            d.setAuthorUsername(m.getAuthor().getUserName());
+            d.setDate(m.getDate());
+            d.setText(m.getText());
+            list.addDescriptor(d);
+        }
+
+        return list;
+    }
+
+    public static LoanFeedbackDescriptor createFeedbackDescriptor(
+            Feedback ownerFeedback, Feedback borrowerFeedback) {
+        LoanFeedbackDescriptor descriptor = new LoanFeedbackDescriptor();
+
+        if (ownerFeedback != null) {
+            descriptor
+                .setOwnerFeedback(createSingleFeedbackDescriptor(ownerFeedback));
+        }
+
+        if (borrowerFeedback != null) {
+            descriptor
+                .setBorrowerFeedback(createSingleFeedbackDescriptor(borrowerFeedback));
+        }
+
+        return descriptor;
+    }
+
+    private static SingleFeedbackDescriptor createSingleFeedbackDescriptor(
+            Feedback feedback) {
+        SingleFeedbackDescriptor descriptor = new SingleFeedbackDescriptor();
+        descriptor.setMark(feedback.getMark().intValue());
+        descriptor.setDate(feedback.getDate());
+        descriptor.setText(feedback.getText());
         return descriptor;
     }
 }
