@@ -18,13 +18,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("loan")
+@Path("loans")
 public class LoanContext {
 
     @Context
     private HttpServletRequest request;
 
     @POST
+    @Path("create")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createLoan(LoanCreationRequest creationRequest) {

@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder = { "result", "descriptor" })
 public abstract class JsonResponse {
 
-    private String result = "error";
+    private String result;
     private Descriptor descriptor;
 
     protected JsonResponse(String result, Descriptor descriptor) {
