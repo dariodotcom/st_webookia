@@ -25,6 +25,11 @@ public class ResponseFactory {
             status = Response.Status.BAD_REQUEST;
         }
 
+        // Print exception on stack trace when debugging
+        System.err
+            .println("Rest interface returned exception message to client:");
+        exception.printStackTrace(System.err);
+
         JsonResponse resp = new JsonErrorResponse(exception);
         return Response.status(status).entity(resp).build();
     }
