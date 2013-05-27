@@ -122,13 +122,6 @@ public class BookResource {
      *             when trying to change the status illegally.
      * */
     public void changeStatus(BookStatus newStatus) throws ResourceException {
-        BookStatus actualStatus = decoratedBook.getStatus();
-
-        if (newStatus.equals(BookStatus.LENT)
-            || actualStatus.equals(BookStatus.LENT)) {
-            String message = "Cannot change the status to LENT directly";
-            throw new ResourceException(ResourceErrorType.BAD_REQUEST, message);
-        }
         decoratedBook.setStatus(newStatus);
         concreteBookStorage.persist(decoratedBook);
     }

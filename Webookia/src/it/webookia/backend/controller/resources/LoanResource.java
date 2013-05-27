@@ -280,6 +280,30 @@ public class LoanResource {
         return DescriptorFactory.createLoanDescriptor(decoratedLoan);
     }
 
+    /**
+     * Retrieves a descriptor of the list of messages exchanged by involved
+     * customer in the context of this loan.
+     * 
+     * @return a {@link Descriptor} containing the list of messages.
+     */
+    public Descriptor getMessages() {
+        return DescriptorFactory.createMessageList(decoratedLoan.getMessages());
+    }
+
+    /**
+     * Retrieves the feedbacks added in the context of this loan, both by owner
+     * and borrower.
+     * 
+     * @return a {@link Descriptor} containing feedback added by involved
+     *         customers.
+     */
+
+    public Descriptor getFeedbacks() {
+        return DescriptorFactory.createFeedbackDescriptor(
+            decoratedLoan.getOwnerFeedback(),
+            decoratedLoan.getBorrowerFeedback());
+    }
+
     // Resource methods
     Loan getEntity() {
         return decoratedLoan;
