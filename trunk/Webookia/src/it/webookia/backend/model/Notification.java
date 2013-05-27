@@ -20,6 +20,7 @@ public class Notification implements Serializable, Storable {
 
     // Default constructor
     public Notification() {
+        this.date = new Date();
         this.senderRef = new ModelRef<UserEntity>(UserEntity.class);
         this.receiverRef = new ModelRef<UserEntity>(UserEntity.class);
     }
