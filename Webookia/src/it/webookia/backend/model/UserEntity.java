@@ -25,13 +25,13 @@ public class UserEntity implements Serializable, Storable {
         this.booksRef =
             new InverseModelListRef<ConcreteBook, UserEntity>(
                 ConcreteBook.class,
-                "owner",
+                "ownerRef",
                 this);
 
         this.notificationsRef =
             new InverseModelListRef<Notification, UserEntity>(
                 Notification.class,
-                "receiver",
+                "receiverRef",
                 this,
                 new Sort("date", SortDirection.DESCENDING));
     }

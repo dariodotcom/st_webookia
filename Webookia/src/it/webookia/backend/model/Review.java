@@ -29,14 +29,14 @@ public class Review implements Serializable, Storable {
         this.commentsRef =
             new InverseModelListRef<Comment, Review>(
                 Comment.class,
-                "review",
+                "reviewRef",
                 this,
                 new Sort("date", SortDirection.DESCENDING));
 
         this.reviewedBookRef =
             new InverseModelRef<ConcreteBook, Review>(
                 ConcreteBook.class,
-                "review",
+                "reviewRef",
                 this);
     }
 

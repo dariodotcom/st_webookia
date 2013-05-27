@@ -33,7 +33,7 @@ public class Loan implements Serializable, Storable {
         messagesRef =
             new InverseModelListRef<Message, Loan>(
                 Message.class,
-                "relativeLoan",
+                "relativeLoanRef",
                 this,
                 new Sort("date", SortDirection.DESCENDING));
     }
