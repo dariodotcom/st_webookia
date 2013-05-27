@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement
 @XmlType(name = "loanDescriptor", propOrder = {
+    "id",
     "ownerId",
     "borrowerId",
     "bookId",

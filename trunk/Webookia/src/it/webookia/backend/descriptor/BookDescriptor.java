@@ -12,24 +12,25 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement
 @XmlType(name = "book", propOrder = {
     "id",
-    "ownerId",
-    "isbn",
     "title",
     "authors",
+    "isbn",
     "publisher",
+    "ownerId",
     "status",
-    "privacy" })
+    "privacy",
+    "thumbnail" })
 public class BookDescriptor implements Descriptor {
 
     private String id;
-    private String ownerId;
-    private String isbn;
     private String title;
     private List<String> authors;
+    private String isbn;
     private String publisher;
-    private String thumbnail;
+    private String ownerId;
     private BookStatus status;
     private PrivacyLevel privacy;
+    private String thumbnail;
 
     BookDescriptor() {
     }
