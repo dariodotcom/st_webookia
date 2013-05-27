@@ -29,7 +29,8 @@ public class Loan implements Serializable, Storable {
         lentBookRef = new ModelRef<ConcreteBook>(ConcreteBook.class);
         borrowerFeedbackRef = new ModelRef<Feedback>(Feedback.class);
         ownerFeedbackRef = new ModelRef<Feedback>(Feedback.class);
-
+        date = new Date();
+        
         messagesRef =
             new InverseModelListRef<Message, Loan>(
                 Message.class,

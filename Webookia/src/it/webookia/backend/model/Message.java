@@ -19,6 +19,7 @@ public class Message implements Serializable, Storable {
 
     // Default constructor
     public Message() {
+        this.date = new Date();
         relativeLoanRef = new ModelRef<Loan>(Loan.class);
         authorRef = new ModelRef<UserEntity>(UserEntity.class);
     }
