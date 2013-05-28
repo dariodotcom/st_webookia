@@ -7,15 +7,26 @@ import it.webookia.backend.model.DetailedBook;
 import it.webookia.backend.model.Feedback;
 import it.webookia.backend.model.Loan;
 import it.webookia.backend.model.Message;
+import it.webookia.backend.model.UserEntity;
 
 public class DescriptorFactory {
+
+    public static UserDescriptor createUserDescriptor(UserEntity user) {
+        UserDescriptor descriptor = new UserDescriptor();
+
+        descriptor.setUserId(user.getUserId());
+        descriptor.setName(user.getName());
+        descriptor.setSurname(user.getSurname());
+
+        return descriptor;
+    }
 
     public static BookDescriptor createFullBookDescriptor(ConcreteBook book) {
         BookDescriptor descriptor = new BookDescriptor();
         DetailedBook details = book.getDetailedBook();
 
         descriptor.setId(book.getId());
-        descriptor.setOwnerId(book.getOwner().getUserName());
+        descriptor.setOwnerId(book.getOwner().getUserId());
         descriptor.setIsbn(details.getIsbn());
         descriptor.setAuthors(details.getAuthors());
         descriptor.setTitle(details.getTitle());
@@ -33,8 +44,8 @@ public class DescriptorFactory {
 
         descriptor.setId(loan.getId());
         descriptor.setBookId(loan.getId());
-        descriptor.setBorrowerId(loan.getBorrower().getUserName());
-        descriptor.setOwnerId(lentBook.getOwner().getUserName());
+        descriptor.setBorrowerId(loan.getBorrower().getUserId());
+        descriptor.setOwnerId(lentBook.getOwner().getUserId());
         descriptor.setStatus(loan.getStatus());
         descriptor.setStartDate(loan.getDate());
 
@@ -49,7 +60,7 @@ public class DescriptorFactory {
 
         for (Message m : inputList) {
             MessageDescriptor d = new MessageDescriptor();
-            d.setAuthorUsername(m.getAuthor().getUserName());
+            d.setAuthorUsername(m.getAuthor().getUserId());
             d.setDate(m.getDate());
             d.setText(m.getText());
             list.addDescriptor(d);

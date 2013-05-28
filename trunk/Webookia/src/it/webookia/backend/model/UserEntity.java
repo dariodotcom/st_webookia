@@ -20,6 +20,29 @@ public class UserEntity implements Serializable, Storable {
 
     private static final long serialVersionUID = 1L;
 
+    // Fields
+    @Attribute(primaryKey = true)
+    private Key key;
+
+    @Attribute(version = true)
+    private Long version;
+
+    @Attribute(lob = true)
+    private AccessToken token;
+
+    private String userId;
+    private String name;
+    private String surname;
+    private String location;
+    private String pictureUrl;
+
+    // Relationships
+    @Attribute(persistent = false)
+    private InverseModelListRef<ConcreteBook, UserEntity> booksRef;
+
+    @Attribute(persistent = false)
+    private InverseModelListRef<Notification, UserEntity> notificationsRef;
+
     // Default constructor
     public UserEntity() {
         this.booksRef =
@@ -36,24 +59,6 @@ public class UserEntity implements Serializable, Storable {
                 new Sort("date", SortDirection.DESCENDING));
     }
 
-    @Attribute(primaryKey = true)
-    private Key key;
-
-    @Attribute(version = true)
-    private Long version;
-
-    // Fields
-    private String userName;
-    @Attribute(lob = true)
-    private AccessToken token;
-
-    // Relationships
-    @Attribute(persistent = false)
-    private InverseModelListRef<ConcreteBook, UserEntity> booksRef;
-
-    @Attribute(persistent = false)
-    private InverseModelListRef<Notification, UserEntity> notificationsRef;
-
     // Storable
     @Override
     public String getId() {
@@ -69,12 +74,44 @@ public class UserEntity implements Serializable, Storable {
         this.token = token;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
     }
 
     public InverseModelListRef<ConcreteBook, UserEntity> getBooksRef() {
