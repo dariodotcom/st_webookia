@@ -5,22 +5,22 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement
-@XmlType(name = "user")
+@XmlType(name = "user", propOrder = { "userId", "name", "surname", "location" })
 public class UserDescriptor implements Descriptor {
 
-    private String username;
+    private String userId;
     private String name;
     private String surname;
     private String location;
 
     // Setters and Getters
-    @XmlElement(name = "username", required = true)
-    public String getUsername() {
-        return username;
+    @XmlElement(name = "userId", required = true)
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserId(String username) {
+        this.userId = username;
     }
 
     @XmlElement(name = "name", required = true)

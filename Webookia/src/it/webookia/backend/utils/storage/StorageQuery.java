@@ -34,11 +34,11 @@ public class StorageQuery {
      *            - the {@link UserEntity} identifier.
      * @return the {@link UserEntity} which has the given username.
      */
-    public static UserEntity getUserByUsername(String username) {
+    public static UserEntity getUserById(String username) {
         UserEntityMeta user = UserEntityMeta.get();
         return Datastore
             .query(user)
-            .filter(user.userName.equal(username))
+            .filter(user.userId.equal(username))
             .asSingle();
     }
 
@@ -52,9 +52,6 @@ public class StorageQuery {
      */
     public static List<UserEntity> getUsersByUsername(List<String> usernames) {
         UserEntityMeta user = UserEntityMeta.get();
-        return Datastore
-            .query(user)
-            .filter(user.userName.in(usernames))
-            .asList();
+        return Datastore.query(user).filter(user.userId.in(usernames)).asList();
     }
 }

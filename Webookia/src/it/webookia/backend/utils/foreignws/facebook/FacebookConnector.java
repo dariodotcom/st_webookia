@@ -12,7 +12,6 @@ import com.restfb.types.User;
 import com.restfb.Parameter;
 import com.sun.jersey.api.client.Client;
 
-import it.webookia.backend.descriptor.UserDescriptor;
 import it.webookia.backend.model.UserEntity;
 import it.webookia.backend.utils.Settings;
 import it.webookia.backend.utils.storage.StorageQuery;
@@ -33,7 +32,13 @@ public class FacebookConnector {
 
     // private AccessToken token;
     private FacebookClient graphAPIClient;
+    private User self;
 
+    /**
+     * Retrieves the url that leads to the Facebook login page
+     * 
+     * @return the url that leads to the Facebook login page
+     */
     public static String getOauthDialogUrl() {
         return String.format(oauthDialogPattern, appID, redirectUri);
     }
@@ -80,8 +85,12 @@ public class FacebookConnector {
      *            - the {@link AccessToken} of user to handle.
      */
     public FacebookConnector(AccessToken token) {
-        // this.token = token;
         this.graphAPIClient = new DefaultFacebookClient(token.toString());
+        this.self =
+            graphAPIClient.fetchObject(
+                "me",
+                User.class,
+                Parameter.with("fields", "first_name,last_name"));
     }
 
     /**
@@ -89,13 +98,26 @@ public class FacebookConnector {
      * 
      * @return the username linked with given access token.
      */
-    public String getUsername() {
-        User self =
-            graphAPIClient.fetchObject(
-                "me",
-                User.class,
-                Parameter.with("fields", "username"));
-        return self.getUsername();
+    public String getUserId() {
+        return self.getId();
+    }
+
+    /**
+     * Retrieves the user first name.
+     * 
+     * @return the user first name.
+     */
+    public String getFirstName() {
+        return self.getFirstName();
+    }
+
+    /**
+     * Retrieves the user last name.
+     * 
+     * @return the user last name.
+     */
+    public String getLastName() {
+        return self.getLastName();
     }
 
     /**
@@ -116,15 +138,4 @@ public class FacebookConnector {
 
         return StorageQuery.getUsersByUsername(friendsID);
     }
-
-    public UserDescriptor getUserDescriptor() {
-        UserDescriptor descriptor = new UserDescriptor();
-        User self = graphAPIClient.fetchObject("me", User.class);
-        descriptor.setUsername(self.getUsername());
-        descriptor.setName(self.getFirstName());
-        descriptor.setSurname(self.getLastName());
-        // descriptor.setLocation(self.getLocation().getName());
-        return descriptor;
-    }
-
 }
