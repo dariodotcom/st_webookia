@@ -38,35 +38,39 @@ public class ServiceServlet extends HttpServlet {
     @Override
     protected final void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        String actionName = getAction(req);
-        if (!getServices.keySet().contains(actionName)) {
-            throw new ServletException(String.format(
-                "No GET handler for action %s in context %s",
-                actionName,
-                contextName));
-        }
-
-        ServiceContext context = new ServiceContext(req, resp);
-        getServices.get(actionName).service(context);
+        runService(Verb.GET, req, resp);
     }
 
     @Override
     protected final void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        String actionName = getAction(req);
-        if (!postServices.keySet().contains(actionName)) {
-            throw new ServletException(String.format(
-                "No POST handler for action %s in context %s",
-                actionName,
-                contextName));
-        }
-
-        ServiceContext context = new ServiceContext(req, resp);
-        postServices.get(actionName).service(context);
+        runService(Verb.POST, req, resp);
     }
 
-    private String getAction(HttpServletRequest request)
-            throws ServletException {
+    private void runService(Verb verb, HttpServletRequest req,
+            HttpServletResponse resp) throws ServletException, IOException {
+        String actionName;
+        ServiceContext context = new ServiceContext(req, resp);
+
+        try {
+            actionName = getActionName(req);
+        } catch (IllegalArgumentException e) {
+            throw new ServletException(e);
+        }
+
+        Map<String, Service> servicePool =
+            verb.equals(Verb.GET) ? getServices : postServices;
+
+        if (!servicePool.keySet().contains(actionName)) {
+            throw new ServletException("No service found for action "
+                + actionName);
+        }
+
+        servicePool.get(actionName).service(context);
+    }
+
+    private String getActionName(HttpServletRequest request)
+            throws IllegalArgumentException {
         String requestURI = request.getRequestURI();
         String contextPath = request.getContextPath();
         String relativePath = requestURI.replace(contextPath, "");
@@ -74,15 +78,20 @@ public class ServiceServlet extends HttpServlet {
         Matcher m = requestPattern.matcher(relativePath);
 
         if (!m.matches()) {
-            throw new ServletException("Bad Request: " + relativePath);
+            throw new IllegalArgumentException("Bad request: " + relativePath);
         }
 
         String context = m.group(1), action = m.group(2);
 
         if (!context.equals(this.contextName)) {
-            throw new ServletException("Service context error: " + context);
+            throw new IllegalArgumentException("Service context error: "
+                + context);
         }
 
         return action;
+    }
+
+    private static enum Verb {
+        GET, POST
     }
 }
