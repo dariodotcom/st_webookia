@@ -94,7 +94,7 @@ public class LoanRest {
         public Response get() {
             try {
                 LoanResource loan = getContextLoan();
-                return ResponseFactory.createFrom(loan.getDescriptor());
+                return ResponseFactory.createFrom(loan.getFeedbacks());
             } catch (ResourceException e) {
                 return ResponseFactory.createFrom(e);
             }
