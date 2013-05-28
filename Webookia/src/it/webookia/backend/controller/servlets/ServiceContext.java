@@ -1,11 +1,11 @@
 package it.webookia.backend.controller.servlets;
 
+import it.webookia.backend.utils.ServletUtils;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class ServiceContext {
-
-    private static final String loggedUserAttribute = "LOGGED_ATTR";
 
     private HttpServletRequest request;
     private HttpServletResponse response;
@@ -18,11 +18,11 @@ public class ServiceContext {
     }
 
     public String getAuthenticatedUserId() {
-        return (String) request.getSession().getAttribute(loggedUserAttribute);
+        return ServletUtils.getAuthenticatedUsername(request);
     }
 
     public void setAuthenticatedUserId(String userID) {
-        request.getSession().setAttribute(loggedUserAttribute, userID);
+        ServletUtils.setAuthenticatedUsername(request, userID);
     }
 
     public Object getAttribute(String arg0) {

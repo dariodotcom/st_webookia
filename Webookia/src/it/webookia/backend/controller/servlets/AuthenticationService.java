@@ -45,8 +45,8 @@ public class AuthenticationService extends ServiceServlet {
                 context
                     .getResponse()
                     .getWriter()
-                    .println("Welcome back, " + userRes.getId());
-                context.setAuthenticatedUserId(userRes.getId());
+                    .println("Welcome back, " + userRes.getUserId());
+                context.setAuthenticatedUserId(userRes.getUserId());
                 // Redirect
 
             } else if (error != null) {
