@@ -1,7 +1,10 @@
 package it.webookia.backend.controller.resources;
 
+import java.util.List;
+
 import it.webookia.backend.controller.resources.exception.ResourceErrorType;
 import it.webookia.backend.controller.resources.exception.ResourceException;
+import it.webookia.backend.descriptor.DescriptorFactory;
 import it.webookia.backend.descriptor.UserDescriptor;
 import it.webookia.backend.model.UserEntity;
 import it.webookia.backend.utils.foreignws.facebook.AccessToken;
@@ -26,13 +29,15 @@ public class UserResource {
      */
     public static UserResource authenticateUser(AccessToken token) {
         FacebookConnector connector = new FacebookConnector(token);
-        String username = connector.getUsername();
-        UserEntity entity = StorageQuery.getUserByUsername(username);
+        String id = connector.getUserId();
+        UserEntity entity = StorageQuery.getUserById(id);
 
         if (entity == null) {
             entity = new UserEntity();
-            entity.setUserName(username);
+            entity.setUserId(id);
             entity.setToken(token);
+            entity.setName(connector.getFirstName());
+            entity.setSurname(connector.getLastName());
             userStorage.persist(entity);
         }
 
@@ -42,22 +47,47 @@ public class UserResource {
     /**
      * Returns an user given its username.
      * 
-     * @param username
-     *            - the username of the user.
+     * @param userId
+     *            - the user id of the user.
      * @return an instance of UserResource which allows to manage selected user,
      *         null if user doesn't exist.
      * @throws ResourceException
      *             if an user with given username doesn't exist.
      * */
-    public static UserResource getUser(String username)
-            throws ResourceException {
-        UserEntity user = StorageQuery.getUserByUsername(username);
+    public static UserResource getUser(String userId) throws ResourceException {
+        UserEntity user = StorageQuery.getUserById(userId);
         if (user == null) {
-            String message = "User " + username + " not found";
+            String message = "User " + userId + " not found";
             throw new ResourceException(ResourceErrorType.NOT_FOUND, message);
         }
 
         return new UserResource(user);
+    }
+
+    /**
+     * Iussues an update of fields with name contained in the given list,
+     * retrieving new value from facebook.
+     * 
+     * @param changedFields
+     *            - the list of the names of the fields to update.
+     */
+    public void updateFields(List<String> changedFields) {
+        FacebookConnector connector =
+            new FacebookConnector(decoratedUser.getToken());
+
+        if (changedFields.contains("first_name")) {
+            decoratedUser.setName(connector.getFirstName());
+        }
+
+        if (changedFields.contains("last_name")) {
+            decoratedUser.setSurname(connector.getLastName());
+        }
+
+        userStorage.persist(decoratedUser);
+    }
+
+    public UserDescriptor getDescriptor() {
+        return DescriptorFactory.createUserDescriptor(decoratedUser);
     }
 
     // User accessed through this instance of UserResource
@@ -84,15 +114,9 @@ public class UserResource {
         return connector.getFriends().contains(user);
     }
 
-    // Descriptor
-    public UserDescriptor getDescriptor() {
-        return new FacebookConnector(decoratedUser.getToken())
-            .getUserDescriptor();
-    }
-
     // Public methods
-    public String getUserName() {
-        return decoratedUser.getUserName();
+    public String getUserId() {
+        return decoratedUser.getUserId();
     }
 
     @Override
