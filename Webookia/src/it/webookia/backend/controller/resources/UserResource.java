@@ -39,6 +39,7 @@ public class UserResource {
             entity.setToken(token);
             entity.setName(connector.getFirstName());
             entity.setSurname(connector.getLastName());
+            entity.setLocation(connector.getLocation());
             userStorage.persist(entity);
         }
 
@@ -95,7 +96,9 @@ public class UserResource {
             decoratedUser.setSurname(connector.getLastName());
         }
 
-        // TODO [LOCALIZATION] Update user localization too.
+        if (changedFields.contains("location")) {
+            decoratedUser.setLocation(connector.getLocation());
+        }
 
         userStorage.persist(decoratedUser);
     }
