@@ -117,7 +117,7 @@ public class UserResource {
      * @return a {@link Descriptor} of received notifications.
      */
     public Descriptor getNotifications() {
-        // TODO implement searching of notification
+        // TODO [NOTIFICATION] Implement searching of notification
         return null;
     }
 

@@ -48,7 +48,7 @@ public class BookResource {
      * */
     public static BookResource createBook(String isbn, UserResource user)
             throws ResourceException {
-        // TODO check that user does not already have this book.
+        // TODO [BOOK] check that user does not already have this book.
 
         DetailedBook details = StorageQuery.getDetailedBookByISBN(isbn);
 
