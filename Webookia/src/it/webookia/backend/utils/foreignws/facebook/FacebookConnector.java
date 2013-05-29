@@ -14,7 +14,6 @@ import com.sun.jersey.api.client.Client;
 
 import it.webookia.backend.model.UserEntity;
 import it.webookia.backend.utils.Settings;
-import it.webookia.backend.utils.storage.StorageQuery;
 
 public class FacebookConnector {
 
@@ -77,14 +76,31 @@ public class FacebookConnector {
     }
 
     /**
-     * Constructs a new {@FacebookConnector} instance that
-     * can performs operations on the user profile corresponding to given
-     * {@link AccessToken}
+     * Creates a new {@FacebookConnector} instance that can
+     * performs operations on the user profile corresponding to given user
+     * 
+     * @param user
+     *            - the {@link UserEntity} whose profile to access.
+     * @return a new instance of {@link FacebookConnector}
+     */
+    public static FacebookConnector forUser(UserEntity user) {
+        return new FacebookConnector(user.getToken());
+    }
+
+    /**
+     * Creates a new {@FacebookConnector} instance that can
+     * performs operations on the user profile corresponding to given token
      * 
      * @param token
-     *            - the {@link AccessToken} of user to handle.
+     *            - the {@link AccessToken} corresponding to the user whose
+     *            profile to access.
+     * @return a new instance of {@link FacebookConnector}
      */
-    public FacebookConnector(AccessToken token) {
+    public static FacebookConnector forToken(AccessToken token) {
+        return new FacebookConnector(token);
+    }
+
+    private FacebookConnector(AccessToken token) {
         this.graphAPIClient = new DefaultFacebookClient(token.toString());
         this.self =
             graphAPIClient.fetchObject(
@@ -121,21 +137,19 @@ public class FacebookConnector {
     }
 
     /**
-     * Returns the list of friends of managed user retrieving friends' usernames
-     * from Facebook and then retrieving corresponding {@link UserEntity} from
-     * the storage.
+     * Returns the list of id of managed user's Facebook friends.
      * 
      * @return the list of this user friends.
      */
-    public List<UserEntity> getFriends() {
+    public List<String> getFriendIds() {
         Connection<User> friends =
             graphAPIClient.fetchConnection("/me/friends", User.class);
 
-        List<String> friendsID = new ArrayList<String>();
+        List<String> friendsId = new ArrayList<String>();
         for (User u : friends.getData()) {
-            friendsID.add(u.getUsername());
+            friendsId.add(u.getId());
         }
 
-        return StorageQuery.getUsersByUsername(friendsID);
+        return friendsId;
     }
 }
