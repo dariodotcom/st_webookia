@@ -94,6 +94,28 @@
 		<url-pattern>/authentication/*</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<servlet-name>Test</servlet-name>
+		<servlet-class>it.webookia.backend.controller.servlets.TestServlet
+		</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Test</servlet-name>
+		<url-pattern>/test</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>TemporaryHome</servlet-name>
+		<servlet-class>it.webookia.backend.controller.servlets.TemporaryHome
+		</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>TemporaryHome</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
 	<security-constraint>
 		<web-resource-collection>
 			<url-pattern>*.jsp</url-pattern>
