@@ -1,6 +1,7 @@
 package it.webookia.backend.model;
 
 import it.webookia.backend.utils.foreignws.facebook.AccessToken;
+import it.webookia.backend.utils.storage.Location;
 import it.webookia.backend.utils.storage.Storable;
 
 import java.io.Serializable;
@@ -33,8 +34,10 @@ public class UserEntity implements Serializable, Storable {
     private String userId;
     private String name;
     private String surname;
-    private String location;
     private String pictureUrl;
+
+    @Attribute(lob = true)
+    private Location location;
 
     // Relationships
     @Attribute(persistent = false)
@@ -98,20 +101,20 @@ public class UserEntity implements Serializable, Storable {
         this.surname = surname;
     }
 
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
     public String getPictureUrl() {
         return pictureUrl;
     }
 
     public void setPictureUrl(String pictureUrl) {
         this.pictureUrl = pictureUrl;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location userLocation) {
+        this.location = userLocation;
     }
 
     public InverseModelListRef<ConcreteBook, UserEntity> getBooksRef() {

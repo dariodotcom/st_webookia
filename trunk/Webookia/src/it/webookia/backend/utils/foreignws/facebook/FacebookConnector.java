@@ -8,12 +8,14 @@ import java.util.regex.Pattern;
 import com.restfb.Connection;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
+import com.restfb.types.Page;
 import com.restfb.types.User;
 import com.restfb.Parameter;
 import com.sun.jersey.api.client.Client;
 
 import it.webookia.backend.model.UserEntity;
 import it.webookia.backend.utils.Settings;
+import it.webookia.backend.utils.storage.Location;
 
 public class FacebookConnector {
 
@@ -151,5 +153,18 @@ public class FacebookConnector {
         }
 
         return friendsId;
+    }
+
+    public Location getLocation() {
+        User user =
+            graphAPIClient.fetchObject(
+                "me",
+                User.class,
+                Parameter.with("fields", "location"));
+        String id = user.getLocation().getId();
+        Page page = graphAPIClient.fetchObject(id, Page.class);
+        return new Location(page.getLocation().getLatitude(), page
+            .getLocation()
+            .getLongitude());
     }
 }
