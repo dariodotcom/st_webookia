@@ -8,10 +8,13 @@ import java.io.Serializable;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.Query.SortDirection;
 
 import org.slim3.datastore.Attribute;
+import org.slim3.datastore.InverseModelListRef;
 import org.slim3.datastore.Model;
 import org.slim3.datastore.ModelRef;
+import org.slim3.datastore.Sort;
 
 @Model(schemaVersion = 1)
 public class ConcreteBook implements Serializable, Storable {
@@ -23,6 +26,12 @@ public class ConcreteBook implements Serializable, Storable {
         detailedBookRef = new ModelRef<DetailedBook>(DetailedBook.class);
         reviewRef = new ModelRef<Review>(Review.class);
         ownerRef = new ModelRef<UserEntity>(UserEntity.class);
+        loansRef =
+            new InverseModelListRef<Loan, ConcreteBook>(
+                Loan.class,
+                "lentBookRef",
+                this,
+                new Sort("date", SortDirection.DESCENDING));
     }
 
     @Attribute(primaryKey = true)
@@ -41,7 +50,8 @@ public class ConcreteBook implements Serializable, Storable {
     private ModelRef<UserEntity> ownerRef;
 
     // Inverse relationship
-    // TODO add loan inverse relationship
+    @Attribute(persistent = false)
+    private InverseModelListRef<Loan, ConcreteBook> loansRef;
 
     // Storable
     @Override
@@ -75,6 +85,10 @@ public class ConcreteBook implements Serializable, Storable {
 
     public ModelRef<UserEntity> getOwnerRef() {
         return ownerRef;
+    }
+
+    public InverseModelListRef<Loan, ConcreteBook> getLoansRef() {
+        return loansRef;
     }
 
     // Relationships getters and setters
