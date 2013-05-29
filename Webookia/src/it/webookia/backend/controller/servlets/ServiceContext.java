@@ -18,11 +18,11 @@ public class ServiceContext {
     }
 
     public String getAuthenticatedUserId() {
-        return ServletUtils.getAuthenticatedUsername(request);
+        return ServletUtils.getAuthenticatedUserId(request);
     }
 
     public void setAuthenticatedUserId(String userID) {
-        ServletUtils.setAuthenticatedUsername(request, userID);
+        ServletUtils.setAuthenticatedUserId(request, userID);
     }
 
     public Object getAttribute(String arg0) {

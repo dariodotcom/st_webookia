@@ -55,7 +55,7 @@ public class BookRest {
     }
 
     private UserResource getRequestor() throws ResourceException {
-        String authUserName = ServletUtils.getAuthenticatedUsername(request);
+        String authUserName = ServletUtils.getAuthenticatedUserId(request);
         return UserResource.getUser(authUserName);
     }
 

@@ -30,7 +30,7 @@ public class LoanContext {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createLoan(LoanCreationRequest creationRequest) {
         String borrowerUsername =
-            ServletUtils.getAuthenticatedUsername(request);
+            ServletUtils.getAuthenticatedUserId(request);
         UserResource borrower;
         BookResource book;
 

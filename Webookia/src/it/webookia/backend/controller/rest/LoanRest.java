@@ -27,7 +27,7 @@ public class LoanRest {
     public LoanRest(String id, HttpServletRequest req) {
         super();
         this.loanId = id;
-        this.requestorUsername = ServletUtils.getAuthenticatedUsername(req);
+        this.requestorUsername = ServletUtils.getAuthenticatedUserId(req);
     }
 
     @GET

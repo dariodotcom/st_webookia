@@ -32,7 +32,7 @@ public class BookContext {
     public Response createBook(BookCreationRequest creationRequest) {
 
         String isbn = creationRequest.getIsbn();
-        String authUserName = ServletUtils.getAuthenticatedUsername(request);
+        String authUserName = ServletUtils.getAuthenticatedUserId(request);
 
         ResourceException ex = null;
 
