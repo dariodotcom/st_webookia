@@ -2,13 +2,12 @@ package it.webookia.backend.controller.rest;
 
 import it.webookia.backend.controller.resources.UserResource;
 import it.webookia.backend.controller.resources.exception.ResourceException;
-import it.webookia.backend.controller.rest.responses.JsonErrorResponse;
-import it.webookia.backend.controller.rest.responses.JsonResponse;
-import it.webookia.backend.controller.rest.responses.JsonSuccessResponse;
+import it.webookia.backend.controller.rest.responses.ResponseFactory;
 import it.webookia.backend.descriptor.Descriptor;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
 
 @Produces("application/json")
 public class UserRest {
@@ -20,13 +19,13 @@ public class UserRest {
     }
 
     @GET
-    public JsonResponse getUser() {
+    public Response getUser() {
         try {
             Descriptor descriptor =
                 UserResource.getUser(username).getDescriptor();
-            return new JsonSuccessResponse(descriptor);
+            return ResponseFactory.createFrom(descriptor);
         } catch (ResourceException e) {
-            return new JsonErrorResponse(e);
+            return ResponseFactory.createFrom(e);
         }
     }
 }
