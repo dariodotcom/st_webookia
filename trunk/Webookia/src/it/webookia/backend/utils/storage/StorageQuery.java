@@ -8,6 +8,7 @@ import it.webookia.backend.meta.DetailedBookMeta;
 import it.webookia.backend.meta.UserEntityMeta;
 import it.webookia.backend.model.DetailedBook;
 import it.webookia.backend.model.UserEntity;
+import it.webookia.backend.utils.foreignws.facebook.FacebookConnector;
 
 /**
  * Class that holds the logic behind queries to the storage so that specific
@@ -43,15 +44,16 @@ public class StorageQuery {
     }
 
     /**
-     * Queries the storage for a list of {@link UserEntity} given their
-     * usernames.
+     * Queries the storage for the list of {@link UserEntity} whose username is
+     * contained on a given list.
      * 
      * @param usernames
-     *            - the usernames of users to retrieve
+     *            - the list of user id's to search for.
      * @return a {@link List} of {@link UserEntity}.
      */
-    public static List<UserEntity> getUsersByUsername(List<String> usernames) {
-        UserEntityMeta user = UserEntityMeta.get();
-        return Datastore.query(user).filter(user.userId.in(usernames)).asList();
+    public static List<UserEntity> getUserFriends(UserEntity user) {
+        List<String> ids = FacebookConnector.forUser(user).getFriendIds();
+        UserEntityMeta userMeta = UserEntityMeta.get();
+        return Datastore.query(userMeta).filter(userMeta.userId.in(ids)).asList();
     }
 }
