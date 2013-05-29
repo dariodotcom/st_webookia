@@ -5,6 +5,7 @@ import it.webookia.backend.controller.resources.exception.ResourceException;
 import it.webookia.backend.descriptor.BookDescriptor;
 import it.webookia.backend.descriptor.DescriptorFactory;
 import it.webookia.backend.enums.BookStatus;
+import it.webookia.backend.enums.NotificationType;
 import it.webookia.backend.enums.PrivacyLevel;
 import it.webookia.backend.model.Comment;
 import it.webookia.backend.model.ConcreteBook;
@@ -205,6 +206,15 @@ public class BookResource {
         comment.setAuthor(author.getEntity());
         comment.setText(text);
         commentStorage.persist(comment);
+
+        // Send notification
+        UserEntity owner = decoratedBook.getOwner();
+        if (!author.matches(owner)) {
+            NotificationResource.createNotification(
+                new UserResource(owner),
+                NotificationType.NEW_REVIEW_COMMENT,
+                decoratedBook);
+        }
     }
 
     /**

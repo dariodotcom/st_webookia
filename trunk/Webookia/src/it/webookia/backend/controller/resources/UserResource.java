@@ -43,6 +43,22 @@ public class UserResource {
 
         return new UserResource(entity);
     }
+    
+    //FIXME Remove
+    public static UserResource authenticateUser(String id) {
+        UserEntity entity = StorageQuery.getUserById(id);
+
+        if (entity == null) {
+            entity = new UserEntity();
+            entity.setUserId(id);
+            entity.setToken(null);
+            entity.setName("claudia");
+            entity.setSurname("puzza");
+            userStorage.persist(entity);
+        }
+
+        return new UserResource(entity);
+    }
 
     /**
      * Returns an user given its username.

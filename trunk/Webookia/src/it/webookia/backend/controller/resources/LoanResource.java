@@ -6,6 +6,7 @@ import it.webookia.backend.descriptor.Descriptor;
 import it.webookia.backend.descriptor.DescriptorFactory;
 import it.webookia.backend.enums.BookStatus;
 import it.webookia.backend.enums.LoanStatus;
+import it.webookia.backend.enums.NotificationType;
 import it.webookia.backend.model.ConcreteBook;
 import it.webookia.backend.model.Feedback;
 import it.webookia.backend.model.Loan;
@@ -38,29 +39,38 @@ public class LoanResource {
      *             if an error occurs.
      */
     public static LoanResource createLoan(UserResource requestor,
-            BookResource book) throws ResourceException {
-        String bookId = book.getEntity().getId();
+            BookResource bookRes) throws ResourceException {
+        ConcreteBook book = bookRes.getEntity();
+        String bookId = book.getId();
 
-        if (!book.canBeSeenBy(requestor)) {
+        if (!bookRes.canBeSeenBy(requestor)) {
             String message = "you cannot ask for a loan of " + bookId;
             throw new ResourceException(
                 ResourceErrorType.UNAUTHORIZED_ACTION,
                 message);
         }
 
-        if (!book.canBeLentTo(requestor)) {
+        if (!bookRes.canBeLentTo(requestor)) {
             String message = "book " + bookId + " is not available for leaning";
             throw new ResourceException(
                 ResourceErrorType.RESOURCE_UNAVAILABLE,
                 message);
         }
 
+        // Create loan
         Loan loan = new Loan();
-        loan.setLentBook(book.getEntity());
+        loan.setLentBook(book);
         loan.setBorrower(requestor.getEntity());
         loan.setStatus(LoanStatus.INITIAL);
-
         loanStorage.persist(loan);
+
+        // Send notification
+        UserResource owner = new UserResource(book.getOwner());
+        NotificationResource.createNotification(
+            owner,
+            NotificationType.NEW_LOAN_REQUEST,
+            loan);
+
         return new LoanResource(loan);
     }
 
@@ -139,6 +149,13 @@ public class LoanResource {
             decoratedLoan.setStatus(LoanStatus.REFUSED);
         }
         loanStorage.persist(decoratedLoan);
+
+        // Send notification
+        UserResource borrower = new UserResource(decoratedLoan.getBorrower());
+        NotificationResource.createNotification(
+            borrower,
+            NotificationType.LOAN_STATUS_CHANGED,
+            decoratedLoan);
     }
 
     /**
@@ -167,6 +184,13 @@ public class LoanResource {
         assertLoanStatus(decoratedLoan, LoanStatus.ACCEPTED);
         decoratedLoan.setStatus(LoanStatus.SHIPPED);
         loanStorage.persist(decoratedLoan);
+
+        // Send notification
+        UserResource owner = new UserResource(lentBook.getOwner());
+        NotificationResource.createNotification(
+            owner,
+            NotificationType.LOAN_STATUS_CHANGED,
+            decoratedLoan);
     }
 
     /**
@@ -197,6 +221,13 @@ public class LoanResource {
         lentBookRes.changeStatus(BookStatus.AVAILABLE);
         decoratedLoan.setStatus(LoanStatus.GIVEN_BACK);
         loanStorage.persist(decoratedLoan);
+
+        // Send notification
+        UserResource borrower = new UserResource(decoratedLoan.getBorrower());
+        NotificationResource.createNotification(
+            borrower,
+            NotificationType.LOAN_STATUS_CHANGED,
+            decoratedLoan);
     }
 
     /**
@@ -224,6 +255,19 @@ public class LoanResource {
         msg.setLoan(decoratedLoan);
         msg.setText(messageText);
         messageStorage.persist(msg);
+
+        // Send notification to other customer
+        ConcreteBook book = decoratedLoan.getLentBook();
+        UserEntity owner = book.getOwner();
+        UserEntity borrower = decoratedLoan.getBorrower();
+
+        // Send notification
+        UserResource target =
+            new UserResource(author.matches(owner) ? borrower : owner);
+        NotificationResource.createNotification(
+            target,
+            NotificationType.NEW_LOAN_MESSAGE,
+            decoratedLoan);
     }
 
     /**
@@ -269,6 +313,14 @@ public class LoanResource {
 
         feedbackStorage.persist(feedback);
         loanStorage.persist(decoratedLoan);
+        
+        // Send notification
+        UserResource target =
+            new UserResource(requestor.matches(owner) ? borrower : owner);
+        NotificationResource.createNotification(
+            target,
+            NotificationType.LOAN_FEEDBACK_ADDED,
+            decoratedLoan);
     }
 
     /**
