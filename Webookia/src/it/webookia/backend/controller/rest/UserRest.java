@@ -5,7 +5,7 @@ import it.webookia.backend.controller.resources.exception.ResourceException;
 import it.webookia.backend.controller.rest.responses.JsonErrorResponse;
 import it.webookia.backend.controller.rest.responses.JsonResponse;
 import it.webookia.backend.controller.rest.responses.JsonSuccessResponse;
-import it.webookia.backend.descriptor.UserDescriptor;
+import it.webookia.backend.descriptor.Descriptor;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
@@ -22,7 +22,7 @@ public class UserRest {
     @GET
     public JsonResponse getUser() {
         try {
-            UserDescriptor descriptor =
+            Descriptor descriptor =
                 UserResource.getUser(username).getDescriptor();
             return new JsonSuccessResponse(descriptor);
         } catch (ResourceException e) {
