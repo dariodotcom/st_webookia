@@ -4,9 +4,13 @@ import java.util.List;
 
 import org.slim3.datastore.Datastore;
 
+import com.google.appengine.api.datastore.Key;
+
 import it.webookia.backend.meta.DetailedBookMeta;
+import it.webookia.backend.meta.NotificationMeta;
 import it.webookia.backend.meta.UserEntityMeta;
 import it.webookia.backend.model.DetailedBook;
+import it.webookia.backend.model.Notification;
 import it.webookia.backend.model.UserEntity;
 import it.webookia.backend.utils.foreignws.facebook.FacebookConnector;
 
@@ -54,6 +58,20 @@ public class StorageQuery {
     public static List<UserEntity> getUserFriends(UserEntity user) {
         List<String> ids = FacebookConnector.forUser(user).getFriendIds();
         UserEntityMeta userMeta = UserEntityMeta.get();
-        return Datastore.query(userMeta).filter(userMeta.userId.in(ids)).asList();
+        return Datastore
+            .query(userMeta)
+            .filter(userMeta.userId.in(ids))
+            .asList();
+    }
+
+    public static List<Notification> getNotificationOf(UserEntity user,
+            int limit) {
+        Key userKey = user.getKey();
+        NotificationMeta notification = NotificationMeta.get();
+        return Datastore
+            .query(notification)
+            .filter(notification.senderRef.equal(userKey))
+            .limit(limit)
+            .asList();
     }
 }

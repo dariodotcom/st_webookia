@@ -2,11 +2,13 @@ package it.webookia.backend.descriptor;
 
 import java.util.List;
 
+import it.webookia.backend.enums.NotificationType;
 import it.webookia.backend.model.ConcreteBook;
 import it.webookia.backend.model.DetailedBook;
 import it.webookia.backend.model.Feedback;
 import it.webookia.backend.model.Loan;
 import it.webookia.backend.model.Message;
+import it.webookia.backend.model.Notification;
 import it.webookia.backend.model.UserEntity;
 
 public class DescriptorFactory {
@@ -84,6 +86,38 @@ public class DescriptorFactory {
         }
 
         return descriptor;
+    }
+
+    public static Descriptor createNotificationList(List<Notification> input) {
+        ListDescriptor<NotificationDescriptor> output =
+            new ListDescriptor<NotificationDescriptor>();
+
+        for (Notification d : input) {
+            output.addDescriptor(createNotificationDescriptor(d));
+        }
+
+        return output;
+    }
+
+    private static NotificationDescriptor createNotificationDescriptor(
+            Notification notification) {
+        NotificationDescriptor d = new NotificationDescriptor();
+
+        d.setId(notification.getId());
+        d.setType(notification.getType());
+        d.setDate(notification.getDate().toString());// TODO format date
+        d.setAuthorId(notification.getSender().getUserId());
+        d.setContextId(notification.getTargetId());
+        d.setRead(notification.isRead());
+
+        NotificationType type = notification.getType();
+        if (type.equals(NotificationType.NEW_REVIEW_COMMENT)) {
+            d.setContextType("BOOK");
+        } else {
+            d.setContextType("LOAN");
+        }
+
+        return d;
     }
 
     private static SingleFeedbackDescriptor createSingleFeedbackDescriptor(
