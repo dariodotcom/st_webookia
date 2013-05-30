@@ -28,7 +28,7 @@ public class AuthenticationService extends ServiceServlet {
             String userId = context.getAuthenticatedUserId();
 
             if (userId != null) {
-                // TODO [SERVLET]  redirect to homepage
+                // TODO [SERVLET] redirect to homepage
                 context
                     .getResponse()
                     .getWriter()

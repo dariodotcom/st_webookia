@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import com.restfb.Connection;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
+import com.restfb.types.NamedFacebookType;
 import com.restfb.types.Page;
 import com.restfb.types.User;
 import com.restfb.Parameter;
@@ -67,6 +68,7 @@ public class FacebookConnector {
                 redirectUri,
                 appSecret,
                 oauthCode);
+
         String response = client.resource(url).get(String.class);
         Matcher matcher = successfulResponsePattern.matcher(response);
 
@@ -161,7 +163,13 @@ public class FacebookConnector {
                 "me",
                 User.class,
                 Parameter.with("fields", "location"));
-        String id = user.getLocation().getId();
+        NamedFacebookType loc = user.getLocation();
+
+        if (loc == null) {
+            return null;
+        }
+
+        String id = loc.getId();
         Page page = graphAPIClient.fetchObject(id, Page.class);
         return new Location(page.getLocation().getLatitude(), page
             .getLocation()
