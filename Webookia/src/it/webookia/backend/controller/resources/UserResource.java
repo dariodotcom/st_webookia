@@ -118,8 +118,17 @@ public class UserResource {
      * by the user.
      * 
      * @return a {@link Descriptor} of received notifications.
+     * @throws ResourceException
+     *             when requestor is not managed user.
      */
-    public Descriptor getNotifications() {
+    public Descriptor getNotifications(UserResource requestor)
+            throws ResourceException {
+        if (!requestor.matches(decoratedUser)) {
+            throw new ResourceException(
+                ResourceErrorType.UNAUTHORIZED_ACTION,
+                "You cannot see this user's notifications");
+        }
+
         // TODO [NOTIFICATION] Implement searching of notification
         return null;
     }
