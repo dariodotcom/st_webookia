@@ -21,8 +21,10 @@ import it.webookia.backend.utils.storage.Location;
 public class FacebookConnector {
 
     private final static String oauthDialogPattern =
-        "https://www.facebook.com/dialog/oauth?client_id=%s&redirect_uri=%s";
+        "https://www.facebook.com/dialog/oauth?client_id=%s&redirect_uri=%s&scope=%s";
     private final static String appID = "497944510260906";
+    private final static String SCOPE =
+        "user_about_me,user_location,friends_about_me,publish_stream";
     private final static String appSecret = "390ee5c96bcac601213ee28cc1915ddb";
     private final static String redirectUri = Settings.CURRENT_HOST
         + "/authentication/landing";
@@ -42,7 +44,7 @@ public class FacebookConnector {
      * @return the url that leads to the Facebook login page
      */
     public static String getOauthDialogUrl() {
-        return String.format(oauthDialogPattern, appID, redirectUri);
+        return String.format(oauthDialogPattern, appID, redirectUri, SCOPE);
     }
 
     /**
