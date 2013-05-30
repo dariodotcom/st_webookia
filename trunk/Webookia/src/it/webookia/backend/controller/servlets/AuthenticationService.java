@@ -6,6 +6,7 @@ import it.webookia.backend.utils.foreignws.facebook.FacebookConnector;
 import it.webookia.backend.utils.foreignws.facebook.OAuthException;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 
@@ -26,13 +27,11 @@ public class AuthenticationService extends ServiceServlet {
             String code = context.getParameter("code");
             String error = context.getParameter("error");
             String userId = context.getAuthenticatedUserId();
+            PrintWriter w = context.getResponse().getWriter();
 
             if (userId != null) {
                 // TODO [SERVLET] redirect to homepage
-                context
-                    .getResponse()
-                    .getWriter()
-                    .println("Already logged in, " + userId);
+                w.println("Already logged in, " + userId);
             } else if (code != null) {
                 AccessToken token;
                 try {
@@ -42,10 +41,12 @@ public class AuthenticationService extends ServiceServlet {
                 }
 
                 UserResource userRes = UserResource.authenticateUser(token);
-                context
-                    .getResponse()
-                    .getWriter()
-                    .println("Welcome back, " + userRes.getUserId());
+                w.println("Welcome back, " + userRes.getUserId());
+                String debugMsg = "\n</br><a href=\"%s\">Debug token</a>";
+                String url =
+                    "https://developers.facebook.com/tools/debug/access_token?q="
+                        + token;
+                w.println(String.format(debugMsg, url));
                 context.setAuthenticatedUserId(userRes.getUserId());
                 // Redirect
 
