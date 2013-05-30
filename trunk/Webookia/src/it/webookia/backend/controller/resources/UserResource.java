@@ -6,6 +6,7 @@ import it.webookia.backend.controller.resources.exception.ResourceErrorType;
 import it.webookia.backend.controller.resources.exception.ResourceException;
 import it.webookia.backend.descriptor.Descriptor;
 import it.webookia.backend.descriptor.DescriptorFactory;
+import it.webookia.backend.model.Notification;
 import it.webookia.backend.model.UserEntity;
 import it.webookia.backend.utils.foreignws.facebook.AccessToken;
 import it.webookia.backend.utils.foreignws.facebook.FacebookConnector;
@@ -129,8 +130,9 @@ public class UserResource {
                 "You cannot see this user's notifications");
         }
 
-        // TODO [NOTIFICATION] Implement searching of notification
-        return null;
+        List<Notification> list =
+            StorageQuery.getNotificationOf(decoratedUser, 15);
+        return DescriptorFactory.createNotificationList(list);
     }
 
     /**
