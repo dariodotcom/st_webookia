@@ -42,7 +42,7 @@ public class UserResource {
             entity.setLocation(connector.getLocation());
             userStorage.persist(entity);
         }
-
+        System.out.println(token);
         return new UserResource(entity);
     }
 
