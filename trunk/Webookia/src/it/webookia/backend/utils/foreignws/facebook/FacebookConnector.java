@@ -172,9 +172,12 @@ public class FacebookConnector {
         }
 
         String id = loc.getId();
+
         Page page = graphAPIClient.fetchObject(id, Page.class);
-        return new Location(page.getLocation().getLatitude(), page
-            .getLocation()
-            .getLongitude());
+        com.restfb.types.Location userLocation = page.getLocation();
+
+        return new Location(
+            userLocation.getLatitude(),
+            userLocation.getLongitude());
     }
 }
