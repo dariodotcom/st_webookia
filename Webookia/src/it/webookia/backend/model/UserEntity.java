@@ -34,6 +34,7 @@ public class UserEntity implements Serializable, Storable {
     private String userId;
     private String name;
     private String surname;
+    private String thumbnailUrl;
     private String pictureUrl;
 
     @Attribute(lob = true)
@@ -123,6 +124,14 @@ public class UserEntity implements Serializable, Storable {
 
     public InverseModelListRef<Notification, UserEntity> getNotificationsRef() {
         return notificationsRef;
+    }
+
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
+
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
     }
 
     // Relationships getters
