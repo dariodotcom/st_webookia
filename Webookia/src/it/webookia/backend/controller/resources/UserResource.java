@@ -6,6 +6,7 @@ import it.webookia.backend.controller.resources.exception.ResourceErrorType;
 import it.webookia.backend.controller.resources.exception.ResourceException;
 import it.webookia.backend.descriptor.Descriptor;
 import it.webookia.backend.descriptor.DescriptorFactory;
+import it.webookia.backend.descriptor.UserDescriptor;
 import it.webookia.backend.model.Notification;
 import it.webookia.backend.model.UserEntity;
 import it.webookia.backend.utils.foreignws.facebook.AccessToken;
@@ -41,6 +42,7 @@ public class UserResource {
             entity.setName(connector.getFirstName());
             entity.setSurname(connector.getLastName());
             entity.setLocation(connector.getLocation());
+            entity.setThumbnailUrl(connector.getThumbnail());
             userStorage.persist(entity);
         }
         System.out.println(token);
@@ -101,6 +103,10 @@ public class UserResource {
             decoratedUser.setLocation(connector.getLocation());
         }
 
+        if (changedFields.contains("picture")) {
+            decoratedUser.setThumbnailUrl(connector.getThumbnail());
+        }
+
         userStorage.persist(decoratedUser);
     }
 
@@ -110,7 +116,7 @@ public class UserResource {
      * 
      * @return a {@link Descriptor} of managed user.
      */
-    public Descriptor getDescriptor() {
+    public UserDescriptor getDescriptor() {
         return DescriptorFactory.createUserDescriptor(decoratedUser);
     }
 
