@@ -1,3 +1,6 @@
+/*
+ *	Webookia CSS.
+ */
 body.webookia {
 	background-color: rgb(247, 247, 247);
 }
@@ -20,12 +23,8 @@ body.webookia a:link {
 /* Header */
 #headerContainer {
 	height: 80px;
-	background: transparent url('../resources/heading.png') top left repeat;
+	background: transparent url('/resources/heading.png') top left repeat;
 	border-bottom: 1px solid #bbbbbb;
-}
-
-#header {
-	height: 58px;
 }
 
 /* Topbar */
@@ -68,12 +67,12 @@ body.webookia a:link {
 	font-size: 0px;
 	height: 28px;
 	width: 28px;
-	background: url('../resources/search.png') center center no-repeat;
+	background: url('/resources/search.png') center center no-repeat;
 	vertical-align: top;
 }
 
 #searchContainer .searchSubmit:hover {
-	background: url('../resources/search-hover.png') center center no-repeat;
+	background-image: url('/resources/search-hover.png');
 }
 
 /* User corner */
@@ -94,7 +93,7 @@ body.webookia a:link {
 }
 
 #fbLogin img {
-	background: transparent url('../resources/f.png');
+	background: transparent url('/resources/f.png');
 	height: 20px;
 	width: 10px;
 	vertical-align: text-top;
@@ -106,6 +105,20 @@ body.webookia a:link {
 	color: #f7f7f7;
 	font-size: 16px;
 	margin-left: 5px;
+}
+
+#userCorner .profilePicture{
+    height: 28px;
+    width: 28px;
+    border-radius: 2px;
+    border: 1px solid #bbbbbb;
+}
+
+#userCorner .username{
+    font-family: 'Alef';
+    color: #777777;
+    vertical-align: super;
+    margin-left: 5px;
 }
 
 /* Tabs*/
@@ -125,12 +138,12 @@ body.webookia a:link {
 	margin-right: 10px;
 }
 
-#menu .entry:not (.selected ){
-	border-color: transparent;
+#menu .entry:not(.selected){
+	border-color:transparent;
 	color: #a8a8a8;
 }
 
-#menu .entry:not (.selected ):hover {
+#menu .entry:not(.selected):hover {
 	border-color: #bbbbbb;
 	background-color: rgba(247, 247, 247, .5);
 }
@@ -141,14 +154,6 @@ body.webookia a:link {
 
 #menu .entry .tabLink {
 	color: #555555;
-}
-
-#menu .entry.selected .tabLink {
-	border-color: #3b5998;
-	color: #3b5998;
-}
-
-#menu .entry .tabLink {
 	font-family: 'Alef';
 	margin: 1px;
 	border-top: 2px solid transparent;
@@ -159,22 +164,28 @@ body.webookia a:link {
 	display: block;
 }
 
+#menu .entry.selected .tabLink {
+	border-color: #3b5998;
+	color: #3b5998;
+}
+
 /*Content*/
 #content {
 	min-height: 250px;
 }
 
-#swimContent a:not (.button ),#swimContent a:not (.button ):visited {
+#swimContent a:not  (.button  ),#swimContent a:not  (.button  ):visited
+	{
 	color: #555555;
 }
 
-#swimContent a:not (.button ):hover {
+#swimContent a:not  (.button  ):hover {
 	color: rgb(28, 120, 179) !important;
 }
 
 /*Logo*/
 #swimLogo:hover>img {
-	background-image: url('./resources/logo-hover.png');
+	background-image: url('/resources/heading.png');
 }
 
 /* User Awareness */
@@ -261,17 +272,76 @@ body.webookia a:link {
 	height: 42px;
 }
 
-#swimMenu .menuEntry:hover:not (.selected ){
-	background-image: url('resources/tab/hover-tab.png');
-}
+#swimMenu
+ 
+.menuEntry
+:hover
+:not
+ 
+(
+.selected
+ 
+){
+background-image
+:
+ 
+url
+('resources/tab/hover-tab
+.png
+');
 
+
+}
 #swimMenu .menuEntry.selected {
 	background-image: url('resources/tab/selected-tab.png');
 }
 
-#swimMenu .menuEntry:not (.selected ):not (:hover ) +.menuEntry:not (.selected
-	):not (:hover ){
-	background: url('resources/tab/separator.png') top left no-repeat;
+#swimMenu
+ 
+.menuEntry
+:not
+ 
+(
+.selected
+ 
+)
+:not
+ 
+(
+:hover
+ 
+)
++
+.menuEntry
+:not
+ 
+(
+.selected
+
+	
+)
+:not
+ 
+(
+:hover
+ 
+){
+background
+:
+ 
+url
+('resources/tab/separator
+.png
+')
+ 
+top
+ 
+left
+ 
+no-repeat
+;
+
+
 }
 
 /*tab title*/
@@ -283,7 +353,7 @@ body.webookia a:link {
 	margin-left: 4px;
 }
 
-#swimMenu .menuEntry:not (.selected ) .tabTitle {
+#swimMenu .menuEntry:not  (.selected  ) .tabTitle {
 	color: white;
 	text-shadow: 0 0 1px rgba(0, 0, 0, .9);
 }
@@ -292,8 +362,9 @@ body.webookia a:link {
 	cursor: default;
 }
 
-#swimMenu .menuEntry.selected .tabTitle,#swimMenu .menuEntry:hover:not (.selected
-	) .tabTitle {
+#swimMenu .menuEntry.selected .tabTitle,#swimMenu .menuEntry:hover:not 
+	(.selected
+	 ) .tabTitle {
 	color: #3d3d3d;
 	text-shadow: none;
 }
@@ -325,34 +396,47 @@ body.webookia a:link {
 }
 
 #swimMenu .menuEntry#home.selected .tabIcon,#swimMenu .menuEntry#home:hover:not
-	(.selected ) .tabIcon {
+	 (.selected  ) .tabIcon {
 	background-image: url('resources/icon/home-dark.png');
 }
 
 #swimMenu .menuEntry#search.selected .tabIcon,#swimMenu .menuEntry#search:hover:not
-	(.selected ) .tabIcon {
+	 (.selected  ) .tabIcon {
 	background-image: url('resources/icon/search-dark.png');
 }
 
 #swimMenu .menuEntry#works.selected .tabIcon,#swimMenu .menuEntry#works:hover:not
-	(.selected ) .tabIcon {
+	 (.selected  ) .tabIcon {
 	background-image: url('resources/icon/works-dark.png');
 }
 
 #swimMenu .menuEntry#feedbacks.selected .tabIcon,#swimMenu .menuEntry#feedbacks:hover:not
-	(.selected ) .tabIcon {
+	 (.selected  ) .tabIcon {
 	background-image: url('resources/icon/feedbacks-dark.png');
 }
 
 #swimMenu .menuEntry#friends.selected .tabIcon,#swimMenu .menuEntry#friends:hover:not
-	(.selected ) .tabIcon {
+	 (.selected  ) .tabIcon {
 	background-image: url('resources/icon/friends-dark.png');
 }
 
-p.paragraph:not (:last-child ){
-	margin-bottom: 25px;
-}
+p
+.paragraph
+:not
+ 
+(
+:last-child
+ 
+){
+margin-bottom
+:
+ 
+25
+px
+;
 
+
+}
 p.paragraph {
 	line-height: 25px;
 }
@@ -392,10 +476,24 @@ h1.pageTitle {
 	border-bottom: 1px solid #bbbbbb;
 }
 
-#swimContent .part:not (:last-child ){
-	margin-bottom: 35px;
-}
+#swimContent
+ 
+.part
+:not
+ 
+(
+:last-child
+ 
+){
+margin-bottom
+:
+ 
+35
+px
+;
 
+
+}
 h2.partTitle {
 	font-size: 20px;
 	color: #333333;
@@ -459,7 +557,7 @@ h2.partTitle {
 	cursor: default;
 }
 
-#swimSecondaryMenu .entry:hover:not (.selected ) .label {
+#swimSecondaryMenu .entry:hover:not  (.selected  ) .label {
 	border-color: rgba(0, 0, 0, .09);
 	background-color: rgba(255, 255, 255, .3);
 }
@@ -502,10 +600,26 @@ span.propertyValue {
 	line-height: 36px;
 }
 
-.propertyList .property .propertyValue:not (:last-child ){
-	margin-left: 15px;
-}
+.propertyList
+ 
+.property
+ 
+.propertyValue
+:not
+ 
+(
+:last-child
+ 
+){
+margin-left
+:
+ 
+15
+px
+;
 
+
+}
 .propertyList.withImage .property {
 	height: 34px;
 }
@@ -702,10 +816,25 @@ body.welcome .formContainer h2 {
 	line-height: 30px;
 }
 
-.profilePage #detailColumn .propertyValue:not (.unset ){
-	font-weight: bold;
-}
+.profilePage
+ 
+#detailColumn
+ 
+.propertyValue
+:not
+ 
+(
+.unset
+ 
+){
+font-weight
+:
+ 
+bold
+;
 
+
+}
 .profilePage #detailColumn .propertyValue.unset {
 	color: #acacac
 }
@@ -770,10 +899,28 @@ body.search .formContainer {
 	
 }
 
-.list .listEntry:not (:last-child ){
-	border-bottom: 1px solid #e1e1e1;
-}
+.list
+ 
+.listEntry
+:not
+ 
+(
+:last-child
+ 
+){
+border-bottom
+:
+ 
+1
+px
+ 
+solid
+ 
+#e1e1e1
+;
 
+
+}
 .list .listEntry:hover {
 	background-color: #f1f1f1;
 }
