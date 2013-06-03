@@ -1,7 +1,10 @@
 package it.webookia.backend.controller.servlets;
 
+import java.io.IOException;
+
 import it.webookia.backend.utils.ServletUtils;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -39,6 +42,10 @@ public class ServiceContext {
 
     public void setAttribute(String arg0, Object arg1) {
         request.setAttribute(arg0, arg1);
+    }
+
+    public void forwardToJsp(Jsp jsp) throws ServletException, IOException {
+        request.getRequestDispatcher(jsp.getUrl()).forward(request, response);
     }
 
     // Standard getters

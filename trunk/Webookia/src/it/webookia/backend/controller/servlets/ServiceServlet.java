@@ -15,10 +15,13 @@ public class ServiceServlet extends HttpServlet {
 
     private static final long serialVersionUID = -6364544534456443497L;
     private static final Pattern requestPattern = Pattern
-        .compile("/([a-z|A-Z]+)/([a-z|A-Z]*)[.]*");
+        .compile("/(([a-z|A-Z]+)/([a-z|A-Z]*)[.]*)?");
 
     private Map<String, Service> getServices;
     private Map<String, Service> postServices;
+    private Service defaultGetService;
+    private Service defaultPostService;
+
     private String contextName;
 
     protected ServiceServlet(String section) {
@@ -27,12 +30,25 @@ public class ServiceServlet extends HttpServlet {
         this.contextName = section;
     }
 
-    protected final void registerGetService(String action, Service service) {
-        this.getServices.put(action, service);
+    protected final void registerDefaultService(Verb verb, Service service) {
+        if (verb.equals(Verb.GET)) {
+            this.defaultGetService = service;
+        } else {
+            this.defaultPostService = service;
+        }
     }
 
-    protected final void registerPostService(String action, Service service) {
-        this.postServices.put(action, service);
+    protected final void registerService(Verb verb, String action,
+            Service service) {
+        if (contextName.equals("")) {
+            throw new IllegalStateException(
+                "Default context service cannot register non-default services");
+        }
+
+        Map<String, Service> target =
+            verb.equals(Verb.GET) ? getServices : postServices;
+
+        target.put(action, service);
     }
 
     @Override
@@ -58,15 +74,32 @@ public class ServiceServlet extends HttpServlet {
             throw new ServletException(e);
         }
 
-        Map<String, Service> servicePool =
-            verb.equals(Verb.GET) ? getServices : postServices;
+        if (!actionName.equals("")) {
+            Map<String, Service> servicePool =
+                verb.equals(Verb.GET) ? getServices : postServices;
 
-        if (!servicePool.keySet().contains(actionName)) {
-            throw new ServletException("No service found for action "
-                + actionName);
+            if (!servicePool.keySet().contains(actionName)) {
+                throw new ServletException("No service found for action "
+                    + actionName);
+            }
+
+            servicePool.get(actionName).service(context);
+        } else {
+            Service defaultService;
+
+            if (verb.equals(Verb.GET)) {
+                defaultService = defaultGetService;
+            } else {
+                defaultService = defaultPostService;
+            }
+
+            if (defaultService == null) {
+                throw new ServletException("No default service for "
+                    + contextName);
+            }
+
+            defaultService.service(context);
         }
-
-        servicePool.get(actionName).service(context);
     }
 
     private String getActionName(HttpServletRequest request)
@@ -81,7 +114,8 @@ public class ServiceServlet extends HttpServlet {
             throw new IllegalArgumentException("Bad request: " + relativePath);
         }
 
-        String context = m.group(1), action = m.group(2);
+        String context = (m.group(2) == null ? "" : m.group(2));
+        String action = (m.group(3) == null ? "" : m.group(3));
 
         if (!context.equals(this.contextName)) {
             throw new IllegalArgumentException("Service context error: "
@@ -89,9 +123,5 @@ public class ServiceServlet extends HttpServlet {
         }
 
         return action;
-    }
-
-    private static enum Verb {
-        GET, POST
     }
 }
