@@ -180,4 +180,15 @@ public class FacebookConnector {
             userLocation.getLatitude(),
             userLocation.getLongitude());
     }
+
+    public String getThumbnail() {
+        Picture p =
+            graphAPIClient.fetchObject(
+                "me/picture",
+                Picture.class,
+                Parameter.with("redirect", false),
+                Parameter.with("height", 30),
+                Parameter.with("width", 30));
+        return p.getUrl();
+    }
 }
