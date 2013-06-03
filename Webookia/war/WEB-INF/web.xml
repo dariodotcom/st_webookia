@@ -95,25 +95,14 @@
 	</servlet-mapping>
 
 	<servlet>
-		<servlet-name>Test</servlet-name>
-		<servlet-class>it.webookia.backend.controller.servlets.TestServlet
+		<servlet-name>Home</servlet-name>
+		<servlet-class>it.webookia.backend.controller.servlets.Home
 		</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>Test</servlet-name>
-		<url-pattern>/test</url-pattern>
-	</servlet-mapping>
-
-	<servlet>
-		<servlet-name>TemporaryHome</servlet-name>
-		<servlet-class>it.webookia.backend.controller.servlets.TemporaryHome
-		</servlet-class>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>TemporaryHome</servlet-name>
-		<url-pattern>/</url-pattern>
+		<servlet-name>Home</servlet-name>
+		<url-pattern>/home/</url-pattern>
 	</servlet-mapping>
 
 	<security-constraint>
