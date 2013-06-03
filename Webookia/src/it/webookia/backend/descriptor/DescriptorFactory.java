@@ -19,7 +19,7 @@ public class DescriptorFactory {
         descriptor.setUserId(user.getUserId());
         descriptor.setName(user.getName());
         descriptor.setSurname(user.getSurname());
-
+        descriptor.setThumbnail(user.getThumbnailUrl());
         return descriptor;
     }
 
