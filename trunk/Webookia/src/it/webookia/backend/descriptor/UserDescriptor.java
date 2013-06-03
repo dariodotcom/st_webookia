@@ -12,6 +12,7 @@ public class UserDescriptor implements Descriptor {
     private String name;
     private String surname;
     private String location;
+    private String thumbnail;
 
     // Setters and Getters
     @XmlElement(name = "userId", required = true)
@@ -50,4 +51,12 @@ public class UserDescriptor implements Descriptor {
         this.location = location;
     }
 
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    @XmlElement(name = "thumbnail")
+    public void setThumbnail(String thumbnailUrl) {
+        this.thumbnail = thumbnailUrl;
+    }
 }
