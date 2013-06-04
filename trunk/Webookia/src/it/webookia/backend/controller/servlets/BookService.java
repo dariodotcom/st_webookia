@@ -60,6 +60,22 @@ public class BookService extends ServiceServlet {
         @Override
         public void service(ServiceContext context) throws ServletException,
                 IOException {
+                String isbn = context.getRequestParameter("isbn");
+                UserResource user = context.getAuthenticatedUserId();
+                
+                try {
+                   
+                    UserResource requestor = UserResource.getUser(user);
+                    BookResource book = BookResource.createBook(isbn, requestor );
+                    String id = book.getDescriptor().getId();
+                    String newUrl = "/books/detail?id="+id;
+                    context.sendRedirect(newUrl);
+                    
+                }
+                catch (ResourceException e) {
+                    context.sendError(e);
+                    return;
+                }
 
         }
     }
