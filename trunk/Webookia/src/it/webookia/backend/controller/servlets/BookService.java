@@ -9,6 +9,11 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
+/**
+ * 
+ * This is the servlet which manages the books, allowing the creation,search,detail.
+ *
+ */
 public class BookService extends ServiceServlet {
 
     private static final long serialVersionUID = -7169462947426225834L;
@@ -19,8 +24,7 @@ public class BookService extends ServiceServlet {
         super("books");
         registerService(Verb.POST, "create", new BookCreation());
         registerService(Verb.GET, "search", new BookSearch());
-        registerService(Verb.GET, "detail", new BookSearch());
-        registerService(Verb.GET, "detail", new BookSearch());
+        registerService(Verb.GET, "detail", new BookDetail());
     }
 
     public class BookDetail implements Service {
@@ -61,7 +65,7 @@ public class BookService extends ServiceServlet {
         public void service(ServiceContext context) throws ServletException,
                 IOException {
                 String isbn = context.getRequestParameter("isbn");
-                UserResource user = context.getAuthenticatedUserId();
+                String user = context.getAuthenticatedUserId();
                 
                 try {
                    
