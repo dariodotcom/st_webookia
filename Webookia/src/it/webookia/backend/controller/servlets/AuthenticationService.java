@@ -23,8 +23,8 @@ public class AuthenticationService extends ServiceServlet {
         public void service(ServiceContext context) throws ServletException,
                 IOException {
 
-            String code = context.getParameter("code");
-            String error = context.getParameter("error");
+            String code = context.getRequestParameter("code");
+            String error = context.getRequestParameter("error");
             String userId = context.getAuthenticatedUserId();
 
             if (userId != null) {
