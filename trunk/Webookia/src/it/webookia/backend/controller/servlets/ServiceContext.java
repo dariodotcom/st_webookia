@@ -2,6 +2,7 @@ package it.webookia.backend.controller.servlets;
 
 import java.io.IOException;
 
+import it.webookia.backend.controller.resources.exception.ResourceException;
 import it.webookia.backend.utils.ServletUtils;
 
 import javax.servlet.ServletException;
@@ -28,7 +29,7 @@ public class ServiceContext {
         ServletUtils.setAuthenticatedUserId(request, userID);
     }
 
-    public Object getAttribute(String arg0) {
+    public Object getRequestAttribute(String arg0) {
         return request.getAttribute(arg0);
     }
 
@@ -36,16 +37,20 @@ public class ServiceContext {
         return request.getContextPath();
     }
 
-    public String getParameter(String arg0) {
+    public String getRequestParameter(String arg0) {
         return request.getParameter(arg0);
     }
 
-    public void setAttribute(String arg0, Object arg1) {
+    public void setRequestAttribute(String arg0, Object arg1) {
         request.setAttribute(arg0, arg1);
     }
 
     public void forwardToJsp(Jsp jsp) throws ServletException, IOException {
         request.getRequestDispatcher(jsp.getUrl()).forward(request, response);
+    }
+
+    public void sendError(ResourceException e) {
+        // TODO: Implement error sending
     }
 
     // Standard getters
