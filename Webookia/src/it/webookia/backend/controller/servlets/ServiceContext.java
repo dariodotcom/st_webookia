@@ -54,6 +54,10 @@ public class ServiceContext {
     public void setAuthenticatedUserId(String userID) {
         ServletUtils.setAuthenticatedUserId(request, userID);
     }
+    
+    public String getConcreteBookId(){
+        return ServletUtils.getConcreteBookId(request);
+    }
 
     /**
      * Retrieves an attribute from the request.

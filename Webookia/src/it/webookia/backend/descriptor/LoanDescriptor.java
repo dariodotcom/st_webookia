@@ -24,6 +24,9 @@ public class LoanDescriptor implements Descriptor {
     private String bookId;
     private LoanStatus status;
     private Date startDate;
+    
+    LoanDescriptor(){   
+    }
 
     @XmlElement(name = "id")
     public String getId() {
