@@ -55,39 +55,94 @@ public class ServiceContext {
         ServletUtils.setAuthenticatedUserId(request, userID);
     }
 
+    /**
+     * Retrieves an attribute from the request.
+     * 
+     * @param - the key associated with the attribute.
+     * @return - the attribute retrieved from the request.
+     */
     public Object getRequestAttribute(String arg0) {
         return request.getAttribute(arg0);
     }
 
-    public String getContextPath() {
-        return request.getContextPath();
-    }
-
-    public String getRequestParameter(String arg0) {
-        return request.getParameter(arg0);
-    }
-
+    /**
+     * Adds an attribute in the request.
+     * 
+     * @param - the key which will be linked to the attribute
+     * @param - the attribute to add.
+     */
     public void setRequestAttribute(String arg0, Object arg1) {
         request.setAttribute(arg0, arg1);
     }
 
+    /**
+     * Returns the request context path.
+     * 
+     * @return the request context path.
+     */
+    public String getContextPath() {
+        return request.getContextPath();
+    }
+
+    /**
+     * Retrieves a parameter from the request.
+     * 
+     * @param - the parameter key.
+     * @return - the parameter.
+     */
+    public String getRequestParameter(String arg0) {
+        return request.getParameter(arg0);
+    }
+
+    /**
+     * Forward this request to a jsp.
+     * 
+     * @param - the JSP to forward the page to.
+     * @throws ServletException
+     *             - if an error occurs.
+     * @throws IOException
+     *             - if an error occurs.
+     */
     public void forwardToJsp(Jsp jsp) throws ServletException, IOException {
         request.getRequestDispatcher(jsp.getUrl()).forward(request, response);
     }
 
+    /**
+     * Send an error response to the user.
+     * 
+     * @param e
+     *            - the {@link ResourceException} that caused the error.
+     */
     public void sendError(ResourceException e) {
         // TODO: Implement error sending
     }
 
+    /**
+     * Redirects a request to a new url.
+     * 
+     * @param newUrl
+     *            - the url to which to redirect the request.
+     * @throws IOException
+     *             - if an error occurs.
+     */
     public void sendRedirect(String newUrl) throws IOException {
         response.sendRedirect(newUrl);
     }
 
-    // Standard getters
+    /**
+     * Retrieves the contained {@link HttpServletRequest}
+     * 
+     * @return - the {@link HttpServletRequest}
+     */
     public HttpServletRequest getRequest() {
         return request;
     }
 
+    /**
+     * Retrieves the contained {@link HttpServletResponse}
+     * 
+     * @return - the {@link HttpServletResponse}
+     */
     public HttpServletResponse getResponse() {
         return response;
     }
