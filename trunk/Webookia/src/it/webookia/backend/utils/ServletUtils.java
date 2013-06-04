@@ -8,6 +8,7 @@ public class ServletUtils {
 
     private static final String AUTH_USER = "AUTH_USER";
     private static final String AUTH_USER_DESCRIPTOR = "AUTH_USER_DESCRIPTOR";
+    private static final String CONCRETE_BOOK = "CONCRETE_BOOK";
 
     public static String getAuthenticatedUserId(HttpServletRequest req) {
         return (String) req.getSession().getAttribute(AUTH_USER);
@@ -15,6 +16,14 @@ public class ServletUtils {
 
     public static void setAuthenticatedUserId(HttpServletRequest req, String id) {
         req.getSession().setAttribute(AUTH_USER, id);
+    }
+    
+    public static String getConcreteBookId(HttpServletRequest req){
+        return (String) req.getSession().getAttribute("CONCRETE_BOOK");
+    }
+    
+    public static void setConcreteBookId(HttpServletRequest req, String id){
+        req.getSession().setAttribute(CONCRETE_BOOK, id);
     }
 
     public static UserDescriptor getLoggedUserDescriptor(

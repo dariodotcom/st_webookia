@@ -14,6 +14,7 @@ import it.webookia.backend.model.Message;
 import it.webookia.backend.model.UserEntity;
 import it.webookia.backend.utils.storage.Mark;
 import it.webookia.backend.utils.storage.StorageFacade;
+import it.webookia.backend.descriptor.LoanDescriptor;
 
 public class LoanResource {
 
@@ -328,7 +329,7 @@ public class LoanResource {
      * 
      * @return a {@link Descriptor} that describes the managed book.
      */
-    public Descriptor getDescriptor() {
+    public LoanDescriptor getDescriptor() {
         return DescriptorFactory.createLoanDescriptor(decoratedLoan);
     }
 
