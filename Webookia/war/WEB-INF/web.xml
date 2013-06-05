@@ -105,6 +105,17 @@
 		<url-pattern>/home/</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<servlet-name>Books</servlet-name>
+		<servlet-class>it.webookia.backend.controller.servlets.BookService
+		</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Books</servlet-name>
+		<url-pattern>/books/*</url-pattern>
+	</servlet-mapping>
+
 	<security-constraint>
 		<web-resource-collection>
 			<url-pattern>*.jsp</url-pattern>

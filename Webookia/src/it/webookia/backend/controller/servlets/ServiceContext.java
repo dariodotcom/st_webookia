@@ -116,9 +116,10 @@ public class ServiceContext {
      * 
      * @param e
      *            - the {@link ResourceException} that caused the error.
+     * @throws ServletException
      */
-    public void sendError(ResourceException e) {
-        // TODO: Implement error sending
+    public void sendError(ResourceException e) throws ServletException {
+        throw new ServletException(e);
     }
 
     /**

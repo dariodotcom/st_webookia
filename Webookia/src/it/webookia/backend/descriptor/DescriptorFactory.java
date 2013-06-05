@@ -99,6 +99,16 @@ public class DescriptorFactory {
         return output;
     }
 
+    public static ListDescriptor<BookDescriptor> createBookListDescriptor(
+            List<ConcreteBook> books) {
+        ListDescriptor<BookDescriptor> descriptor =
+            new ListDescriptor<BookDescriptor>();
+        for (ConcreteBook b : books) {
+            descriptor.addDescriptor(createFullBookDescriptor(b));
+        }
+        return descriptor;
+    }
+
     private static NotificationDescriptor createNotificationDescriptor(
             Notification notification) {
         NotificationDescriptor d = new NotificationDescriptor();

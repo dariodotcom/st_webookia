@@ -21,15 +21,38 @@ public class BookService extends ServiceServlet {
 
     public static final String CONTEXT_BOOK = "CONTEXT_BOOK";
 
+    public static final String BOOKLIST_ATTR = "BOOKLIST";
+
     /**
      * This is the constructor of the class, depending on the user invoked
      * service.
      */
     public BookService() {
         super("books");
+        registerDefaultService(Verb.GET, new BookLanding());
         registerService(Verb.POST, "create", new BookCreation());
         registerService(Verb.GET, "search", new BookSearch());
         registerService(Verb.GET, "detail", new BookDetail());
+    }
+
+    public class BookLanding implements Service {
+
+        @Override
+        public void service(ServiceContext context) throws ServletException,
+                IOException {
+            String userId = context.getAuthenticatedUserId();
+            UserResource user;
+
+            try {
+                user = UserResource.getUser(userId);
+            } catch (ResourceException e) {
+                context.sendError(e);
+                return;
+            }
+
+            context.setRequestAttribute(BOOKLIST_ATTR, user.getUserBooks());
+            context.forwardToJsp(Jsp.BOOK_JSP);
+        }
     }
 
     /**

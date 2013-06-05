@@ -4,8 +4,10 @@ import java.util.List;
 
 import it.webookia.backend.controller.resources.exception.ResourceErrorType;
 import it.webookia.backend.controller.resources.exception.ResourceException;
+import it.webookia.backend.descriptor.BookDescriptor;
 import it.webookia.backend.descriptor.Descriptor;
 import it.webookia.backend.descriptor.DescriptorFactory;
+import it.webookia.backend.descriptor.ListDescriptor;
 import it.webookia.backend.descriptor.UserDescriptor;
 import it.webookia.backend.model.Notification;
 import it.webookia.backend.model.UserEntity;
@@ -118,6 +120,11 @@ public class UserResource {
      */
     public UserDescriptor getDescriptor() {
         return DescriptorFactory.createUserDescriptor(decoratedUser);
+    }
+
+    public ListDescriptor<BookDescriptor> getUserBooks() {
+        return DescriptorFactory.createBookListDescriptor(decoratedUser
+            .getOwnedBooks());
     }
 
     /**
