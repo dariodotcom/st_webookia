@@ -3,7 +3,7 @@ package it.webookia.backend.controller.servlets;
 public enum Jsp {
 
     HOME("/home.jsp"),
-    BOOK_JSP("/book.jsp");
+    BOOK_JSP("/books.jsp");
 
     private String url;
 
