@@ -68,12 +68,6 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
-	<servlet>
-		<servlet-name>Authentication</servlet-name>
-		<servlet-class>it.webookia.backend.controller.servlets.AuthenticationService
-		</servlet-class>
-	</servlet>
-
 	<servlet-mapping>
 		<servlet-name>GlobalTransactionServlet</servlet-name>
 		<url-pattern>/slim3/gtx</url-pattern>
@@ -89,25 +83,59 @@
 		<url-pattern>/api/*</url-pattern>
 	</servlet-mapping>
 
+	<!-- Webookia services -->
+	<!-- Authentication -->
+	<servlet>
+		<servlet-name>Authentication</servlet-name>
+		<servlet-class>it.webookia.backend.controller.services.Authentication
+		</servlet-class>
+	</servlet>
+	
 	<servlet-mapping>
 		<servlet-name>Authentication</servlet-name>
 		<url-pattern>/authentication/*</url-pattern>
 	</servlet-mapping>
 
+	<!-- Home -->
 	<servlet>
 		<servlet-name>Home</servlet-name>
-		<servlet-class>it.webookia.backend.controller.servlets.Home
+		<servlet-class>it.webookia.backend.controller.services.Home
 		</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
 		<servlet-name>Home</servlet-name>
-		<url-pattern>/home/</url-pattern>
+		<url-pattern>/home/*</url-pattern>
+	</servlet-mapping>
+	
+	<!-- Home -->
+	<servlet>
+		<servlet-name>Dashboard</servlet-name>
+		<servlet-class>it.webookia.backend.controller.services.Dashboard
+		</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Dashboard</servlet-name>
+		<url-pattern>/dashboard/*</url-pattern>
 	</servlet-mapping>
 
+	<!-- Users -->
+	<servlet>
+		<servlet-name>Users</servlet-name>
+		<servlet-class>it.webookia.backend.controller.services.Users
+		</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Users</servlet-name>
+		<url-pattern>/users/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- Books -->
 	<servlet>
 		<servlet-name>Books</servlet-name>
-		<servlet-class>it.webookia.backend.controller.servlets.BookService
+		<servlet-class>it.webookia.backend.controller.services.Books
 		</servlet-class>
 	</servlet>
 
@@ -116,6 +144,18 @@
 		<url-pattern>/books/*</url-pattern>
 	</servlet-mapping>
 
+	<!-- Loans -->
+	<servlet>
+		<servlet-name>Loans</servlet-name>
+		<servlet-class>it.webookia.backend.controller.services.Loans
+		</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Loans</servlet-name>
+		<url-pattern>/loans/*</url-pattern>
+	</servlet-mapping>
+	
 	<security-constraint>
 		<web-resource-collection>
 			<url-pattern>*.jsp</url-pattern>
