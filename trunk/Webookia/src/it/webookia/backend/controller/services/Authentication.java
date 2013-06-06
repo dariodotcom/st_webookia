@@ -19,10 +19,11 @@ public class Authentication extends ServiceServlet {
 
     public Authentication() {
         super("authentication");
-        super.registerService(Verb.GET, "landing", new LoginLanding());
+        super.registerService(Verb.GET, "login", new LoginService());
+        super.registerService(Verb.GET, "logout", new LogoutService());
     }
 
-    private class LoginLanding implements Service {
+    private class LoginService implements Service {
         @Override
         public void service(ServiceContext context) throws ServletException,
                 IOException {
@@ -38,7 +39,8 @@ public class Authentication extends ServiceServlet {
                 try {
                     token = FacebookConnector.performOauthValidation(code);
                 } catch (OAuthException o) {
-                    throw new ServletException(o);
+                    throw new ServletException(o); // TODO Converto into a
+                                                   // Resource Exception
                 }
 
                 UserResource userRes = UserResource.authenticateUser(token);
@@ -50,6 +52,15 @@ public class Authentication extends ServiceServlet {
             } else {
                 throw new ServletException("Not a response from facebook");
             }
+        }
+    }
+
+    private class LogoutService implements Service {
+        @Override
+        public void service(ServiceContext context) throws ServletException,
+                IOException {
+            context.setAuthenticatedUserId(null);
+            context.sendRedirect("/home/");
         }
     }
 }
