@@ -13,11 +13,11 @@ import it.webookia.backend.controller.services.impl.ServiceContext;
 import it.webookia.backend.controller.services.impl.ServiceServlet;
 import it.webookia.backend.controller.services.impl.Verb;
 
-public class LoanService extends ServiceServlet {
+public class Loans extends ServiceServlet {
 
     private static final long serialVersionUID = 2335276930451134433L;
 
-    public LoanService() {
+    public Loans() {
         super("loan");
         registerService(Verb.POST, "create", new LoanCreation());
     }

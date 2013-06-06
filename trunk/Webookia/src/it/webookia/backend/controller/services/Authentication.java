@@ -13,11 +13,11 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
-public class AuthenticationService extends ServiceServlet {
+public class Authentication extends ServiceServlet {
 
     private static final long serialVersionUID = 4703628228514306116L;
 
-    public AuthenticationService() {
+    public Authentication() {
         super("authentication");
         super.registerService(Verb.GET, "landing", new LoginLanding());
     }

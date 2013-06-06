@@ -20,7 +20,7 @@ import javax.servlet.ServletException;
  * detail.
  * 
  */
-public class BookService extends ServiceServlet {
+public class Books extends ServiceServlet {
 
     private static final long serialVersionUID = -7169462947426225834L;
 
@@ -32,7 +32,7 @@ public class BookService extends ServiceServlet {
      * This is the constructor of the class, depending on the user invoked
      * service.
      */
-    public BookService() {
+    public Books() {
         super("books");
         registerDefaultService(Verb.GET, new BookLanding());
         registerService(Verb.POST, "create", new BookCreation());

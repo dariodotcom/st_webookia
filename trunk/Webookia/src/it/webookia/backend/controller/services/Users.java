@@ -8,11 +8,11 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
-public class UserService extends ServiceServlet {
+public class Users extends ServiceServlet {
 
     private static final long serialVersionUID = 351675044359094818L;
 
-    protected UserService() {
+    protected Users() {
         super("user");
         // TODO Auto-generated constructor stub
     }
