@@ -27,7 +27,7 @@ public class FacebookConnector {
         "user_about_me,user_location,friends_about_me,publish_stream";
     private final static String appSecret = "390ee5c96bcac601213ee28cc1915ddb";
     private final static String redirectUri = Settings.CURRENT_HOST
-        + "/authentication/landing";
+        + "/authentication/login";
 
     private final static Pattern successfulResponsePattern = Pattern
         .compile("access_token=([a-z|A-Z|0-9]+)&expires=([0-9]+)");
