@@ -4,6 +4,8 @@ import it.webookia.backend.controller.resources.exception.ResourceErrorType;
 import it.webookia.backend.controller.resources.exception.ResourceException;
 import it.webookia.backend.descriptor.BookDescriptor;
 import it.webookia.backend.descriptor.DescriptorFactory;
+import it.webookia.backend.descriptor.ReviewDescriptor;
+import it.webookia.backend.descriptor.UserDescriptor;
 import it.webookia.backend.enums.BookStatus;
 import it.webookia.backend.enums.NotificationType;
 import it.webookia.backend.enums.PrivacyLevel;
@@ -113,6 +115,29 @@ public class BookResource {
     }
 
     // Public methods
+
+    boolean canBeLentTo(UserResource user) {
+        UserEntity owner = decoratedBook.getOwner();
+        BookStatus status = decoratedBook.getStatus();
+
+        if (user.matches(owner)) {
+            return false;
+        } else if (!canBeSeenBy(user)) {
+            return false;
+        } else if (!status.equals(BookStatus.AVAILABLE)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public boolean isOwner(UserResource user) {
+        if (user == null) {
+            return false;
+        }
+        return user.matches(decoratedBook.getOwner());
+    }
+
     /**
      * Change book status. It is only possible to change the status meanwhile a
      * book is not lent and it can't be changed into lent directly by the user.
@@ -227,6 +252,28 @@ public class BookResource {
         return DescriptorFactory.createFullBookDescriptor(decoratedBook);
     }
 
+    /**
+     * Retrieves a representation of the review of managed book.
+     * 
+     * @return a {@link ReviewDescriptor} that describes the review of managed
+     *         book.
+     */
+    public ReviewDescriptor getReview() {
+        Review review = decoratedBook.getReview();
+        return DescriptorFactory.createReviewDescriptor(review);
+    }
+
+    /**
+     * Retrieves a representation of the owner of managed book.
+     * 
+     * @return a {@link UserDescriptor} that describes the owner of the managed
+     *         book.
+     */
+    public UserDescriptor getOwner() {
+        UserEntity owner = decoratedBook.getOwner();
+        return DescriptorFactory.createUserDescriptor(owner);
+    }
+
     // Resource methods
     boolean canBeSeenBy(UserResource user) {
         PrivacyLevel privacy = decoratedBook.getPrivacy();
@@ -242,22 +289,6 @@ public class BookResource {
         } else {
             return false;
         }
-    }
-
-    boolean canBeLentTo(UserResource user) {
-        UserEntity owner = decoratedBook.getOwner();
-        BookStatus status = decoratedBook.getStatus();
-
-        if (user.matches(owner)) {
-            return false;
-        } else if (!canBeSeenBy(user)) {
-            return false;
-        } else if (!status.equals(BookStatus.AVAILABLE)) {
-            return false;
-        } else {
-            return true;
-        }
-
     }
 
     ConcreteBook getEntity() {
