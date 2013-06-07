@@ -62,6 +62,10 @@ public class UserResource {
      *             if an user with given username doesn't exist.
      * */
     public static UserResource getUser(String userId) throws ResourceException {
+        if (userId == null) {
+            return null;
+        }
+
         UserEntity user = StorageQuery.getUserById(userId);
         if (user == null) {
             String message = "User " + userId + " not found";
