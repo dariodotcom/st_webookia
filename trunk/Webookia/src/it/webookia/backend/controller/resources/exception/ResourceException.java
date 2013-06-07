@@ -35,7 +35,9 @@ public class ResourceException extends Exception {
      *            - the {@link Throwable} that triggered the error.
      */
     public ResourceException(ResourceErrorType errorType, Throwable cause) {
-        super(errorType.getFriendlyText(), cause);
+        super(
+            errorType.getFriendlyText() + " - " + cause.getLocalizedMessage(),
+            cause);
         this.errorType = errorType;
     }
 
