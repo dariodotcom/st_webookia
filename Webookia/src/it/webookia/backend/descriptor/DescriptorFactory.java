@@ -9,6 +9,7 @@ import it.webookia.backend.model.Feedback;
 import it.webookia.backend.model.Loan;
 import it.webookia.backend.model.Message;
 import it.webookia.backend.model.Notification;
+import it.webookia.backend.model.Review;
 import it.webookia.backend.model.UserEntity;
 
 public class DescriptorFactory {
@@ -137,5 +138,13 @@ public class DescriptorFactory {
         descriptor.setDate(feedback.getDate());
         descriptor.setText(feedback.getText());
         return descriptor;
+    }
+
+    public static ReviewDescriptor createReviewDescriptor(Review review) {
+        if (review == null) {
+            return null;
+        }
+
+        return new ReviewDescriptor(review);
     }
 }
