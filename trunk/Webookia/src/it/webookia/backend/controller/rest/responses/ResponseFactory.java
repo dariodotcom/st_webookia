@@ -1,5 +1,6 @@
 package it.webookia.backend.controller.rest.responses;
 
+import it.webookia.backend.controller.resources.exception.ResourceErrorType;
 import it.webookia.backend.controller.resources.exception.ResourceException;
 import it.webookia.backend.descriptor.Descriptor;
 
@@ -35,6 +36,14 @@ public class ResponseFactory {
     }
 
     public static Response createFrom(Descriptor descriptor) {
+        if (descriptor == null) {
+            ResourceException e =
+                new ResourceException(
+                    ResourceErrorType.NOT_FOUND,
+                    "Element not found");
+            return createFrom(e);
+        }
+
         JsonResponse resp = new JsonSuccessResponse(descriptor);
         return Response.ok().entity(resp).build();
     }

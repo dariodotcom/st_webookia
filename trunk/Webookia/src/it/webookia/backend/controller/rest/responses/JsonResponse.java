@@ -23,7 +23,7 @@ public abstract class JsonResponse {
         return result;
     }
 
-    @XmlElement(name = "descriptor")
+    @XmlElement(name = "descriptor", nillable = false)
     public Descriptor getDescriptor() {
         return descriptor;
     }
