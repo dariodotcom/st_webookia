@@ -96,7 +96,10 @@ public class BookResource {
 
         BookResource bookResource = new BookResource(book);
 
-        if (!bookResource.canBeSeenBy(requestor)) {
+        if (requestor == null
+            && bookResource.getDescriptor().getPrivacy() == PrivacyLevel.PUBLIC) {
+            return bookResource;
+        } else if (!bookResource.canBeSeenBy(requestor)) {
             String message = "not authorized to access requested book";
             throw new ResourceException(
                 ResourceErrorType.UNAUTHORIZED_ACTION,
