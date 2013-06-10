@@ -5,6 +5,7 @@ import it.webookia.backend.controller.services.impl.Service;
 import it.webookia.backend.controller.services.impl.ServiceContext;
 import it.webookia.backend.controller.services.impl.ServiceServlet;
 import it.webookia.backend.controller.services.impl.Verb;
+import it.webookia.backend.utils.servlets.Context;
 
 import java.io.IOException;
 
@@ -15,7 +16,7 @@ public class Home extends ServiceServlet {
     private static final long serialVersionUID = 6199421201754122052L;
 
     public Home() {
-        super("home");
+        super(Context.HOME);
         registerDefaultService(Verb.GET, new HomeService());
     }
 
