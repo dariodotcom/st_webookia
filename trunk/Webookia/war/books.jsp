@@ -1,12 +1,14 @@
-<%@page import="it.webookia.backend.controller.servlets.BookService"%>
+<%@page import="it.webookia.backend.controller.services.Books"%>
 <%@page import="it.webookia.backend.descriptor.BookDescriptor"%>
 <%@page import="it.webookia.backend.descriptor.ListDescriptor"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 
+<%@ include file="shared/commons.jsp"%>
+
 <%
 	ListDescriptor<BookDescriptor> books = (ListDescriptor<BookDescriptor>) request
-			.getAttribute(BookService.BOOKLIST_ATTR);
+			.getAttribute(Books.BOOKLIST_ATTR);
 %>
 
 <!doctype html>
@@ -68,7 +70,8 @@
 								}
 						%>
 						<div class="bookPresentation">
-							<img class="bookPicture"
+							<img
+								class="bookPicture"
 								src="http://www.oasidellibro.it/wp-content/uploads/2010/04/Il-Signore-Degli-Anelli.jpg" />
 							<div class="bookInfo">
 								<div class="title"><%=b.getTitle()%></div>
@@ -77,6 +80,7 @@
 									<span class="privacy <%=privacyClass%>"><%=privacyText%></span>
 									<span class="status <%=statusClass%>"><%=statusText%></span>
 								</div>
+								<div class="bookView"><%=viewLinkFor(ConcreteBook.class, b.getId())%></div>
 							</div>
 						</div>
 						<%
