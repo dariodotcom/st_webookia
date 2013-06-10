@@ -20,7 +20,8 @@ public class ReviewDescriptor implements Descriptor {
     private String text;
     private List<CommentDescriptor> comments;
 
-    public ReviewDescriptor(Review review) {
+    /* Constructor */
+    ReviewDescriptor(Review review) {
         comments = new ArrayList<CommentDescriptor>();
         date = review.getDate();
         mark = review.getMark().intValue();

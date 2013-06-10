@@ -1,8 +1,8 @@
 package it.webookia.backend.descriptor;
 
 import it.webookia.backend.enums.LoanStatus;
-
-import java.util.Date;
+import it.webookia.backend.model.Loan;
+import it.webookia.backend.utils.Settings;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -23,9 +23,15 @@ public class LoanDescriptor implements Descriptor {
     private String borrowerId;
     private String bookId;
     private LoanStatus status;
-    private Date startDate;
-    
-    LoanDescriptor(){   
+    private String startDate;
+
+    LoanDescriptor(Loan loan) {
+        this.id = loan.getId();
+        this.bookId = loan.getLentBook().getId();
+        this.borrowerId = loan.getBorrower().getUserId();
+        this.ownerId = loan.getLentBook().getOwner().getUserId();
+        this.status = loan.getStatus();
+        this.startDate = Settings.DATE_FORMAT.format(loan.getDate());
     }
 
     @XmlElement(name = "id")
@@ -74,11 +80,11 @@ public class LoanDescriptor implements Descriptor {
     }
 
     @XmlElement(name = "startDate")
-    public Date getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    void setStartDate(Date date) {
+    void setStartDate(String date) {
         this.startDate = date;
     }
 }

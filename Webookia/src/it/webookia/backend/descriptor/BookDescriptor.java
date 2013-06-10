@@ -2,8 +2,9 @@ package it.webookia.backend.descriptor;
 
 import it.webookia.backend.enums.BookStatus;
 import it.webookia.backend.enums.PrivacyLevel;
-
-import java.util.List;
+import it.webookia.backend.model.ConcreteBook;
+import it.webookia.backend.model.DetailedBook;
+import it.webookia.backend.utils.CollectionUtils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -24,7 +25,7 @@ public class BookDescriptor implements Descriptor {
 
     private String id;
     private String title;
-    private List<String> authors;
+    private String authors;
     private String isbn;
     private String publisher;
     private String ownerId;
@@ -32,7 +33,19 @@ public class BookDescriptor implements Descriptor {
     private PrivacyLevel privacy;
     private String thumbnail;
 
-    BookDescriptor() {
+    /* Constructor */
+    BookDescriptor(ConcreteBook book) {
+        DetailedBook details = book.getDetailedBook();
+
+        id = book.getId();
+        ownerId = book.getOwner().getUserId();
+        isbn = details.getIsbn();
+        authors = CollectionUtils.join(details.getAuthors(), ", ");
+        title = details.getTitle();
+        publisher = details.getPublisher();
+        thumbnail = details.getThumbnail();
+        status = book.getStatus();
+        privacy = book.getPrivacy();
     }
 
     @XmlElement(name = "id")
@@ -66,7 +79,7 @@ public class BookDescriptor implements Descriptor {
     }
 
     @XmlElement(name = "authors")
-    public List<String> getAuthors() {
+    public String getAuthors() {
         return authors;
     }
 
@@ -93,7 +106,7 @@ public class BookDescriptor implements Descriptor {
         this.title = title;
     }
 
-    void setAuthors(List<String> authors) {
+    void setAuthors(String authors) {
         this.authors = authors;
     }
 

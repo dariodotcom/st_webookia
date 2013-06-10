@@ -1,23 +1,32 @@
 package it.webookia.backend.descriptor;
 
-import java.util.Date;
+import it.webookia.backend.model.Feedback;
+import it.webookia.backend.utils.Settings;
+import it.webookia.backend.utils.storage.Mark;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlType(name = "feedbackDescriptor")
 public class SingleFeedbackDescriptor implements Descriptor {
-    private int Mark;
+    private int mark;
     private String text;
-    private Date date;
+    private String date;
+
+    /* Descriptor */
+    SingleFeedbackDescriptor(Feedback feedback) {
+        mark = Mark.valueOf(feedback.getMark());
+        text = feedback.getText();
+        date = Settings.DATE_FORMAT.format(feedback.getDate());
+    }
 
     @XmlElement(name = "mark")
     public int getMark() {
-        return Mark;
+        return mark;
     }
 
     public void setMark(int mark) {
-        Mark = mark;
+        this.mark = mark;
     }
 
     @XmlElement(name = "text")
@@ -30,11 +39,11 @@ public class SingleFeedbackDescriptor implements Descriptor {
     }
 
     @XmlElement(name = "date")
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 }
