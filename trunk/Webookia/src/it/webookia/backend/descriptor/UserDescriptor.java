@@ -59,4 +59,8 @@ public class UserDescriptor implements Descriptor {
     public void setThumbnail(String thumbnailUrl) {
         this.thumbnail = thumbnailUrl;
     }
+
+    public String getFullName() {
+        return name + " " + surname;
+    }
 }

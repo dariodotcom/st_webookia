@@ -1,6 +1,8 @@
 package it.webookia.backend.descriptor;
 
 import it.webookia.backend.enums.NotificationType;
+import it.webookia.backend.model.Notification;
+import it.webookia.backend.utils.Settings;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -14,9 +16,17 @@ public class NotificationDescriptor implements Descriptor {
     private NotificationType type;
     private String date;
     private String authorId;
-    private String contextType;
     private String contextId;
     private boolean read;
+
+    /* Constructor */
+    NotificationDescriptor(Notification notification) {
+        id = notification.getId();
+        type = notification.getType();
+        date = Settings.DATE_FORMAT.format(notification.getDate());
+        authorId = notification.getSender().getId();
+        contextId = notification.getTargetId();
+    }
 
     @XmlElement(name = "id")
     public String getId() {
@@ -52,15 +62,6 @@ public class NotificationDescriptor implements Descriptor {
 
     public void setAuthorId(String authorId) {
         this.authorId = authorId;
-    }
-
-    @XmlElement(name = "context")
-    public String getContextType() {
-        return contextType;
-    }
-
-    public void setContextType(String contextType) {
-        this.contextType = contextType;
     }
 
     @XmlElement(name = "contextId")

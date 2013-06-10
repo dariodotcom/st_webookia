@@ -11,6 +11,12 @@ public class LoanFeedbackDescriptor implements Descriptor {
     private SingleFeedbackDescriptor ownerFeedback;
     private SingleFeedbackDescriptor borrowerFeedback;
 
+    LoanFeedbackDescriptor(SingleFeedbackDescriptor ownerFeedback,
+            SingleFeedbackDescriptor borrowerFeedback) {
+        this.ownerFeedback = ownerFeedback;
+        this.borrowerFeedback = borrowerFeedback;
+    }
+
     @XmlElement(name = "ownerFeedback")
     public SingleFeedbackDescriptor getOwnerFeedback() {
         return ownerFeedback;
