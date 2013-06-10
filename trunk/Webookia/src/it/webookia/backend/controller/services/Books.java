@@ -8,7 +8,6 @@ import it.webookia.backend.controller.services.impl.Service;
 import it.webookia.backend.controller.services.impl.ServiceContext;
 import it.webookia.backend.controller.services.impl.ServiceServlet;
 import it.webookia.backend.controller.services.impl.Verb;
-import it.webookia.backend.descriptor.BookDescriptor;
 
 import java.io.IOException;
 
@@ -78,9 +77,8 @@ public class Books extends ServiceServlet {
             try {
                 UserResource requestor = UserResource.getUser(requestorId);
                 BookResource book = BookResource.getBook(bookId, requestor);
-                BookDescriptor descriptor = book.getDescriptor();
-                context.setRequestAttribute(CONTEXT_BOOK, descriptor);
-                context.forwardToJsp(Jsp.BOOK_JSP);
+                context.setRequestAttribute(CONTEXT_BOOK, book);
+                context.forwardToJsp(Jsp.BOOK_DETAIL_JSP);
             } catch (ResourceException e) {
                 context.sendError(e);
                 return;
