@@ -11,10 +11,10 @@ public class ServletUtils {
 
     private static final String AUTH_USER = "AUTH_USER";
     private static final String AUTH_USER_DESCRIPTOR = "AUTH_USER_DESCRIPTOR";
-    private static final String CONCRETE_BOOK = "CONCRETE_BOOK";
 
     /* Authenticate userd id getters and setters */
     public static String getAuthenticatedUserId(HttpServletRequest req) {
+
         return (String) req.getSession().getAttribute(AUTH_USER);
     }
 
@@ -29,14 +29,6 @@ public class ServletUtils {
         } catch (ResourceException e) {
             throw new ServletException(e);
         }
-    }
-
-    public static String getConcreteBookId(HttpServletRequest req) {
-        return (String) req.getSession().getAttribute("CONCRETE_BOOK");
-    }
-
-    public static void setConcreteBookId(HttpServletRequest req, String id) {
-        req.getSession().setAttribute(CONCRETE_BOOK, id);
     }
 
     public static UserDescriptor getLoggedUserDescriptor(
@@ -58,6 +50,11 @@ public class ServletUtils {
             Class<T> attributeType, String attributeName)
             throws ServletException {
         Object obj = request.getAttribute(attributeName);
+
+        if (obj == null) {
+            return null;
+        }
+
         try {
             return attributeType.cast(obj);
         } catch (ClassCastException e) {
