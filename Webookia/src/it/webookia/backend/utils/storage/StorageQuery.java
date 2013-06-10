@@ -1,17 +1,23 @@
 package it.webookia.backend.utils.storage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slim3.datastore.Datastore;
+import org.slim3.datastore.ModelQuery;
 
 import com.google.appengine.api.datastore.Key;
 
 import it.webookia.backend.meta.DetailedBookMeta;
+import it.webookia.backend.meta.LoanMeta;
 import it.webookia.backend.meta.NotificationMeta;
 import it.webookia.backend.meta.UserEntityMeta;
+import it.webookia.backend.model.ConcreteBook;
 import it.webookia.backend.model.DetailedBook;
+import it.webookia.backend.model.Loan;
 import it.webookia.backend.model.Notification;
 import it.webookia.backend.model.UserEntity;
+import it.webookia.backend.utils.Settings;
 import it.webookia.backend.utils.foreignws.facebook.FacebookConnector;
 
 /**
@@ -73,5 +79,25 @@ public class StorageQuery {
             .filter(notification.senderRef.equal(userKey))
             .limit(limit)
             .asList();
+    }
+
+    public static List<Loan> getUserReceivedLoans(UserEntity receiver, int page) {
+        List<ConcreteBook> books = receiver.getOwnedBooks();
+        List<Loan> loans = new ArrayList<Loan>();
+        for (ConcreteBook b : books) {
+            loans.addAll(b.getLoansRef().getModelList());
+        }
+        return loans; // TODO do it better :(
+    }
+
+    public static List<Loan> getUserSentLoans(UserEntity sender, int page) {
+        LoanMeta loan = LoanMeta.get();
+        ModelQuery<Loan> query = Datastore.query(loan);
+        query.filter(loan.borrowerRef.equal(sender.getKey()));
+        if (page > 0) {
+            query.offset(page * Settings.LOAN_PAGINATION_SIZE);
+        }
+        query.limit(Settings.LOAN_PAGINATION_SIZE);
+        return query.asList();
     }
 }
