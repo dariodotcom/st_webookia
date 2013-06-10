@@ -24,6 +24,22 @@ public class Mark implements Serializable {
     public static final int MAX_VALUE = 5;
 
     /**
+     * Retrieves the integer value of given Mark
+     * 
+     * @param mark
+     *            - the mark
+     * @return - the {@link Mark} integer value unless it's null, null in this
+     *         case.
+     */
+    public static Integer valueOf(Mark mark) {
+        if (mark == null) {
+            return null;
+        } else {
+            return mark.intValue();
+        }
+    }
+
+    /**
      * Constructs a new mark given its numerical value. This value can range
      * between MIN_VALUE and MAX_VALUE, otherwise a
      * {@link IllegalArgumentException} will be thrown.
