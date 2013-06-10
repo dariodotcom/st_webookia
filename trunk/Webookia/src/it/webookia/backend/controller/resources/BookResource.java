@@ -96,10 +96,7 @@ public class BookResource {
 
         BookResource bookResource = new BookResource(book);
 
-        if (requestor == null
-            && bookResource.getDescriptor().getPrivacy() == PrivacyLevel.PUBLIC) {
-            return bookResource;
-        } else if (!bookResource.canBeSeenBy(requestor)) {
+        if (!bookResource.canBeSeenBy(requestor)) {
             String message = "not authorized to access requested book";
             throw new ResourceException(
                 ResourceErrorType.UNAUTHORIZED_ACTION,
@@ -123,11 +120,17 @@ public class BookResource {
         UserEntity owner = decoratedBook.getOwner();
         BookStatus status = decoratedBook.getStatus();
 
-        if (user.matches(owner)) {
+        if (user == null) {
+            System.out.println("User is null");
+            return false;
+        } else if (user.matches(owner)) {
+            System.out.println("Cannot ask yourself a book");
             return false;
         } else if (!canBeSeenBy(user)) {
+            System.out.println("You can't see this book");
             return false;
         } else if (!status.equals(BookStatus.AVAILABLE)) {
+            System.out.println("Book is not available");
             return false;
         } else {
             return true;
@@ -182,7 +185,7 @@ public class BookResource {
         UserEntity bookOwner = decoratedBook.getOwner();
         Mark mark;
 
-        if (!author.matches(bookOwner)) {
+        if (author == null || !author.matches(bookOwner)) {
             String message = "Only the author can add a review";
             throw new ResourceException(
                 ResourceErrorType.UNAUTHORIZED_ACTION,
@@ -225,6 +228,13 @@ public class BookResource {
             throws ResourceException {
         Review bookReview = decoratedBook.getReview();
 
+        if (author == null) {
+            String message = "Login required to post a comment";
+            throw new ResourceException(
+                ResourceErrorType.UNAUTHORIZED_ACTION,
+                message);
+        }
+
         if (bookReview == null) {
             String message = "book doesn't have a review";
             throw new ResourceException(ResourceErrorType.NOT_FOUND, message);
@@ -233,6 +243,7 @@ public class BookResource {
         Comment comment = new Comment();
         comment.setAuthor(author.getEntity());
         comment.setText(text);
+        comment.setReview(bookReview);
         commentStorage.persist(comment);
 
         // Send notification
@@ -284,6 +295,8 @@ public class BookResource {
 
         if (privacy.equals(PrivacyLevel.PUBLIC)) {
             return true;
+        } else if (user == null) {
+            return false;
         } else if (user.matches(owner)) {
             return true;
         } else if (privacy.equals(PrivacyLevel.FRIENDS_ONLY)
