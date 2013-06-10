@@ -4,6 +4,9 @@ import it.webookia.backend.controller.resources.exception.ResourceErrorType;
 import it.webookia.backend.controller.resources.exception.ResourceException;
 import it.webookia.backend.descriptor.Descriptor;
 import it.webookia.backend.descriptor.DescriptorFactory;
+import it.webookia.backend.descriptor.ListDescriptor;
+import it.webookia.backend.descriptor.LoanFeedbackDescriptor;
+import it.webookia.backend.descriptor.MessageDescriptor;
 import it.webookia.backend.enums.BookStatus;
 import it.webookia.backend.enums.LoanStatus;
 import it.webookia.backend.enums.NotificationType;
@@ -66,11 +69,11 @@ public class LoanResource {
         loanStorage.persist(loan);
 
         // Send notification
-        UserResource owner = new UserResource(book.getOwner());
-        NotificationResource.createNotification(
-            owner,
-            NotificationType.NEW_LOAN_REQUEST,
-            loan);
+        // UserResource owner = new UserResource(book.getOwner());
+        // NotificationResource.createNotification(
+        // owner,
+        // NotificationType.NEW_LOAN_REQUEST,
+        // loan);
 
         return new LoanResource(loan);
     }
@@ -314,7 +317,7 @@ public class LoanResource {
 
         feedbackStorage.persist(feedback);
         loanStorage.persist(decoratedLoan);
-        
+
         // Send notification
         UserResource target =
             new UserResource(requestor.matches(owner) ? borrower : owner);
@@ -339,7 +342,7 @@ public class LoanResource {
      * 
      * @return a {@link Descriptor} containing the list of messages.
      */
-    public Descriptor getMessages() {
+    public ListDescriptor<MessageDescriptor> getMessages() {
         return DescriptorFactory.createMessageList(decoratedLoan.getMessages());
     }
 
@@ -351,10 +354,8 @@ public class LoanResource {
      *         customers.
      */
 
-    public Descriptor getFeedbacks() {
-        return DescriptorFactory.createFeedbackDescriptor(
-            decoratedLoan.getOwnerFeedback(),
-            decoratedLoan.getBorrowerFeedback());
+    public LoanFeedbackDescriptor getFeedbacks() {
+        return DescriptorFactory.createFeedbackDescriptor(decoratedLoan);
     }
 
     // Resource methods
@@ -364,6 +365,10 @@ public class LoanResource {
 
     // Helpers
     private boolean isUserInvolved(UserResource user) {
+        if (user == null) {
+            return false;
+        }
+
         ConcreteBook lentBook = decoratedLoan.getLentBook();
         UserEntity owner = lentBook.getOwner();
         UserEntity borrower = decoratedLoan.getBorrower();

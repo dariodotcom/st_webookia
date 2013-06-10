@@ -20,7 +20,7 @@ public class ResourceException extends Exception {
      *            the error.
      */
     public ResourceException(ResourceErrorType errorType, String message) {
-        super(errorType.getFriendlyText() + " - " + message);
+        super(errorType.getFriendlyText() + ": " + message);
         this.errorType = errorType;
     }
 
@@ -36,7 +36,7 @@ public class ResourceException extends Exception {
      */
     public ResourceException(ResourceErrorType errorType, Throwable cause) {
         super(
-            errorType.getFriendlyText() + " - " + cause.getLocalizedMessage(),
+            errorType.getFriendlyText() + ": " + cause.getLocalizedMessage(),
             cause);
         this.errorType = errorType;
     }

@@ -8,7 +8,9 @@ import it.webookia.backend.descriptor.BookDescriptor;
 import it.webookia.backend.descriptor.Descriptor;
 import it.webookia.backend.descriptor.DescriptorFactory;
 import it.webookia.backend.descriptor.ListDescriptor;
+import it.webookia.backend.descriptor.LoanDescriptor;
 import it.webookia.backend.descriptor.UserDescriptor;
+import it.webookia.backend.model.Loan;
 import it.webookia.backend.model.Notification;
 import it.webookia.backend.model.UserEntity;
 import it.webookia.backend.utils.foreignws.facebook.AccessToken;
@@ -150,6 +152,18 @@ public class UserResource {
         List<Notification> list =
             StorageQuery.getNotificationOf(decoratedUser, 15);
         return DescriptorFactory.createNotificationList(list);
+    }
+
+    public ListDescriptor<LoanDescriptor> getReceivedLoanRequest(int page) {
+        List<Loan> loanList =
+            StorageQuery.getUserReceivedLoans(decoratedUser, page);
+        return DescriptorFactory.createLoanListDescriptor(loanList);
+    }
+
+    public ListDescriptor<LoanDescriptor> getSentLoanRequest(int page) {
+        List<Loan> loanList =
+            StorageQuery.getUserSentLoans(decoratedUser, page);
+        return DescriptorFactory.createLoanListDescriptor(loanList);
     }
 
     /**
