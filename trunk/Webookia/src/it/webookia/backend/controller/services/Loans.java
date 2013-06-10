@@ -13,6 +13,7 @@ import it.webookia.backend.controller.services.impl.Service;
 import it.webookia.backend.controller.services.impl.ServiceContext;
 import it.webookia.backend.controller.services.impl.ServiceServlet;
 import it.webookia.backend.controller.services.impl.Verb;
+import it.webookia.backend.utils.servlets.Context;
 
 public class Loans extends ServiceServlet {
 
@@ -24,7 +25,7 @@ public class Loans extends ServiceServlet {
     public static final String RECEIVED_LOANS = "RECEIVED_LOANS";
 
     public Loans() {
-        super("loans");
+        super(Context.LOANS);
         registerDefaultService(Verb.GET, new LoanLanding());
         registerService(Verb.POST, "create", new LoanCreation());
         registerService(Verb.GET, "detail", new LoanDetail());

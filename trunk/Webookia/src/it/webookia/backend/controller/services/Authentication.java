@@ -8,6 +8,7 @@ import it.webookia.backend.controller.services.impl.Verb;
 import it.webookia.backend.utils.foreignws.facebook.AccessToken;
 import it.webookia.backend.utils.foreignws.facebook.FacebookConnector;
 import it.webookia.backend.utils.foreignws.facebook.OAuthException;
+import it.webookia.backend.utils.servlets.Context;
 
 import java.io.IOException;
 
@@ -18,7 +19,7 @@ public class Authentication extends ServiceServlet {
     private static final long serialVersionUID = 4703628228514306116L;
 
     public Authentication() {
-        super("authentication");
+        super(Context.AUTHENTICATION);
         super.registerService(Verb.GET, "login", new LoginService());
         super.registerService(Verb.GET, "logout", new LogoutService());
     }

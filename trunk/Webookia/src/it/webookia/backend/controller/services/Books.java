@@ -8,6 +8,7 @@ import it.webookia.backend.controller.services.impl.Service;
 import it.webookia.backend.controller.services.impl.ServiceContext;
 import it.webookia.backend.controller.services.impl.ServiceServlet;
 import it.webookia.backend.controller.services.impl.Verb;
+import it.webookia.backend.utils.servlets.Context;
 
 import java.io.IOException;
 
@@ -32,7 +33,7 @@ public class Books extends ServiceServlet {
      * service.
      */
     public Books() {
-        super("books");
+        super(Context.BOOKS);
         registerDefaultService(Verb.GET, new BookLanding());
         registerService(Verb.POST, "create", new BookCreation());
         registerService(Verb.GET, "search", new BookSearch());

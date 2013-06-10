@@ -1,5 +1,7 @@
 package it.webookia.backend.controller.services.impl;
 
+import it.webookia.backend.utils.servlets.Context;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,23 +13,27 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.datanucleus.util.StringUtils;
+
 public class ServiceServlet extends HttpServlet {
+
+    public static final String CONTEXT = "CONTEXT";
 
     private static final long serialVersionUID = -6364544534456443497L;
     private static final Pattern requestPattern = Pattern
         .compile("/(([a-z|A-Z]+)/([a-z|A-Z]*)[.]*)?");
+
+    private Context context;
 
     private Map<String, Service> getServices;
     private Map<String, Service> postServices;
     private Service defaultGetService;
     private Service defaultPostService;
 
-    private String contextName;
-
-    protected ServiceServlet(String section) {
+    protected ServiceServlet(Context context) {
         this.getServices = new HashMap<String, Service>();
         this.postServices = new HashMap<String, Service>();
-        this.contextName = section;
+        this.context = context;
     }
 
     protected final void registerDefaultService(Verb verb, Service service) {
@@ -40,11 +46,6 @@ public class ServiceServlet extends HttpServlet {
 
     protected final void registerService(Verb verb, String action,
             Service service) {
-        if (contextName.equals("")) {
-            throw new IllegalStateException(
-                "Default context service cannot register non-default services");
-        }
-
         Map<String, Service> target =
             verb.equals(Verb.GET) ? getServices : postServices;
 
@@ -66,7 +67,7 @@ public class ServiceServlet extends HttpServlet {
     private void runService(Verb verb, HttpServletRequest req,
             HttpServletResponse resp) throws ServletException, IOException {
         String actionName;
-        ServiceContext context = new ServiceContext(req, resp);
+        ServiceContext serviceContext = new ServiceContext(req, resp);
 
         try {
             actionName = getActionName(req);
@@ -74,32 +75,30 @@ public class ServiceServlet extends HttpServlet {
             throw new ServletException(e);
         }
 
-        if (!actionName.equals("")) {
-            Map<String, Service> servicePool =
-                verb.equals(Verb.GET) ? getServices : postServices;
+        req.setAttribute(CONTEXT, context);
 
-            if (!servicePool.keySet().contains(actionName)) {
-                throw new ServletException("No service found for action "
-                    + actionName);
-            }
+        if (StringUtils.isEmpty(actionName)) {
+            Service def =
+                verb.equals(Verb.GET) ? defaultGetService : defaultPostService;
 
-            servicePool.get(actionName).service(context);
-        } else {
-            Service defaultService;
-
-            if (verb.equals(Verb.GET)) {
-                defaultService = defaultGetService;
-            } else {
-                defaultService = defaultPostService;
-            }
-
-            if (defaultService == null) {
+            if (def == null) {
                 throw new ServletException("No default service for "
-                    + contextName);
+                    + context.getContextName());
             }
 
-            defaultService.service(context);
+            def.service(serviceContext);
+            return;
         }
+
+        Map<String, Service> servicePool =
+            verb.equals(Verb.GET) ? getServices : postServices;
+
+        if (!servicePool.keySet().contains(actionName)) {
+            throw new ServletException("No service found for action "
+                + actionName);
+        }
+
+        servicePool.get(actionName).service(serviceContext);
     }
 
     private String getActionName(HttpServletRequest request)
@@ -117,7 +116,7 @@ public class ServiceServlet extends HttpServlet {
         String context = (m.group(2) == null ? "" : m.group(2));
         String action = (m.group(3) == null ? "" : m.group(3));
 
-        if (!context.equals(this.contextName)) {
+        if (!context.equals(this.context.getContextName())) {
             throw new IllegalArgumentException("Service context error: "
                 + context);
         }
