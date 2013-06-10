@@ -3,6 +3,7 @@
  */
 body.webookia {
 	background-color: rgb(247, 247, 247);
+	color: #111111;
 }
 
 body.webookia a:link {
@@ -107,6 +108,14 @@ body.webookia a:link {
 	margin-left: 5px;
 }
 
+.userThumb{
+	display: inline-block;
+	border: 3px solid white;
+	border-radius: 2px;
+	box-shadow: 0 0 0 1px rgba(0,0,0,.2);
+	margin-bottom: 0px;
+}
+
 #userCorner .profilePicture{
     height: 28px;
     width: 28px;
@@ -170,11 +179,27 @@ body.webookia a:link {
 }
 
 /*Content*/
+.left{
+	float: left;
+}
+
+.right{
+	float: right;
+}
+
+.empty{
+	text-align: center;
+	color: #555555;
+	margin-bottom: 25px;
+}
+
 #content {
+	font-family: Tahoma;
 	min-height: 250px;
 	margin-top: 30px;
 }
 
+/* Sections */
 .sectionTitle,
 .paragraph:not(:last-child){
 	margin-bottom: 15px;
@@ -186,22 +211,61 @@ body.webookia a:link {
 
 .sectionTitle{
 	font-family: 'Alef';
-	font-size: 17px;
-	font-weight: bold;
 	color: #3b5998;
+}
+
+h1.sectionTitle{
+	font-size: 22px;
+}
+
+h2.sectionTitle{
+	font-size: 18px;
 }
 
 .sectionContent{
 	margin-left: 20px;
+	line-height: 25px;
 }
 
 .paragraph{
-	font-family: Tahoma;
 	font-size: 14px;
 	line-height: 20px;
 	color: #666666;
 }
 
+/* Statuses */
+.privacy,
+.status {
+	font-size: 13px;
+	padding: 2px 4px;
+	color: rgba(0,0,0,.65);
+	box-shadow: 0 0 0 1px rgba(0,0,0,.35) inset;
+	border-radius: 2px;
+	text-transform: uppercase; 
+}
+
+.status.initial{
+	background-color: #d5d5d5;
+}
+
+.status.accepted{
+	background-color: #89d67a; 
+}
+
+.status.refused{
+	background-color: #d67a7a;
+}
+
+.status.shipped{
+	background-color: #d6987a;
+}
+
+.status.givenBack{
+	background-color: #7aa7d6;
+}
+
+
+/* Book creation*/
 #createBookForm{
 	text-align: center;
 }
@@ -259,7 +323,7 @@ body.webookia a:link {
 	box-shadow: 0 0 3px 0 rgba(0,0,0,.1) inset;
 }
 
-.bookPicture{
+.bookPresentation .bookPicture{
 	width: 110px;
 	border-radius: 2px;
 }
@@ -273,19 +337,8 @@ body.webookia a:link {
 	margin-top: 5px;
 }
 
-
-.bookPresentation .property > span{
-	border-radius: 2px;
-	padding: 2px 4px;
-	box-shadow: 0 0 1px 0 rgba(0,0,0,.6) inset;
-	font-weight: lighter;
-	font-size: 13px;
-	color: rgba(0,0,0,.6);
-}
-
 .bookPresentation .privacy{
 	float: left;
-	background: red;
 }
 
 .bookPresentation .status{
@@ -315,3 +368,112 @@ body.webookia a:link {
 .bookPresentation .privacy.private{
 	background: #ce59df;
 }
+
+/* Book Detail*/
+.details .detailContainer{
+	margin-left: 25px;
+	width: 600px;
+}
+
+.details .detailContainer .sectionContent > div{
+	margin-top: 15px;
+}
+
+.details .detailContainer .title{
+	font-weight: bold;
+	font-size: 20px;
+}
+
+/* Messages */
+.message .messageBody{
+ 	width: 250px;
+}
+
+.message > .userThumb,
+.message > .arrow,
+.message > .messageBody{
+	position: relative;
+	display: inline-block;
+}
+
+.message.self > .userThumb,
+.message.self > .arrow,
+.message.self > .messageBody{
+	float: left;
+}
+
+.message.other > .userThumb,
+.message.other > .arrow,
+.message.other > .messageBody{
+	float: right;
+}
+
+.message.other > .arrow{
+	margin: 12px -4px 0 -1px;
+	transform: scaleX(-1);
+}
+
+.message.self > .arrow{
+	margin: 12px -1px 0 -4px;
+}
+
+.message > .arrow{
+	background: url('../resources/arrow.png');
+	height: 14px;
+	width: 11px;
+	z-index: 20;
+}
+
+.message .messageHeader{
+	font-size: 12px;
+	color: #aaaaaa;
+	cursor: default;
+}
+
+.message .messageBody{
+	border: 1px solid #bbbbbb;
+	background: white;
+	padding: 10px;
+	border-radius: 4px;
+	box-shadow: 0 0 2px 0 rgba(0,0,0,.05);
+	color: #444444;
+	line-height: 24px;
+	z-index: 1;
+}
+
+.message .messageInput{
+	width: 250px;
+	min-width: 250px;
+	max-width: 250px;
+	border: none;
+	font-family: Tahoma;
+	color: #444444;
+	line-height: 24px;
+}
+
+/* Review */
+.message.review .messageBody{
+ 	width: 400px;
+}
+
+.comment.self{
+	margin-left: 45px;
+}
+
+/*Elem list*/
+.elemList{
+    width: 100%;
+}
+
+.elemList .elem .property{
+    font-size: 15px;
+}
+
+.elemList .listHead .property{
+	color: #3b5998;
+	border-bottom: 1px solid rgba(0,0,0,.2);
+}
+
+
+
+

@@ -12,7 +12,6 @@
 
 	String authUserId = ServletUtils.getAuthenticatedUserId(request);
 	if (authUserId != null) {
-		UserDescriptor descriptor;
 		hUserDescriptor = UserResource.getUser(authUserId)
 				.getDescriptor();
 	}

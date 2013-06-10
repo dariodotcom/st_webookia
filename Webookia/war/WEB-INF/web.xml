@@ -62,7 +62,7 @@
 
 	<servlet>
 		<description>JAX-RS Tools Generated - Do not modify</description>
-		<servlet-name>JAX-RS Servlet</servlet-name>
+		<servlet-name>JAX-RS</servlet-name>
 		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer
 		</servlet-class>
 		<load-on-startup>1</load-on-startup>
@@ -79,7 +79,7 @@
 	</servlet-mapping>
 
 	<servlet-mapping>
-		<servlet-name>JAX-RS Servlet</servlet-name>
+		<servlet-name>JAX-RS</servlet-name>
 		<url-pattern>/api/*</url-pattern>
 	</servlet-mapping>
 
@@ -90,7 +90,7 @@
 		<servlet-class>it.webookia.backend.controller.services.Authentication
 		</servlet-class>
 	</servlet>
-	
+
 	<servlet-mapping>
 		<servlet-name>Authentication</servlet-name>
 		<url-pattern>/authentication/*</url-pattern>
@@ -107,7 +107,7 @@
 		<servlet-name>Home</servlet-name>
 		<url-pattern>/home/*</url-pattern>
 	</servlet-mapping>
-	
+
 	<!-- Home -->
 	<servlet>
 		<servlet-name>Dashboard</servlet-name>
@@ -155,7 +155,7 @@
 		<servlet-name>Loans</servlet-name>
 		<url-pattern>/loans/*</url-pattern>
 	</servlet-mapping>
-	
+
 	<security-constraint>
 		<web-resource-collection>
 			<url-pattern>*.jsp</url-pattern>
@@ -179,4 +179,10 @@
 			<role-name>admin</role-name>
 		</auth-constraint>
 	</security-constraint>
+
+	<session-config>
+		<session-timeout>
+			30
+		</session-timeout>
+	</session-config>
 </web-app>
