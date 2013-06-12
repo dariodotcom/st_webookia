@@ -29,14 +29,15 @@ public class StorageFacade<T extends Storable> {
      * @param key
      *            - the key to which the object is linked to.
      * @return the retrieved object, null if the object does not exsist.
+     * @throws StorageException if given key is malformed.
      * */
-    public T get(String key) {
+    public T get(String key) throws StorageException {
         Key k;
 
         try {
             k = KeyFactory.stringToKey(key);
         } catch (IllegalArgumentException e) {
-            return null;
+            throw new StorageException(e);
         }
         return Datastore.get(type, k);
     }
