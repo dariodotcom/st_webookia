@@ -1,16 +1,14 @@
 package it.webookia.backend.utils.storage;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.slim3.datastore.Datastore;
-import org.slim3.datastore.Filter;
-import org.slim3.datastore.FilterCriterion;
 import org.slim3.datastore.ModelQuery;
 
 import com.google.appengine.api.datastore.Key;
 
+import it.webookia.backend.enums.PrivacyLevel;
 import it.webookia.backend.meta.ConcreteBookMeta;
 import it.webookia.backend.meta.DetailedBookMeta;
 import it.webookia.backend.meta.LoanMeta;
@@ -109,26 +107,31 @@ public class StorageQuery {
     public static List<DetailedBook> lookUpDetailedBook(SearchParameters params) {
         DetailedBookMeta detailedBook = DetailedBookMeta.get();
         ModelQuery<DetailedBook> query = Datastore.query(detailedBook);
-        
-        if(params.getTitle() != null){
-            query.filterInMemory(detailedBook.title.contains(params.getTitle()));
-        }
-        
-        if(params.getAuthors()!= null){
-            query.filterInMemory(detailedBook.authors.contains(params.getAuthors()));
+
+        if (params.getTitle() != null) {
+            query
+                .filterInMemory(detailedBook.title.contains(params.getTitle()));
         }
 
-        if(params.getISBN()!= null){
+        if (params.getAuthors() != null) {
+            query.filterInMemory(detailedBook.authors.contains(params
+                .getAuthors()));
+        }
+
+        if (params.getISBN() != null) {
             query.filter(detailedBook.isbn.equal(params.getISBN()));
         }
-        
+
         return query.asList();
     }
-    
-    public static List<ConcreteBook> getConcreteBooksByDetail(DetailedBook detail){
+
+    public static List<ConcreteBook> getConcreteBooksByDetail(
+            DetailedBook detail) {
         ConcreteBookMeta concreteBook = ConcreteBookMeta.get();
         ModelQuery<ConcreteBook> query = Datastore.query(concreteBook);
         query.filter(concreteBook.detailedBookRef.equal(detail.getKey()));
+        query.filter(concreteBook.privacy.notEqual(PrivacyLevel.PRIVATE));
+        
         return query.asList();
     }
 }

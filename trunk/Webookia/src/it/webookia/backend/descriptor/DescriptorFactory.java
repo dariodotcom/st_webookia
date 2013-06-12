@@ -3,6 +3,7 @@ package it.webookia.backend.descriptor;
 import java.util.List;
 
 import it.webookia.backend.model.ConcreteBook;
+import it.webookia.backend.model.DetailedBook;
 import it.webookia.backend.model.Feedback;
 import it.webookia.backend.model.Loan;
 import it.webookia.backend.model.Message;
@@ -24,9 +25,13 @@ public class DescriptorFactory {
     }
 
     /* BOOKS */
-    public static BookDescriptor createFullBookDescriptor(ConcreteBook book) {
-        BookDescriptor descriptor = new BookDescriptor(book);
-        return descriptor;
+    public static DetailedBookDescriptor createDetailedBookDescriptor(
+            DetailedBook book) {
+        return (book == null ? null : new DetailedBookDescriptor(book));
+    }
+
+    public static BookDescriptor createConcreteBookDescriptor(ConcreteBook book) {
+        return (book == null ? null : new BookDescriptor(book));
     }
 
     public static ListDescriptor<BookDescriptor> createBookListDescriptor(
@@ -34,9 +39,19 @@ public class DescriptorFactory {
         ListDescriptor<BookDescriptor> descriptor =
             new ListDescriptor<BookDescriptor>();
         for (ConcreteBook b : books) {
-            descriptor.addDescriptor(createFullBookDescriptor(b));
+            descriptor.addDescriptor(createConcreteBookDescriptor(b));
         }
         return descriptor;
+    }
+
+    public static ListDescriptor<DetailedBookDescriptor> createDetailedBookListDescriptor(
+            List<DetailedBook> input) {
+        ListDescriptor<DetailedBookDescriptor> output =
+            new ListDescriptor<DetailedBookDescriptor>();
+        for (DetailedBook b : input) {
+            output.addDescriptor(createDetailedBookDescriptor(b));
+        }
+        return output;
     }
 
     public static ReviewDescriptor createReviewDescriptor(Review review) {
