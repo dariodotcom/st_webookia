@@ -6,7 +6,8 @@ public enum Jsp {
     BOOK_JSP("/books.jsp"),
     BOOK_DETAIL_JSP("/book_detail.jsp"),
     LOAN_DETAIL("/loan_detail.jsp"),
-    LOAN_JSP("/loans.jsp");
+    LOAN_JSP("/loans.jsp"),
+    ERROR_JSP("/error.jsp");
 
     private String url;
 

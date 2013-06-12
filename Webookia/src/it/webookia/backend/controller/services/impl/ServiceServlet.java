@@ -1,5 +1,7 @@
 package it.webookia.backend.controller.services.impl;
 
+import it.webookia.backend.controller.resources.exception.ResourceErrorType;
+import it.webookia.backend.controller.resources.exception.ResourceException;
 import it.webookia.backend.utils.servlets.Context;
 
 import java.io.IOException;
@@ -18,6 +20,7 @@ import org.datanucleus.util.StringUtils;
 public class ServiceServlet extends HttpServlet {
 
     public static final String CONTEXT = "CONTEXT";
+    public static final String ERROR = "ERROR";
 
     private static final long serialVersionUID = -6364544534456443497L;
     private static final Pattern requestPattern = Pattern
@@ -72,7 +75,10 @@ public class ServiceServlet extends HttpServlet {
         try {
             actionName = getActionName(req);
         } catch (IllegalArgumentException e) {
-            throw new ServletException(e);
+            ResourceException ex =
+                new ResourceException(ResourceErrorType.NOT_FOUND, e);
+            serviceContext.sendError(ex);
+            return;
         }
 
         req.setAttribute(CONTEXT, context);
@@ -82,8 +88,12 @@ public class ServiceServlet extends HttpServlet {
                 verb.equals(Verb.GET) ? defaultGetService : defaultPostService;
 
             if (def == null) {
-                throw new ServletException("No default service for "
-                    + context.getContextName());
+                String message =
+                    "No default service for " + context.getContextName();
+                ResourceException ex =
+                    new ResourceException(ResourceErrorType.NOT_FOUND, message);
+                serviceContext.sendError(ex);
+                return;
             }
 
             def.service(serviceContext);
@@ -94,8 +104,15 @@ public class ServiceServlet extends HttpServlet {
             verb.equals(Verb.GET) ? getServices : postServices;
 
         if (!servicePool.keySet().contains(actionName)) {
-            throw new ServletException("No service found for action "
-                + actionName);
+            String message =
+                "No service found for action "
+                    + actionName
+                    + " in context "
+                    + context.getContextName();
+            ResourceException ex =
+                new ResourceException(ResourceErrorType.NOT_FOUND, message);
+            serviceContext.sendError(ex);
+            return;
         }
 
         servicePool.get(actionName).service(serviceContext);

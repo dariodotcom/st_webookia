@@ -2,6 +2,7 @@ package it.webookia.backend.controller.services;
 
 import it.webookia.backend.controller.resources.BookResource;
 import it.webookia.backend.controller.resources.UserResource;
+import it.webookia.backend.controller.resources.exception.ResourceErrorType;
 import it.webookia.backend.controller.resources.exception.ResourceException;
 import it.webookia.backend.controller.services.impl.Jsp;
 import it.webookia.backend.controller.services.impl.Service;
@@ -45,6 +46,13 @@ public class Books extends ServiceServlet {
         @Override
         public void service(ServiceContext context) throws ServletException,
                 IOException {
+            if (!context.isUserLoggedIn()) {
+                context.sendError(new ResourceException(
+                    ResourceErrorType.NOT_LOGGED_IN,
+                    "You need to be logged in to access your loans."));
+                return;
+            }
+
             String userId = context.getAuthenticatedUserId();
             UserResource user;
 
