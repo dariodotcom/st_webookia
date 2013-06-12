@@ -69,11 +69,11 @@ public class LoanResource {
         loanStorage.persist(loan);
 
         // Send notification
-        // UserResource owner = new UserResource(book.getOwner());
-        // NotificationResource.createNotification(
-        // owner,
-        // NotificationType.NEW_LOAN_REQUEST,
-        // loan);
+         UserResource owner = new UserResource(book.getOwner());
+         NotificationResource.createNotification(
+         owner,
+         NotificationType.NEW_LOAN_REQUEST,
+         loan);
 
         return new LoanResource(loan);
     }

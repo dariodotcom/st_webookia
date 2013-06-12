@@ -41,9 +41,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <%@ include file="shared/head.jsp"%>
 <body class="webookia">
-	<%
-		System.out.println(errorText);
-	%>
 	<%@ include file="shared/header.jsp"%>
 
 	<div id="contentContainer">

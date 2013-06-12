@@ -33,13 +33,8 @@ public class LoanContainer {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createLoan(LoanCreationRequest creationRequest) {
 
-        System.out.println("attr: "
-            + request.getSession().getAttribute("AUTH_USER"));
-
         String requestorId = ServletUtils.getAuthenticatedUserId(request);
         String bookId = creationRequest.getBookId();
-
-        System.out.println(requestorId + " asked for " + bookId);
 
         try {
             UserResource requestor = UserResource.getUser(requestorId);

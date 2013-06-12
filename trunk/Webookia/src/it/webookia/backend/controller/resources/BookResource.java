@@ -1,9 +1,12 @@
 package it.webookia.backend.controller.resources;
 
+import java.util.List;
+
 import it.webookia.backend.controller.resources.exception.ResourceErrorType;
 import it.webookia.backend.controller.resources.exception.ResourceException;
 import it.webookia.backend.descriptor.BookDescriptor;
 import it.webookia.backend.descriptor.DescriptorFactory;
+import it.webookia.backend.descriptor.ListDescriptor;
 import it.webookia.backend.descriptor.ReviewDescriptor;
 import it.webookia.backend.descriptor.UserDescriptor;
 import it.webookia.backend.enums.BookStatus;
@@ -16,6 +19,7 @@ import it.webookia.backend.model.Review;
 import it.webookia.backend.model.UserEntity;
 import it.webookia.backend.utils.foreignws.isbndb.IsbnDBException;
 import it.webookia.backend.utils.foreignws.isbndb.IsbnResolver;
+import it.webookia.backend.utils.servlets.SearchParameters;
 import it.webookia.backend.utils.storage.Mark;
 import it.webookia.backend.utils.storage.StorageFacade;
 import it.webookia.backend.utils.storage.StorageQuery;
@@ -106,6 +110,11 @@ public class BookResource {
         return bookResource;
     }
 
+//    public static ListDescriptor<BookDescriptor> lookUp(SearchParameters params) {
+//        List<ConcreteBook> books = StorageQuery.lookUpBooks(params);
+//        return DescriptorFactory.createBookListDescriptor(books);
+//    }
+    
     // Book that this instance is managing
     private ConcreteBook decoratedBook;
 
