@@ -13,7 +13,7 @@ public class Users extends ServiceServlet {
 
     private static final long serialVersionUID = 351675044359094818L;
 
-    protected Users() {
+    public Users() {
         super(Context.USERS);
         // TODO Auto-generated constructor stub
     }

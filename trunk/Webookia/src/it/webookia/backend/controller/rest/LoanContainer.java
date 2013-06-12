@@ -19,34 +19,41 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("loans")
-public class LoanContext {
+public class LoanContainer {
 
-    @Context
     private HttpServletRequest request;
 
+    public LoanContainer(@Context HttpServletRequest request) {
+        this.request = request;
+    }
+
     @POST
-    @Path("create")
+    @Path("new")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createLoan(LoanCreationRequest creationRequest) {
-        String borrowerUsername =
-            ServletUtils.getAuthenticatedUserId(request);
-        UserResource borrower;
-        BookResource book;
+
+        System.out.println("attr: "
+            + request.getSession().getAttribute("AUTH_USER"));
+
+        String requestorId = ServletUtils.getAuthenticatedUserId(request);
+        String bookId = creationRequest.getBookId();
+
+        System.out.println(requestorId + " asked for " + bookId);
 
         try {
-            borrower = UserResource.getUser(borrowerUsername);
-            book = BookResource.getBook(creationRequest.getBookId(), borrower);
-            LoanResource loan = LoanResource.createLoan(borrower, book);
-            return ResponseFactory.createFrom(loan.getDescriptor());
+            UserResource requestor = UserResource.getUser(requestorId);
+            BookResource book = BookResource.getBook(bookId, requestor);
+            LoanResource Loan = LoanResource.createLoan(requestor, book);
+            return ResponseFactory.createFrom(Loan.getDescriptor());
         } catch (ResourceException e) {
             return ResponseFactory.createFrom(e);
         }
-
     }
 
     @Path("loan/{id}")
-    public LoanRest handleLoan(@PathParam(value = "id") String id) {
+    public LoanRest handleLoanRequest(@PathParam(value = "id") String id) {
         return new LoanRest(id, request);
     }
+
 }

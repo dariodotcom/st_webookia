@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import it.webookia.backend.controller.resources.BookResource;
 import it.webookia.backend.controller.resources.LoanResource;
 import it.webookia.backend.controller.resources.UserResource;
+import it.webookia.backend.controller.resources.exception.ResourceErrorType;
 import it.webookia.backend.controller.resources.exception.ResourceException;
 import it.webookia.backend.controller.services.impl.Jsp;
 import it.webookia.backend.controller.services.impl.Service;
@@ -35,10 +36,16 @@ public class Loans extends ServiceServlet {
         @Override
         public void service(ServiceContext context) throws ServletException,
                 IOException {
-
             String bookId = null;
-            String userId = context.getAuthenticatedUserId();
 
+            if (!context.isUserLoggedIn()) {
+                context.sendError(new ResourceException(
+                    ResourceErrorType.NOT_LOGGED_IN,
+                    "You need to be logged in to create a loan."));
+                return;
+            }
+
+            String userId = context.getAuthenticatedUserId();
             try {
                 UserResource requestor = UserResource.getUser(userId);
                 BookResource book = BookResource.getBook(bookId, requestor);
@@ -59,6 +66,13 @@ public class Loans extends ServiceServlet {
         public void service(ServiceContext context) throws ServletException,
                 IOException {
             String userId = context.getAuthenticatedUserId();
+
+            if (!context.isUserLoggedIn()) {
+                context.sendError(new ResourceException(
+                    ResourceErrorType.NOT_LOGGED_IN,
+                    "You need to be logged in to access your loans."));
+                return;
+            }
 
             try {
                 UserResource user = UserResource.getUser(userId);

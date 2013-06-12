@@ -55,6 +55,10 @@ public class ServiceContext {
         ServletUtils.setAuthenticatedUserId(request, userID);
     }
 
+    public boolean isUserLoggedIn(){
+        return getAuthenticatedUserId() != null;
+    }
+    
     /**
      * Retrieves an attribute from the request.
      * 
@@ -112,10 +116,13 @@ public class ServiceContext {
      * 
      * @param e
      *            - the {@link ResourceException} that caused the error.
+     * @throws IOException
      * @throws ServletException
      */
-    public void sendError(ResourceException e) throws ServletException {
-        throw new ServletException(e);
+    public void sendError(ResourceException e) throws ServletException,
+            IOException {
+        setRequestAttribute(ServiceServlet.ERROR, e);
+        forwardToJsp(Jsp.ERROR_JSP);
     }
 
     /**
