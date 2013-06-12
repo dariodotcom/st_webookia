@@ -1,3 +1,6 @@
+<%@page import="it.webookia.backend.enums.PrivacyLevel"%>
+<%@page import="it.webookia.backend.enums.BookStatus"%>
+<%@page import="it.webookia.backend.utils.servlets.Context"%>
 <%@page import="it.webookia.backend.model.ConcreteBook"%>
 <%@page import="it.webookia.backend.model.Loan"%>
 <%@page import="it.webookia.backend.enums.LoanStatus"%>
@@ -30,6 +33,48 @@
 
 		final String pattern = "<span class=\"status %s\">%s</span>";
 		return String.format(pattern, elemClass, text);
+	}
+
+	public String bookStatusToHMTL(BookStatus status) {
+		String statusClass, statusText;
+		String pattern = "<span class=\"status %s\">%s</span>";
+
+		switch (status) {
+		case AVAILABLE:
+			statusClass = "available";
+			statusText = "Disponibile";
+			break;
+		case LENT:
+			statusClass = "lent";
+			statusText = "In prestito";
+			break;
+		default:
+			statusClass = "notAvailable";
+			statusText = "Non disponibile";
+		}
+
+		return String.format(pattern, statusClass, statusText);
+	}
+
+	public String bookPrivacyToHTML(PrivacyLevel privacy) {
+		String privacyClass, privacyText;
+		String pattern = "<span class=\"privacy %s\">%s</span>";
+
+		switch (privacy) {
+		case PUBLIC:
+			privacyClass = "public";
+			privacyText = "Pubblico";
+			break;
+		case FRIENDS_ONLY:
+			privacyClass = "friendsOnly";
+			privacyText = "Amici";
+			break;
+		default:
+			privacyClass = "private";
+			privacyText = "Privato";
+		}
+
+		return String.format(pattern, privacyClass, privacyText);
 	}
 
 	public <T> String viewLinkFor(Class<T> model, String id) {
