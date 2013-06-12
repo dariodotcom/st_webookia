@@ -1,3 +1,4 @@
+<%@page import="java.util.List"%>
 <%@page import="it.webookia.backend.controller.services.Books"%>
 <%@page import="it.webookia.backend.descriptor.BookDescriptor"%>
 <%@page import="it.webookia.backend.descriptor.ListDescriptor"%>
@@ -36,54 +37,33 @@
 			<div class="contentSection">
 				<h1 class="sectionTitle">I tuoi libri</h1>
 				<div class="sectionContent">
+					<%
+						List<BookDescriptor> bookList = books.getList();
+						if (bookList.isEmpty()) {
+					%>
+					<p class="empty">Non hai inserito alcun libro.</p>
+					<%
+						} else {
+					%>
 					<div class="bookGrid clearfix">
 						<%
 							for (BookDescriptor b : books.getList()) {
-								String statusClass, statusText;
-								switch (b.getStatus()) {
-								case AVAILABLE:
-									statusClass = "available";
-									statusText = "Disponibile";
-									break;
-								case LENT:
-									statusClass = "lent";
-									statusText = "In prestito";
-									break;
-								default:
-									statusClass = "notAvailable";
-									statusText = "Non disponibile";
-								}
-
-								String privacyClass, privacyText;
-								switch (b.getPrivacy()) {
-								case PUBLIC:
-									privacyClass = "public";
-									privacyText = "Pubblico";
-									break;
-								case FRIENDS_ONLY:
-									privacyClass = "friendsOnly";
-									privacyText = "Amici";
-									break;
-								default:
-									privacyClass = "private";
-									privacyText = "Privato";
-								}
 						%>
 						<div class="bookPresentation">
-							<img
-								class="bookPicture"
+							<img class="bookPicture"
 								src="http://www.oasidellibro.it/wp-content/uploads/2010/04/Il-Signore-Degli-Anelli.jpg" />
 							<div class="bookInfo">
 								<div class="title"><%=b.getTitle()%></div>
 								<div class="author"><%=b.getAuthors()%></div>
 								<div class="property">
-									<span class="privacy <%=privacyClass%>"><%=privacyText%></span>
-									<span class="status <%=statusClass%>"><%=statusText%></span>
+									<%=bookStatusToHMTL(b.getStatus())%>
+									<%=bookPrivacyToHTML(b.getPrivacy())%>
 								</div>
 								<div class="bookView"><%=viewLinkFor(ConcreteBook.class, b.getId())%></div>
 							</div>
 						</div>
 						<%
+							}
 							}
 						%>
 					</div>
