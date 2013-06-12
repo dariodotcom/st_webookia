@@ -1,3 +1,6 @@
+<%@page import="it.webookia.backend.utils.servlets.Context"%>
+<%@page
+	import="it.webookia.backend.controller.services.impl.ServiceServlet"%>
 <%@page import="it.webookia.backend.controller.resources.UserResource"%>
 <%@page import="it.webookia.backend.descriptor.UserDescriptor"%>
 <%@page import="it.webookia.backend.utils.ServletUtils"%>
@@ -6,9 +9,33 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 
+
+<%! public String contextDisplayName(Context context) {
+		switch (context) {
+		case AUTHENTICATION:
+			return "";
+		case BOOKS:
+			return "Libreria";
+		case HOME:
+			return "Home";
+		case LOANS:
+			return "Prestiti";
+		case SEARCH:
+			return "Ricerca";
+		case USERS:
+			return "Utenti";
+		default:
+			return "";
+		}
+	}%>
+
 <%
+
 	HttpSession hSession = request.getSession();
 	UserDescriptor hUserDescriptor = null;
+
+	Context hCurrentContext = ServletUtils.getRequestAttribute(request,
+			Context.class, ServiceServlet.CONTEXT);
 
 	String authUserId = ServletUtils.getAuthenticatedUserId(request);
 	if (authUserId != null) {
@@ -52,12 +79,18 @@
 		</div>
 		<div id="menuContainer" class="headerContent topWidthElement">
 			<ul id="menu">
-				<li class="entry selected" id=""><span class="tabLink" href="">
-						<span class="tabTitle">Libreria</span>
-				</span></li>
-				<li class="entry animate" id=""><a class="tabLink" href="">
-						<span class="tabTitle">Prestiti</span>
+				<%
+					for (Context context : Context.values()) {
+						String extraClass = context.equals(hCurrentContext) ? " selected"
+								: "";
+				%>
+				<li class="entry<%=extraClass%>" id="<%=context%>"><a
+					class="tabLink" href="/<%=context.getContextName()%>/"> <span
+						class="tabTitle"><%=contextDisplayName(context)%></span>
 				</a></li>
+				<%
+					}
+				%>
 			</ul>
 		</div>
 	</div>
