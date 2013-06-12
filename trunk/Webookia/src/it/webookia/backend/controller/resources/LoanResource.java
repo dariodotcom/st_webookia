@@ -16,6 +16,7 @@ import it.webookia.backend.model.Loan;
 import it.webookia.backend.model.Message;
 import it.webookia.backend.model.UserEntity;
 import it.webookia.backend.utils.storage.Mark;
+import it.webookia.backend.utils.storage.StorageException;
 import it.webookia.backend.utils.storage.StorageFacade;
 import it.webookia.backend.descriptor.LoanDescriptor;
 
@@ -69,11 +70,11 @@ public class LoanResource {
         loanStorage.persist(loan);
 
         // Send notification
-         UserResource owner = new UserResource(book.getOwner());
-         NotificationResource.createNotification(
-         owner,
-         NotificationType.NEW_LOAN_REQUEST,
-         loan);
+        UserResource owner = new UserResource(book.getOwner());
+        NotificationResource.createNotification(
+            owner,
+            NotificationType.NEW_LOAN_REQUEST,
+            loan);
 
         return new LoanResource(loan);
     }
@@ -89,7 +90,12 @@ public class LoanResource {
      */
     public static LoanResource getLoan(UserResource requestor, String id)
             throws ResourceException {
-        Loan loan = loanStorage.get(id);
+        Loan loan;
+        try {
+            loan = loanStorage.get(id);
+        } catch (StorageException e) {
+            throw new ResourceException(ResourceErrorType.NOT_FOUND, e);
+        }
 
         if (loan == null) {
             String message = "loan " + id + " not found";

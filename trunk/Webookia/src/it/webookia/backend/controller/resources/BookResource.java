@@ -6,6 +6,7 @@ import it.webookia.backend.controller.resources.exception.ResourceErrorType;
 import it.webookia.backend.controller.resources.exception.ResourceException;
 import it.webookia.backend.descriptor.BookDescriptor;
 import it.webookia.backend.descriptor.DescriptorFactory;
+import it.webookia.backend.descriptor.DetailedBookDescriptor;
 import it.webookia.backend.descriptor.ListDescriptor;
 import it.webookia.backend.descriptor.ReviewDescriptor;
 import it.webookia.backend.descriptor.UserDescriptor;
@@ -21,6 +22,7 @@ import it.webookia.backend.utils.foreignws.isbndb.IsbnDBException;
 import it.webookia.backend.utils.foreignws.isbndb.IsbnResolver;
 import it.webookia.backend.utils.servlets.SearchParameters;
 import it.webookia.backend.utils.storage.Mark;
+import it.webookia.backend.utils.storage.StorageException;
 import it.webookia.backend.utils.storage.StorageFacade;
 import it.webookia.backend.utils.storage.StorageQuery;
 
@@ -89,7 +91,13 @@ public class BookResource {
      * */
     public static BookResource getBook(String id, UserResource requestor)
             throws ResourceException {
-        ConcreteBook book = concreteBookStorage.get(id);
+        ConcreteBook book;
+
+        try {
+            book = concreteBookStorage.get(id);
+        } catch (StorageException e) {
+            throw new ResourceException(ResourceErrorType.NOT_FOUND, e);
+        }
 
         if (book == null) {
             String message = "book %s not found";
@@ -110,11 +118,27 @@ public class BookResource {
         return bookResource;
     }
 
-//    public static ListDescriptor<BookDescriptor> lookUp(SearchParameters params) {
-//        List<ConcreteBook> books = StorageQuery.lookUpBooks(params);
-//        return DescriptorFactory.createBookListDescriptor(books);
-//    }
-    
+    public static ListDescriptor<DetailedBookDescriptor> lookupDetailedBooks(
+            SearchParameters params) {
+        List<DetailedBook> books = StorageQuery.lookUpDetailedBook(params);
+        return DescriptorFactory.createDetailedBookListDescriptor(books);
+    }
+
+    public static ListDescriptor<BookDescriptor> lookupConcreteBooks(
+            String detailId) throws ResourceException {
+        DetailedBook detail;
+
+        try {
+            detail = detailedBookStorage.get(detailId);
+        } catch (StorageException e) {
+            throw new ResourceException(ResourceErrorType.NOT_FOUND, e);
+        }
+
+        List<ConcreteBook> books =
+            StorageQuery.getConcreteBooksByDetail(detail);
+        return DescriptorFactory.createBookListDescriptor(books);
+    }
+
     // Book that this instance is managing
     private ConcreteBook decoratedBook;
 
@@ -272,7 +296,7 @@ public class BookResource {
      * @return a {@link BookDescriptor} that describes managed book.
      */
     public BookDescriptor getDescriptor() {
-        return DescriptorFactory.createFullBookDescriptor(decoratedBook);
+        return DescriptorFactory.createConcreteBookDescriptor(decoratedBook);
     }
 
     /**
