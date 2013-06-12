@@ -108,18 +108,6 @@
 		<url-pattern>/home/*</url-pattern>
 	</servlet-mapping>
 
-	<!-- Home -->
-	<servlet>
-		<servlet-name>Dashboard</servlet-name>
-		<servlet-class>it.webookia.backend.controller.services.Dashboard
-		</servlet-class>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>Dashboard</servlet-name>
-		<url-pattern>/dashboard/*</url-pattern>
-	</servlet-mapping>
-
 	<!-- Users -->
 	<servlet>
 		<servlet-name>Users</servlet-name>
@@ -156,6 +144,18 @@
 		<url-pattern>/loans/*</url-pattern>
 	</servlet-mapping>
 
+	<!-- Search -->
+	<servlet>
+		<servlet-name>Search</servlet-name>
+		<servlet-class>it.webookia.backend.controller.services.SearchContainer
+		</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Search</servlet-name>
+		<url-pattern>/search/*</url-pattern>
+	</servlet-mapping>
+	
 	<security-constraint>
 		<web-resource-collection>
 			<url-pattern>*.jsp</url-pattern>

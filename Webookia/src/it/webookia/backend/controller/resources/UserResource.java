@@ -49,7 +49,7 @@ public class UserResource {
             entity.setThumbnailUrl(connector.getThumbnail());
             userStorage.persist(entity);
         }
-        System.out.println(token);
+        
         return new UserResource(entity);
     }
 

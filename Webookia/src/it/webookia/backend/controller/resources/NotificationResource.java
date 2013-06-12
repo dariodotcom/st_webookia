@@ -5,6 +5,7 @@ import it.webookia.backend.controller.resources.exception.ResourceException;
 import it.webookia.backend.enums.NotificationType;
 import it.webookia.backend.model.Comment;
 import it.webookia.backend.model.ConcreteBook;
+import it.webookia.backend.model.Loan;
 import it.webookia.backend.model.Notification;
 import it.webookia.backend.model.Review;
 import it.webookia.backend.model.UserEntity;
@@ -31,7 +32,7 @@ public class NotificationResource {
      * @throws {@link ResourceException} if an error occurs.
      */
     public static NotificationResource createNotification(UserResource target,
-            NotificationType type, Object context) throws ResourceException {
+            NotificationType type, Object contextEntity) throws ResourceException {
         Notification notification = new Notification();
         notification.setReceiver(target.getEntity());
         notification.setType(type);
@@ -41,15 +42,15 @@ public class NotificationResource {
 
         try {
             if (type == NotificationType.NEW_REVIEW_COMMENT) {
-                Comment comment = (Comment) context;
+                Comment comment = (Comment) contextEntity;
                 notificationSender = comment.getAuthor();
                 Review relatedReview = comment.getReview();
                 ConcreteBook relatedBook = relatedReview.getReviewedBook();
                 entityID = relatedBook.getId();
-            } else {
-                LoanResource loan = (LoanResource) context;
-                notificationSender = loan.getEntity().getBorrower();
-                entityID = loan.getEntity().getId();
+            } else  {
+                Loan loan = (Loan) contextEntity;
+                notificationSender = loan.getBorrower();
+                entityID = loan.getId();
             }
         } catch (ClassCastException e) {
             throw new ResourceException(ResourceErrorType.SERVER_FAULT, e);
