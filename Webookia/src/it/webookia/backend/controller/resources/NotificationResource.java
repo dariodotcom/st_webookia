@@ -9,6 +9,7 @@ import it.webookia.backend.model.Loan;
 import it.webookia.backend.model.Notification;
 import it.webookia.backend.model.Review;
 import it.webookia.backend.model.UserEntity;
+import it.webookia.backend.utils.storage.StorageException;
 import it.webookia.backend.utils.storage.StorageFacade;
 
 public class NotificationResource {
@@ -32,7 +33,8 @@ public class NotificationResource {
      * @throws {@link ResourceException} if an error occurs.
      */
     public static NotificationResource createNotification(UserResource target,
-            NotificationType type, Object contextEntity) throws ResourceException {
+            NotificationType type, Object contextEntity)
+            throws ResourceException {
         Notification notification = new Notification();
         notification.setReceiver(target.getEntity());
         notification.setType(type);
@@ -47,7 +49,7 @@ public class NotificationResource {
                 Review relatedReview = comment.getReview();
                 ConcreteBook relatedBook = relatedReview.getReviewedBook();
                 entityID = relatedBook.getId();
-            } else  {
+            } else {
                 Loan loan = (Loan) contextEntity;
                 notificationSender = loan.getBorrower();
                 entityID = loan.getId();
@@ -75,7 +77,13 @@ public class NotificationResource {
      */
     public static NotificationResource getNotification(String id)
             throws ResourceException {
-        Notification notification = notificationStorage.get(id);
+        Notification notification;
+        try {
+            notification = notificationStorage.get(id);
+        } catch (StorageException e) {
+            throw new ResourceException(ResourceErrorType.NOT_FOUND, e);
+        }
+        
         if (notification == null) {
             String message = "notification " + id + "not found";
             throw new ResourceException(ResourceErrorType.NOT_FOUND, message);
