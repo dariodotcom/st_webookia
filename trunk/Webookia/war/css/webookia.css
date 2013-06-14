@@ -230,7 +230,7 @@ body.webookia a:link {
 }
 
 .contentSection:not(:last-child){
-	margin-bottom: 25px;
+	margin-bottom: 35px;
 }
 
 .sectionTitle{
@@ -310,20 +310,33 @@ h2.sectionTitle{
 	border-radius: 2px;
 	font-family: Tahoma;
 	color: #666666;
+	padding: 0 4px;
 }
 
-.submitInput{
+.submitInput,
+a.button:link{
+	display: inline-block;
+	background-color: #3b5998;
+	padding: 2px 7px;
 	border-radius: 2px;
-	font-family: Tahoma;
-	font-size: 16px;
+	border: none;
+	font-family: 'Alef';
+	font-weight: bold;
 	color: #f7f7f7;
-	border: 1px solid rgba(0,0,0,.1);
-	background: #3b5998;
-	cursor: pointer;
+	font-size: 16px;
+	margin-left: 5px;
+	text-decoration: none;
+	box-shadow: 0 -3px 0 0 rgba(0,0,0,.3) inset;
 }
 
-.submitInput:hover {
+a.button:visited{
+	color: white;
+}
+
+.submitInput:hover,
+a.button:hover {
 	background-color: #6d84b4;
+	cursor: pointer;
 }
 
  /* Book presentation */
@@ -503,7 +516,8 @@ h2.sectionTitle{
 }
 
 .completeSearchForm .searchLine{
-	margin-bottom: 10px;
+	margin: 0 auto 10px;
+	width: 560px;
 }
 
 .completeSearchForm .textInput,
@@ -514,12 +528,57 @@ h2.sectionTitle{
 
 .completeSearchForm .textInput{
 	font-size: 16px;
-	width: 350px;
+	width: 75%;
 }
 
 .completeSearchForm .searchLabel{
-	width: 80px;
+	width: 20%;
 	color: #777777;
 	font-weight: light;
 }
 
+.completeSearchForm .submitInput{
+	display: block;
+	margin: 0 auto;
+}
+
+
+.resultList{
+	margin: 0 auto;
+	width: 660px;
+}
+
+.result{
+	padding: 10px;
+	border-top: 1px solid #bbbbbb;
+}
+
+.result:last-child{
+	border-bottom: 1px solid #bbbbbb;
+}
+
+.result .pictureContainer .bookPicture{
+	height: 120px;
+}
+
+.result .resultDetails{
+	margin-left: 10px;
+	max-width: 440px;
+}
+
+.result:hover{
+	background: #eeeeee;
+}
+
+.result .resultDetails .detail{
+	color: #444444;
+	margin-bottom: 10px;
+}
+
+.result .resultDetails .detail.title{
+	font-size: 22px;
+}
+
+a.button.select{
+	margin-top: 40px;
+}
