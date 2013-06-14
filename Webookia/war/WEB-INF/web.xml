@@ -65,6 +65,10 @@
 		<servlet-name>JAX-RS</servlet-name>
 		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer
 		</servlet-class>
+		<init-param>
+			<param-name>com.sun.jersey.config.feature.DisableWADL</param-name>
+			<param-value>true</param-value>
+		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
@@ -155,7 +159,7 @@
 		<servlet-name>Search</servlet-name>
 		<url-pattern>/search/*</url-pattern>
 	</servlet-mapping>
-	
+
 	<security-constraint>
 		<web-resource-collection>
 			<url-pattern>*.jsp</url-pattern>

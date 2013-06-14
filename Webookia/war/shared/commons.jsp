@@ -77,6 +77,10 @@
 		return String.format(pattern, privacyClass, privacyText);
 	}
 
+	public String nullfix(String in) {
+		return in == null ? "" : in;
+	}
+
 	public <T> String viewLinkFor(Class<T> model, String id) {
 		String context;
 		String pattern = "<a href=\"%s\">Visualizza</a>";
