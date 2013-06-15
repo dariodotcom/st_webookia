@@ -10,4 +10,6 @@ public class Settings {
 
     public final static DateFormat DATE_FORMAT = new SimpleDateFormat(
         "dd/MM/yyyy HH:mm");
+
+    public static final boolean DEBUG_MODE = true;
 }
