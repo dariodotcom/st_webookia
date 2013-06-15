@@ -3,12 +3,12 @@ package it.webookia.backend.utils.storage;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.datanucleus.util.StringUtils;
 import org.slim3.datastore.Datastore;
 import org.slim3.datastore.ModelQuery;
 
 import com.google.appengine.api.datastore.Key;
 
-import it.webookia.backend.enums.PrivacyLevel;
 import it.webookia.backend.meta.ConcreteBookMeta;
 import it.webookia.backend.meta.DetailedBookMeta;
 import it.webookia.backend.meta.LoanMeta;
@@ -22,6 +22,7 @@ import it.webookia.backend.model.UserEntity;
 import it.webookia.backend.utils.Settings;
 import it.webookia.backend.utils.foreignws.facebook.FacebookConnector;
 import it.webookia.backend.utils.servlets.SearchParameters;
+import it.webookia.backend.utils.storage.filters.BookVisibilityFilter;
 
 /**
  * Class that holds the logic behind queries to the storage so that specific
@@ -108,30 +109,37 @@ public class StorageQuery {
         DetailedBookMeta detailedBook = DetailedBookMeta.get();
         ModelQuery<DetailedBook> query = Datastore.query(detailedBook);
 
-        if (params.getTitle() != null) {
-            query
-                .filterInMemory(detailedBook.title.contains(params.getTitle()));
+        if (!StringUtils.isEmpty(params.getTitle())) {
+            String param = params.getTitle();
+            System.out.println("title: " + param);
+            query.filterInMemory(detailedBook.title.contains(param));
         }
 
-        if (params.getAuthors() != null) {
-            query.filterInMemory(detailedBook.authors.contains(params
-                .getAuthors()));
+        if (!StringUtils.isEmpty(params.getAuthors())) {
+            String param = params.getAuthors();
+            System.out.println("authors: " + param);
+            query.filterInMemory(detailedBook.authors.contains(param));
         }
 
-        if (params.getISBN() != null) {
-            query.filter(detailedBook.isbn.equal(params.getISBN()));
+        if (!StringUtils.isEmpty(params.getISBN())) {
+            String param = params.getISBN();
+            System.out.println("isbn: " + param);
+            query.filterInMemory(detailedBook.isbn.equal(param));
         }
 
         return query.asList();
     }
 
     public static List<ConcreteBook> getConcreteBooksByDetail(
-            DetailedBook detail) {
+            DetailedBook detail, UserEntity requestor) {
         ConcreteBookMeta concreteBook = ConcreteBookMeta.get();
         ModelQuery<ConcreteBook> query = Datastore.query(concreteBook);
         query.filter(concreteBook.detailedBookRef.equal(detail.getKey()));
-        query.filter(concreteBook.privacy.notEqual(PrivacyLevel.PRIVATE));
-        
+
+        query.filterInMemory(new BookVisibilityFilter(
+            concreteBook.privacy,
+            requestor));
+
         return query.asList();
     }
 }
