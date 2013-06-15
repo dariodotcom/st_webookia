@@ -1,5 +1,7 @@
 package it.webookia.backend.utils.servlets;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,11 +20,10 @@ public class SearchParameters {
     public static SearchParameters createFrom(HttpServletRequest req) {
         SearchParameters parameters = new SearchParameters();
 
-        for (Field field : SearchParameters.class.getFields()) {
-            if (field.isAnnotationPresent(ParamName.class)) {
-                String paramName = field.getAnnotation(ParamName.class).value();
-                String param = req.getParameter(paramName);
-                
+        for (Field field : SearchParameters.class.getDeclaredFields()) {
+            ParamName paramName = field.getAnnotation(ParamName.class);
+            if (paramName != null) {
+                String param = req.getParameter(paramName.value());
                 try {
                     field.set(parameters, param);
                 } catch (IllegalArgumentException | IllegalAccessException e) {
@@ -50,7 +51,7 @@ public class SearchParameters {
         return isbn;
     }
 
-    // 
+    @Retention(RetentionPolicy.RUNTIME)
     private static @interface ParamName {
         String value();
     }
