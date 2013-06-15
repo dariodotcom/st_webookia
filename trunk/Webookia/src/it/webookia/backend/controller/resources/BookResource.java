@@ -22,6 +22,7 @@ import it.webookia.backend.utils.foreignws.isbndb.IsbnDBException;
 import it.webookia.backend.utils.foreignws.isbndb.IsbnResolver;
 import it.webookia.backend.utils.servlets.SearchParameters;
 import it.webookia.backend.utils.storage.Mark;
+import it.webookia.backend.utils.storage.PermissionManager;
 import it.webookia.backend.utils.storage.StorageException;
 import it.webookia.backend.utils.storage.StorageFacade;
 import it.webookia.backend.utils.storage.StorageQuery;
@@ -108,8 +109,8 @@ public class BookResource {
 
         BookResource bookResource = new BookResource(book);
 
-        if (!bookResource.canBeSeenBy(requestor)) {
-            String message = "not authorized to access requested book";
+        if (!PermissionManager.user(requestor.getEntity()).canAccess(book)) {
+            String message = "Not authorized to access requested book";
             throw new ResourceException(
                 ResourceErrorType.UNAUTHORIZED_ACTION,
                 message);
@@ -135,7 +136,7 @@ public class BookResource {
         }
 
         List<ConcreteBook> books =
-            StorageQuery.getConcreteBooksByDetail(detail);
+            StorageQuery.getConcreteBooksByDetail(detail, null);
         return DescriptorFactory.createBookListDescriptor(books);
     }
 
@@ -148,28 +149,6 @@ public class BookResource {
     }
 
     // Public methods
-
-    boolean canBeLentTo(UserResource user) {
-        UserEntity owner = decoratedBook.getOwner();
-        BookStatus status = decoratedBook.getStatus();
-
-        if (user == null) {
-            System.out.println("User is null");
-            return false;
-        } else if (user.matches(owner)) {
-            System.out.println("Cannot ask yourself a book");
-            return false;
-        } else if (!canBeSeenBy(user)) {
-            System.out.println("You can't see this book");
-            return false;
-        } else if (!status.equals(BookStatus.AVAILABLE)) {
-            System.out.println("Book is not available");
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     public boolean isOwner(UserResource user) {
         if (user == null) {
             return false;
@@ -215,10 +194,11 @@ public class BookResource {
      * */
     public void addReview(UserResource author, String text, int intMark)
             throws ResourceException {
-        UserEntity bookOwner = decoratedBook.getOwner();
         Mark mark;
 
-        if (author == null || !author.matches(bookOwner)) {
+        if (!PermissionManager
+            .user(author.getEntity())
+            .canReview(decoratedBook)) {
             String message = "Only the author can add a review";
             throw new ResourceException(
                 ResourceErrorType.UNAUTHORIZED_ACTION,
@@ -319,25 +299,6 @@ public class BookResource {
     public UserDescriptor getOwner() {
         UserEntity owner = decoratedBook.getOwner();
         return DescriptorFactory.createUserDescriptor(owner);
-    }
-
-    // Resource methods
-    boolean canBeSeenBy(UserResource user) {
-        PrivacyLevel privacy = decoratedBook.getPrivacy();
-        UserEntity owner = decoratedBook.getOwner();
-
-        if (privacy.equals(PrivacyLevel.PUBLIC)) {
-            return true;
-        } else if (user == null) {
-            return false;
-        } else if (user.matches(owner)) {
-            return true;
-        } else if (privacy.equals(PrivacyLevel.FRIENDS_ONLY)
-            && user.isFriendWith(owner)) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     ConcreteBook getEntity() {
