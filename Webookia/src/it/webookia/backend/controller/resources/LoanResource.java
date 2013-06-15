@@ -16,6 +16,7 @@ import it.webookia.backend.model.Loan;
 import it.webookia.backend.model.Message;
 import it.webookia.backend.model.UserEntity;
 import it.webookia.backend.utils.storage.Mark;
+import it.webookia.backend.utils.storage.PermissionManager;
 import it.webookia.backend.utils.storage.StorageException;
 import it.webookia.backend.utils.storage.StorageFacade;
 import it.webookia.backend.descriptor.LoanDescriptor;
@@ -48,17 +49,10 @@ public class LoanResource {
         ConcreteBook book = bookRes.getEntity();
         String bookId = book.getId();
 
-        if (!bookRes.canBeSeenBy(requestor)) {
-            String message = "you cannot ask for a loan of " + bookId;
+        if (!PermissionManager.user(requestor.getEntity()).canBorrow(book)) {
+            String message = "you cannot borrow book " + bookId;
             throw new ResourceException(
                 ResourceErrorType.UNAUTHORIZED_ACTION,
-                message);
-        }
-
-        if (!bookRes.canBeLentTo(requestor)) {
-            String message = "book " + bookId + " is not available for leaning";
-            throw new ResourceException(
-                ResourceErrorType.RESOURCE_UNAVAILABLE,
                 message);
         }
 
@@ -103,8 +97,8 @@ public class LoanResource {
         }
 
         LoanResource loanRes = new LoanResource(loan);
-        if (!loanRes.isUserInvolved(requestor)) {
-            String message = "you can't access this loan";
+        if (!PermissionManager.user(requestor.getEntity()).canAccess(loan)) {
+            String message = "Cannot access loan " + id;
             throw new ResourceException(
                 ResourceErrorType.UNAUTHORIZED_ACTION,
                 message);
@@ -253,7 +247,8 @@ public class LoanResource {
      */
     public void sendContextMessage(UserResource author, String messageText)
             throws ResourceException {
-        if (!isUserInvolved(author)) {
+        if (!PermissionManager.user(author.getEntity()).canSendMessage(
+            decoratedLoan)) {
             String message = "You must be involved in the loan to do this";
             throw new ResourceException(
                 ResourceErrorType.UNAUTHORIZED_ACTION,
@@ -367,18 +362,6 @@ public class LoanResource {
     // Resource methods
     Loan getEntity() {
         return decoratedLoan;
-    }
-
-    // Helpers
-    private boolean isUserInvolved(UserResource user) {
-        if (user == null) {
-            return false;
-        }
-
-        ConcreteBook lentBook = decoratedLoan.getLentBook();
-        UserEntity owner = lentBook.getOwner();
-        UserEntity borrower = decoratedLoan.getBorrower();
-        return user.matches(borrower) || user.matches(owner);
     }
 
     private void assertBookStatus(ConcreteBook book, BookStatus status)
