@@ -322,7 +322,7 @@ h2.sectionTitle{
 }
 
 .submitInput,
-a.button:link{
+.button{
 	display: inline-block;
 	background-color: #3b5998;
 	padding: 2px 7px;
@@ -615,7 +615,7 @@ a.button.select{
 }
 
 .concrete{
-	height: 48px;
+	padding: 5px;
 	border-bottom: 1px solid #bbbbbb;
 	cursor: pointer;
 	position: relative;
@@ -630,7 +630,6 @@ a.button.select{
 .concrete .concreteDetail{
 	float: left;
 	vertical-align: top;
-	margin: 5px;
 }
 
 .concreteDetail{
@@ -692,4 +691,12 @@ a.button.select{
 
 .concretePopup .buttons .button{
 	width: 40px;
+}
+
+.concrete.selected .ask{
+	display: inline;
+}
+
+.ask{
+	display: none;
 }
