@@ -56,61 +56,59 @@
 				</div>
 
 			</div>
-				<!-- Detail result -->
-				<%
-					DetailedResultBox resultBox = ServletUtils.getRequestAttribute(
-							request, DetailedResultBox.class,
-							SearchContainer.DETAILED_RESULTS);
-					if (resultBox != null) {
-						List<DetailedBookDescriptor> resultList = resultBox.getList();
-				%>
-				<div class="contentSection">
-					<h1 class="sectionTitle">Risultati ricerca</h1>
-					<div class="sectionContent">
+			<!-- Detail result -->
+			<%
+				DetailedResultBox resultBox = ServletUtils.getRequestAttribute(
+						request, DetailedResultBox.class,
+						SearchContainer.DETAILED_RESULTS);
+				if (resultBox != null) {
+					List<DetailedBookDescriptor> resultList = resultBox.getList();
+			%>
+			<div class="contentSection">
+				<h1 class="sectionTitle">Risultati ricerca</h1>
+				<div class="sectionContent">
+					<%
+						if (resultList.isEmpty()) {
+					%>
+					<p class="empty">La ricerca non ha restituito risultati.</p>
+					<%
+						} else {
+					%>
+					<p class="paragraph">La ricerca ha restituito i seguenti
+						risultati. Selezionane uno per proseguire nella ricerca.</p>
+					<div class="resultList">
 						<%
-							if (resultList.isEmpty()) {
+							for (DetailedBookDescriptor book : resultBox.getList()) {
 						%>
-						<p class="empty">La ricerca non ha restituito risultati.</p>
-						<%
-							} else {
-						%>
-						<p class="paragraph">La ricerca ha restituito i seguenti
-							risultati. Selezionane uno per proseguire nella ricerca.</p>
-						<div class="resultList">
-							<%
-								for (DetailedBookDescriptor book : resultBox.getList()) {
-							%>
-							<div class="result clearfix">
-								<div class="pictureContainer left">
-									<img class="bookPicture"
-										src="http://www.oasidellibro.it/wp-content/uploads/2010/04/Il-Signore-Degli-Anelli.jpg" />
-								</div>
-								<div class="resultDetails left">
-									<div class="detail title"><%=book.getTitle()%></div>
-									<div class="detail author">
-										di
-										<%=book.getAuthors()%></div>
-									<div class="detail isbn"><%=book.getIsbn()%></div>
-								</div>
-								<div class="selectButton right">
-									<a href="/search/concrete?detail=<%=book.getId()%>"
-										class="button select animate">Seleziona</a>
-								</div>
+						<div class="result clearfix">
+							<div class="pictureContainer left">
+								<img class="bookPicture"
+									src="http://www.oasidellibro.it/wp-content/uploads/2010/04/Il-Signore-Degli-Anelli.jpg" />
 							</div>
-							<%
-								}
-							%>
+							<div class="resultDetails left">
+								<div class="detail title"><%=book.getTitle()%></div>
+								<div class="detail author">
+									di
+									<%=book.getAuthors()%></div>
+								<div class="detail isbn"><%=book.getIsbn()%></div>
+							</div>
+							<div class="selectButton right">
+								<a href="/search/concrete?detail=<%=book.getId()%>"
+									class="button select animate">Seleziona</a>
+							</div>
 						</div>
 						<%
 							}
 						%>
 					</div>
+					<%
+						}
+					%>
 				</div>
-				<%
-					}
-				%>
-				<!-- Concrete results -->
 			</div>
+			<%
+				}
+			%>
 		</div>
 	</div>
 </body>

@@ -116,6 +116,10 @@ body.webookia a:link {
 	margin-bottom: 0px;
 }
 
+.profilePicture{
+	vertical-align: bottom;
+}
+
 #userCorner .profilePicture{
     height: 28px;
     width: 28px;
@@ -221,6 +225,10 @@ body.webookia a:link {
 	font-family: Tahoma;
 	min-height: 250px;
 	margin-top: 30px;
+}
+
+.hidden{
+	display: none;
 }
 
 /* Sections */
@@ -534,7 +542,6 @@ a.button:hover {
 .completeSearchForm .searchLabel{
 	width: 20%;
 	color: #777777;
-	font-weight: light;
 }
 
 .completeSearchForm .submitInput{
@@ -581,4 +588,108 @@ a.button:hover {
 
 a.button.select{
 	margin-top: 40px;
+}
+
+.concreteDisplay{
+	border-top: 1px solid #bbbbbb;
+}
+
+#concreteList{
+	position: relative;
+	display: inline-block;
+	vertical-align: top;
+	width: 240px;
+	z-index: 10;
+	height: 700px;
+	overflow-y: auto;
+}
+
+#map{
+	position: relative;
+	display: inline-block;
+	background-color: blue;
+	width: 700px;
+	height: 700px;
+	margin-left: -5px;
+	z-index: 2;
+}
+
+.concrete{
+	height: 48px;
+	border-bottom: 1px solid #bbbbbb;
+	cursor: pointer;
+	position: relative;
+	z-index: 10
+}
+
+.concrete:hover{
+	background: #6d84b4;
+}
+
+.concrete .userThumb,
+.concrete .concreteDetail{
+	float: left;
+	vertical-align: top;
+	margin: 5px;
+}
+
+.concreteDetail{
+	margin-left: 5px;
+	font-size: 14px;
+	line-height: 14px;
+}
+
+.concreteDetail > div{
+	margin-bottom: 5px;
+}
+
+.concreteDetail .name{
+	color: #222222;
+	font-weight: bold;
+}
+
+.concrete:hover .concreteDetail .name{
+	color: white;
+}
+
+.concrete:hover .concreteDetail .location{
+	color: rgba(255,255,255,.8);
+}
+
+.concreteDetail .location{
+	color: #666666;
+}
+
+.concretePopup{
+	position: absolute;
+	z-index: 200;
+	top: 45px;
+	border: 1px solid rgba(0,0,0,.2);
+	background: white;
+	background-clip: content-box;
+	font-size: 14px;
+	border-radius: 2px;
+	box-shadow: 0 0 1px 0 rgba(0,0,0,.1);
+	margin-left: 1px;
+}
+
+.concretePopup .text{
+	padding: 5px 10px;
+}
+
+.concretePopup .arrow{
+	width: 14px;
+	height: 10px;
+	margin-left: 15px;
+	background-image: url('../resources/popup-arrow.png');
+	margin-top: -10px;
+}
+
+.concretePopup .buttons{
+	padding: 0 10px 5px;
+	text-align: center;
+}
+
+.concretePopup .buttons .button{
+	width: 40px;
 }

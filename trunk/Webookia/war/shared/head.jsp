@@ -28,6 +28,7 @@
 <link type="text/css" rel="stylesheet" href="/css/webookia.css" />
 <link rel="icon" href="/favicon.ico" type="image/icon" />
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 <%
 	if (hContextBook != null) {
 %>
