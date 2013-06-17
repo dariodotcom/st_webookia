@@ -82,7 +82,7 @@ var $doc = document.getElementById.bind(document);
 			        popupElem.hide();
 			    },
 			    top: function(top){
-			        popupElem.css("top", top);
+			        popupElem.css("top", top + "px");
 			    },
 			}
 			
@@ -112,7 +112,11 @@ var $doc = document.getElementById.bind(document);
 		selectConcrete: function _selectConcrete(concrete, marker){
 		    this.popup.hide();
 		    
-		    // Set top.
+		    var top = concrete.position().top;
+		    var height = concrete.height();
+		    var newPosition = top + height + 9;
+		    Utility.log("Setting height to " + (top + height));
+		    this.popup.top(newPosition);
 		    
 		    var name = concrete.children('.concreteDetail').children('.name').text();
 		    this.popup.setName(name);
