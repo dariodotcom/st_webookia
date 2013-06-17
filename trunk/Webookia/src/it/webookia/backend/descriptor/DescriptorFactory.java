@@ -15,12 +15,7 @@ public class DescriptorFactory {
 
     /* USERS */
     public static UserDescriptor createUserDescriptor(UserEntity user) {
-        UserDescriptor descriptor = new UserDescriptor();
-
-        descriptor.setUserId(user.getUserId());
-        descriptor.setName(user.getName());
-        descriptor.setSurname(user.getSurname());
-        descriptor.setThumbnail(user.getThumbnailUrl());
+        UserDescriptor descriptor = new UserDescriptor(user);
         return descriptor;
     }
 

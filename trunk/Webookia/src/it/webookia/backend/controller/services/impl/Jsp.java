@@ -8,7 +8,8 @@ public enum Jsp {
     LOAN_DETAIL("/loan_detail.jsp"),
     LOAN_JSP("/loans.jsp"),
     ERROR_JSP("/error.jsp"),
-    SEARCH_JSP("/search.jsp");
+    SEARCH_JSP("/search.jsp"),
+    CONCRETE_JSP("/concretes.jsp");
 
     private String url;
 
