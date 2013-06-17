@@ -11,6 +11,8 @@
 <%@ include file="shared/commons.jsp"%>
 
 <%
+	String userId = ServletUtils.getAuthenticatedUserId(request);
+	UserDescriptor viewer = UserResource.getUser(userId).getDescriptor();
 	ConcreteResultBox box = ServletUtils.getRequestAttribute(request,
 			ConcreteResultBox.class, SearchContainer.CONCRETE_RESULTS);
 	List<BookDescriptor> results = box.getList();
@@ -23,6 +25,7 @@
 	<%@ include file="shared/header.jsp"%>
 	<div id="contentContainer">
 		<div id="content" class="topWidthElement">
+			<div class="selfCoords hidden"><%=viewer.getLocation()%></div>
 			<!-- Search -->
 			<div class="contentSection">
 				<h1 class="sectionTitle">Libri disponibili</h1>
@@ -47,7 +50,7 @@
 										UserDescriptor owner = UserResource.getUser(
 												book.getOwnerId()).getDescriptor();
 							%>
-							<div class="concrete animate">
+							<div class="concrete animate clearfix">
 								<div class="userThumb">
 									<img class="profilePicture" src="<%=owner.getThumbnail()%>">
 								</div>
@@ -56,7 +59,6 @@
 									<div class="location">Milano, India</div>
 									<div class="coords hidden"><%=owner.getLocation()%></div>
 								</div>
-								<div class="arrow">&nbsp;</div>
 							</div>
 							<%
 								}
@@ -67,8 +69,8 @@
 									Vuoi chiedere il libro in prestito a <span class="name"></span>?
 								</div>
 								<div class="buttons">
-									<a class="button yes" href="#">Si</a>
-									<a class="button no" href="#">No</a>
+									<a class="button yes" href="#">Si</a> <a class="button no"
+										href="#">No</a>
 								</div>
 							</div>
 						</div>
