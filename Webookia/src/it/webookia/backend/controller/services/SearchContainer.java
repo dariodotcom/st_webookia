@@ -1,6 +1,7 @@
 package it.webookia.backend.controller.services;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 
@@ -23,11 +24,12 @@ public class SearchContainer extends ServiceServlet {
 
     public static final String CONCRETE_RESULTS = "CONCRETE_RESULTS";
     public static final String DETAILED_RESULTS = "DETAILED_RESULTS";
+    public static final String PARAMETERS = "PARAMETERS";
 
     public SearchContainer() {
         super(Context.SEARCH);
         registerService(Verb.POST, "result", new SearchDetail());
-        registerService(Verb.GET, "instances", new SearchInstances());
+        registerService(Verb.GET, "concrete", new SearchInstances());
         registerDefaultService(Verb.GET, new SearchLanding());
     }
 
@@ -35,7 +37,6 @@ public class SearchContainer extends ServiceServlet {
         @Override
         public void service(ServiceContext context) throws ServletException,
                 IOException {
-
             context.forwardToJsp(Jsp.SEARCH_JSP);
         }
     }
@@ -51,7 +52,11 @@ public class SearchContainer extends ServiceServlet {
 
             ListDescriptor<DetailedBookDescriptor> results =
                 BookResource.lookupDetailedBooks(params);
-            context.setRequestAttribute(DETAILED_RESULTS, results);
+            context.setRequestAttribute(
+                DETAILED_RESULTS,
+                new DetailedResultBox(results));
+            context.setRequestAttribute(PARAMETERS, params);
+
             context.forwardToJsp(Jsp.SEARCH_JSP);
 
         }
@@ -72,8 +77,34 @@ public class SearchContainer extends ServiceServlet {
                 return;
             }
 
-            context.setRequestAttribute(CONCRETE_RESULTS, result);
-            context.forwardToJsp(Jsp.SEARCH_JSP);
+            context.setRequestAttribute(
+                CONCRETE_RESULTS,
+                new ConcreteResultBox(result));
+            context.forwardToJsp(Jsp.CONCRETE_JSP);
+        }
+    }
+
+    public static class DetailedResultBox {
+        private List<DetailedBookDescriptor> list;
+
+        public DetailedResultBox(ListDescriptor<DetailedBookDescriptor> desc) {
+            this.list = desc.getList();
+        }
+
+        public List<DetailedBookDescriptor> getList() {
+            return list;
+        }
+    }
+
+    public static class ConcreteResultBox {
+        private List<BookDescriptor> list;
+
+        public ConcreteResultBox(ListDescriptor<BookDescriptor> desc) {
+            this.list = desc.getList();
+        }
+
+        public List<BookDescriptor> getList() {
+            return list;
         }
     }
 }

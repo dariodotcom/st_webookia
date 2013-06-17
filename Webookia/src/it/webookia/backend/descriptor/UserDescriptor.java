@@ -1,5 +1,8 @@
 package it.webookia.backend.descriptor;
 
+import it.webookia.backend.model.UserEntity;
+import it.webookia.backend.utils.storage.Location;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -11,8 +14,16 @@ public class UserDescriptor implements Descriptor {
     private String userId;
     private String name;
     private String surname;
-    private String location;
+    private LocationDescriptor location;
     private String thumbnail;
+
+    UserDescriptor(UserEntity user) {
+        userId = user.getUserId();
+        name = user.getName();
+        surname = user.getSurname();
+        thumbnail = user.getThumbnailUrl();
+        location = new LocationDescriptor(user.getLocation());
+    }
 
     // Setters and Getters
     @XmlElement(name = "userId", required = true)
@@ -43,24 +54,56 @@ public class UserDescriptor implements Descriptor {
     }
 
     @XmlElement(name = "location")
-    public String getLocation() {
+    public LocationDescriptor getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(LocationDescriptor location) {
         this.location = location;
     }
 
+    @XmlElement(name = "thumbnail")
     public String getThumbnail() {
         return thumbnail;
     }
 
-    @XmlElement(name = "thumbnail")
     public void setThumbnail(String thumbnailUrl) {
         this.thumbnail = thumbnailUrl;
     }
 
     public String getFullName() {
         return name + " " + surname;
+    }
+
+    @XmlType(name = "location")
+    public static class LocationDescriptor {
+        private double latitude;
+        private double longitude;
+        private String name;
+
+        private LocationDescriptor(Location location) {
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+        }
+
+        @XmlElement(name = "latitude")
+        public double getLatitude() {
+            return latitude;
+        }
+
+        @XmlElement(name = "longitude")
+        public double getLongitude() {
+            return longitude;
+        }
+
+        @XmlElement(name = "name")
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public String toString() {
+            return String.format("%s,%s", latitude, longitude);
+        }
     }
 }
