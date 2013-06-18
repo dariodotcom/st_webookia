@@ -231,6 +231,32 @@ body.webookia a:link {
 	display: none;
 }
 
+/*Error message*/
+#errorContainer{
+	margin: 0 auto;
+	width: 700px;
+	text-align: center;
+}
+
+#errorContainer .error{
+	background-color: red;
+	border-radius: 2px;
+	height: 30px;
+	line-height: 30px;
+	padding: 0px 20px;
+	vertical-align: middle;
+	margin-top: 20px;
+}
+
+#errorContainer .error .errorText{
+	float: left;
+}
+
+#errorContainer .close{
+	float: right;
+	cursor: pointer;
+}
+
 /* Sections */
 .sectionTitle,
 .paragraph:not(:last-child){
