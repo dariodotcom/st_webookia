@@ -2,6 +2,8 @@ const
 DEBUG_MODE = true;
 const
 LOG_PREFIX = "[WEBOOKIA LOG] ";
+const
+API_URL = "/api";
 
 var $doc = document.getElementById.bind(document);
 
@@ -10,11 +12,11 @@ var $doc = document.getElementById.bind(document);
 	// Main object declaration
 	var Webookia = window.Webookia = {};
 
+	var logFn = (console ? console.log.bind(console) : alert.bind(window));
 	var Utility = Webookia.Utility = {
 		log : function _log(message) {
 			if (DEBUG_MODE) {
-				(window.console ? window.console.log : window.alert).call(
-						window, (LOG_PREFIX + message));
+				logFn(LOG_PREFIX + message);
 			}
 		}
 	}
@@ -34,15 +36,78 @@ var $doc = document.getElementById.bind(document);
 		})
 	})
 
+	/*
+	 * ============ API ACCESS ============
+	 */
+	var Api = Webookia.Api = {}
+
+	Api.post = function(url, json, onSuccess, onError) {
+		$.ajax({
+			type : "POST",
+			beforeSend : function(req) {
+				req.setRequestHeader("Content-Type", "application/json");
+			},
+			url : API_URL + url,
+			data : JSON.stringify(json),
+		}).done(onSuccess).fail(onError);
+	}
+
+	// Loans
+	var Loan = Webookia.Loan = function(id) {
+		this.id = id;
+	}
+
+	Loan.create = function(bookId, onsuccess, onerror) {
+		var json = {
+			bookId : bookId
+		};
+		var url = "/loans/new";
+		Api.post(url, json, onsuccess, onerror);
+	}
+
+	// Books
+	var Book = Webookia.Book = function(id) {
+		this.id = id;
+	}
+
+	Book.prototype = {
+		getId : function _getId() {
+			return this.id;
+		},
+		privacy : function _privacy(privacy, onSuccess, onError) {
+			var json = {
+				privacy : privacy
+			};
+			var url = "/books/book/" + this.id;
+			Api.post(url, json, onSuccess, onError);
+		},
+		status : function _status(status, onSuccess, onError) {
+			var json = {
+				status : status
+			};
+			var url = "books/book/" + this.id;
+			Api.post(url, json, onSuccess, onError);
+		},
+		review : function _review(text, mark, onSuccess, onError) {
+			var json = {
+				mark : mark,
+				text : text
+			};
+			var url = "books/book/" + this.id + "/review";
+			Api.post(url, json, onSuccess, onError);
+		},
+		comment : function _comment() {
+
+		}
+	}
+
 	// Error
 	var errorContainer;
 	Webookia.Initializer.plugin(function() {
 		errorContainer = $doc("errorContainer")
 				|| ($("<div id=\"errorContainer\"></div>")
 						.prependTo($("#content")));
-		
-		//Test
-		Webookia.Error.append("Non puoi eseguire l'azione richiesta.");
+
 	});
 
 	var Error = Webookia.Error = {
@@ -99,6 +164,10 @@ var $doc = document.getElementById.bind(document);
 			var popupElem = $(".concretePopup");
 			popupElem.hide();
 
+			var buttons = popupElem.children('.buttons');
+			var no = buttons.children('.no');
+			var yes = buttons.children('.yes');
+
 			this.popup = {
 				setName : function(name) {
 					popupElem.children(".text").children(".name").text(name);
@@ -112,10 +181,12 @@ var $doc = document.getElementById.bind(document);
 				top : function(top) {
 					popupElem.css("top", top + "px");
 				},
+				yes : function(listener) {
+					yes.unbind('click');
+					yes.click(listener);
+				}
 			}
 
-			var buttons = popupElem.children('.buttons');
-			var no = buttons.children('.no');
 			no.click(this.popup.hide);
 		},
 
@@ -140,19 +211,36 @@ var $doc = document.getElementById.bind(document);
 
 		selectConcrete : function _selectConcrete(concrete, marker) {
 			this.popup.hide();
+			var detail = concrete.children('.concreteDetail');
 
+			// Set top offset
 			var top = concrete.position().top;
 			var height = concrete.height();
 			var newPosition = top + height + 9;
-			Utility.log("Setting height to " + (top + height));
 			this.popup.top(newPosition);
 
-			var name = concrete.children('.concreteDetail').children('.name')
-					.text();
+			// Set name
+			var name = detail.children('.name').text();
 			this.popup.setName(name);
+
+			// Set listener
+			var id = detail.children('.id').text();
+			this.popup.yes(this.createLoan.bind(this, id));
 
 			this.popup.show();
 			this.bounceMarker(marker);
+		},
+
+		createLoan : function(detailId) {
+			function success(req) {
+				location.href = "/loans/detail?id=" + req.descriptor.id;
+			}
+			
+			function error(req){
+				Webookia.Error.append(req.responseJSON.descriptor.message);
+			}
+
+			Loan.create(detailId, success, error);
 		},
 
 		init : function _init() {
@@ -163,7 +251,9 @@ var $doc = document.getElementById.bind(document);
 	}
 
 	Initializer.plugin(function __loadConcreteUI__() {
-		ConcreteUI.init();
+		if ($doc("concreteDisplay")) {
+			ConcreteUI.init();
+		}
 	});
 
 })();

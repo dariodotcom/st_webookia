@@ -27,7 +27,7 @@
 	rel='stylesheet' type='text/css'>
 <link type="text/css" rel="stylesheet" href="/css/webookia.css" />
 <link rel="icon" href="/favicon.ico" type="image/icon" />
-<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.js"></script>
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 <script type="text/javascript" src="/js/Webookia.Core.js"></script>
 <%
