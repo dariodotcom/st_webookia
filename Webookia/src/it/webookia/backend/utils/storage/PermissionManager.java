@@ -105,13 +105,13 @@ public class PermissionManager {
         }
 
         if (concreteBook.getOwner().equals(user)) {
-            logger.log("User "
-                + user.getUserId()
-                + " cannot borrow his own book");
+            logger.log(borrowDeniedMsg("his own book", concreteBook.getId()));
+            return false;
         }
 
         if (concreteBook.getStatus() != BookStatus.AVAILABLE) {
-            logger.log("Book " + concreteBook.getId() + "is not available");
+            logger
+                .log(borrowDeniedMsg("unavailable book", concreteBook.getId()));
             return false;
         }
 
@@ -180,6 +180,14 @@ public class PermissionManager {
         }
 
         return false;
+    }
+
+    private String borrowDeniedMsg(String resType, String resId) {
+        return String.format(
+            "User %s cannot borrow %s %s",
+            user.getUserId(),
+            resType,
+            resId);
     }
 
 }

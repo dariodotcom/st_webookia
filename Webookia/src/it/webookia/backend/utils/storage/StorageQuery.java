@@ -22,7 +22,7 @@ import it.webookia.backend.model.UserEntity;
 import it.webookia.backend.utils.Settings;
 import it.webookia.backend.utils.foreignws.facebook.FacebookConnector;
 import it.webookia.backend.utils.servlets.SearchParameters;
-import it.webookia.backend.utils.storage.filters.BookVisibilityFilter;
+import it.webookia.backend.utils.storage.filters.BookSearchFilter;
 
 /**
  * Class that holds the logic behind queries to the storage so that specific
@@ -105,7 +105,8 @@ public class StorageQuery {
         return query.asList();
     }
 
-    public static List<DetailedBook> lookUpDetailedBook(SearchParameters params) {
+    public static List<DetailedBook> lookUpDetailedBook(
+            SearchParameters params) {
         DetailedBookMeta detailedBook = DetailedBookMeta.get();
         ModelQuery<DetailedBook> query = Datastore.query(detailedBook);
 
@@ -134,11 +135,8 @@ public class StorageQuery {
             DetailedBook detail, UserEntity requestor) {
         ConcreteBookMeta concreteBook = ConcreteBookMeta.get();
         ModelQuery<ConcreteBook> query = Datastore.query(concreteBook);
-        query.filter(concreteBook.detailedBookRef.equal(detail.getKey()));
 
-        query.filterInMemory(new BookVisibilityFilter(
-            concreteBook.privacy,
-            requestor));
+        query.filterInMemory(new BookSearchFilter(requestor, detail.getKey()));
 
         return query.asList();
     }
