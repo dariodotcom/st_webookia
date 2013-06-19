@@ -9,16 +9,26 @@
 	pageEncoding="ISO-8859-1"%>
 <%@ include file="shared/commons.jsp"%>
 
+<%!
+	private String textOf(PrivacyLevel level){
+		switch(level){
+		case FRIENDS_ONLY:return "Solo amici";
+		case PRIVATE: return "Nessuno";
+		default: return "Tutti";
+		}
+	}
+%>
+
 <%
-	BookResource detailedBook = ServletUtils.getRequestAttribute(
+	BookResource contextBook = ServletUtils.getRequestAttribute(
 			request, BookResource.class, Books.CONTEXT_BOOK);
 	UserResource viewer = ServletUtils.getAuthenticatedUser(request);
 	UserDescriptor viewerDescriptor = (viewer == null ? null : viewer
 			.getDescriptor());
-	UserDescriptor ownerDescriptor = detailedBook.getOwner();
-	BookDescriptor detailedBookDescriptor = detailedBook
-			.getDescriptor();
-	boolean isOwner = detailedBook.isOwner(viewer);
+	UserDescriptor ownerDescriptor = contextBook.getOwner();
+	BookDescriptor contextBookDescriptor = contextBook.getDescriptor();
+	
+	boolean isOwner = contextBook.isOwner(viewer);
 %>
 
 <!doctype html>
@@ -41,9 +51,9 @@
 							<div class="contentSection">
 								<div class="sectionTitle">Dettagli</div>
 								<div class="sectionContent">
-									<div class="title"><%=detailedBookDescriptor.getTitle()%></div>
-									<div class="author"><%=detailedBookDescriptor.getAuthors()%></div>
-									<div class="publisher"><%=detailedBookDescriptor.getPublisher()%></div>
+									<div class="title"><%=contextBookDescriptor.getTitle()%></div>
+									<div class="author"><%=contextBookDescriptor.getAuthors()%></div>
+									<div class="publisher"><%=contextBookDescriptor.getPublisher()%></div>
 								</div>
 							</div>
 
@@ -55,10 +65,19 @@
 								<div class="sectionTitle">Impostazioni</div>
 								<div class="sectionContent">
 									<label for="bookPrivacy" class="privacyLabel">Mostra
-										questo libro a: </label> <select name="privacy" id="bookPrivacy">
-										<option value="public">Tutti</option>
-										<option value="friends_only">Solo amici</option>
-										<option value="private">Nessuno</option>
+										questo libro a: </label><select name="privacy" id="bookPrivacy">
+										<%
+											for (PrivacyLevel level : PrivacyLevel.values()) {
+													String value = level.getClass().getName();
+													String text = textOf(level);
+													boolean selected = level.equals(contextBookDescriptor
+															.getPrivacy());
+										%>
+										<option value="<%=value%>" selected="selected"><%=text%></option>
+										<%
+											}
+										%>
+
 									</select> <br> <input type="checkbox" name="available"
 										class="bookStatus" id="bookStatus" /> <label for="bookStatus"
 										class="statusLabel">Il libro è disponibile per il
