@@ -12,7 +12,8 @@
 
 <%
 	String userId = ServletUtils.getAuthenticatedUserId(request);
-	UserDescriptor viewer = UserResource.getUser(userId).getDescriptor();
+	UserDescriptor viewer = UserResource.getUser(userId)
+			.getDescriptor();
 	ConcreteResultBox box = ServletUtils.getRequestAttribute(request,
 			ConcreteResultBox.class, SearchContainer.CONCRETE_RESULTS);
 	List<BookDescriptor> results = box.getList();
@@ -43,7 +44,7 @@
 						Stai cercando copie di "<%=example.getTitle()%>". I seguenti
 						utenti ne hanno una, selezionane uno per chiedere in prestito!
 					</p>
-					<div class="concreteDisplay clearfix">
+					<div id="concreteDisplay" class="clearfix">
 						<div id="concreteList">
 							<%
 								for (BookDescriptor book : results) {
@@ -58,6 +59,7 @@
 									<div class="name"><%=owner.getFullName()%></div>
 									<div class="location">Milano, India</div>
 									<div class="coords hidden"><%=owner.getLocation()%></div>
+									<div class="id hidden">saddf</div>
 								</div>
 							</div>
 							<%
