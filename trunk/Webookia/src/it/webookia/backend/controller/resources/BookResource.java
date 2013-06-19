@@ -126,7 +126,7 @@ public class BookResource {
     }
 
     public static ListDescriptor<BookDescriptor> lookupConcreteBooks(
-            String detailId) throws ResourceException {
+            String detailId, UserResource requestor) throws ResourceException {
         DetailedBook detail;
 
         try {
@@ -136,7 +136,8 @@ public class BookResource {
         }
 
         List<ConcreteBook> books =
-            StorageQuery.getConcreteBooksByDetail(detail, null);
+            StorageQuery
+                .getConcreteBooksByDetail(detail, requestor.getEntity());
         return DescriptorFactory.createBookListDescriptor(books);
     }
 

@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.ServletException;
 
 import it.webookia.backend.controller.resources.BookResource;
+import it.webookia.backend.controller.resources.UserResource;
 import it.webookia.backend.controller.resources.exception.ResourceException;
 import it.webookia.backend.controller.services.impl.Jsp;
 import it.webookia.backend.controller.services.impl.Service;
@@ -46,7 +47,6 @@ public class SearchContainer extends ServiceServlet {
         @Override
         public void service(ServiceContext context) throws ServletException,
                 IOException {
-
             SearchParameters params =
                 SearchParameters.createFrom(context.getRequest());
 
@@ -67,11 +67,15 @@ public class SearchContainer extends ServiceServlet {
         @Override
         public void service(ServiceContext context) throws ServletException,
                 IOException {
-            String id = context.getRequestParameter("detail");
+            String bookId = context.getRequestParameter("detail");
             ListDescriptor<BookDescriptor> result;
 
+            String userId = context.getAuthenticatedUserId();
+            UserResource user;
+
             try {
-                result = BookResource.lookupConcreteBooks(id);
+                user = UserResource.getUser(userId);
+                result = BookResource.lookupConcreteBooks(bookId, user);
             } catch (ResourceException e) {
                 context.sendError(e);
                 return;
