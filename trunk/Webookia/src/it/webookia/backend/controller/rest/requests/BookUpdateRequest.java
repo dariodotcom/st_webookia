@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement
 @XmlType(name = "bookUpdateRequest")
-public class BookUpdateRequest {
+public class BookUpdateRequest extends RestRequest {
 
     private BookStatus status;
     private PrivacyLevel privacy;

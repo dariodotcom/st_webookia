@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement
 @XmlType(name = "loan")
-public class LoanCreationRequest {
+public class LoanCreationRequest extends RestRequest {
 
     private String bookId;
 

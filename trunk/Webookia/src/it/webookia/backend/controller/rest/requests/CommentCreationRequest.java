@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement
 @XmlType(name = "commentCreation")
-public class CommentCreationRequest {
+public class CommentCreationRequest extends RestRequest {
 
     private String text;
 
@@ -16,6 +16,6 @@ public class CommentCreationRequest {
     }
 
     public void setText(String text) {
-        this.text = text;
+        this.text = filter(text);
     }
 }
