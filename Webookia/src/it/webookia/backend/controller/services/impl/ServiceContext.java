@@ -3,6 +3,7 @@ package it.webookia.backend.controller.services.impl;
 import java.io.IOException;
 
 import it.webookia.backend.controller.resources.exception.ResourceException;
+import it.webookia.backend.utils.HTMLInputFilter;
 import it.webookia.backend.utils.ServletUtils;
 
 import javax.servlet.ServletException;
@@ -95,7 +96,10 @@ public class ServiceContext {
      * @return - the parameter.
      */
     public String getRequestParameter(String arg0) {
-        return request.getParameter(arg0);
+        String unfiltered = request.getParameter(arg0);
+        
+        // Filter content from user
+        return new HTMLInputFilter().filter(unfiltered);
     }
 
     /**

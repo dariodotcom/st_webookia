@@ -8,7 +8,7 @@ import it.webookia.backend.enums.PrivacyLevel;
 
 @XmlRootElement
 @XmlType(name = "bookCreationRequest")
-public class BookCreationRequest {
+public class BookCreationRequest extends RestRequest {
 
     private String isbn;
     private PrivacyLevel privacy;

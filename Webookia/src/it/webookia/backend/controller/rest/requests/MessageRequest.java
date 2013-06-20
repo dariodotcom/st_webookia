@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement
 @XmlType(name = "messageRequest")
-public class MessageRequest {
+public class MessageRequest extends RestRequest {
 
     private String messageText;
 
@@ -16,7 +16,7 @@ public class MessageRequest {
     }
 
     public void setMessageText(String messageText) {
-        this.messageText = messageText;
+        this.messageText = filter(messageText);
     }
 
 }

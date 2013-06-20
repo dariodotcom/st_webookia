@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement
 @XmlType(name = "reviewCreation")
-public class ReviewCreationRequest {
+public class ReviewCreationRequest extends RestRequest {
 
     private String text;
     private int mark;
@@ -17,7 +17,7 @@ public class ReviewCreationRequest {
     }
 
     public void setText(String text) {
-        this.text = text;
+        this.text = filter(text);
     }
 
     @XmlElement(name = "mark", required = true, nillable = false)

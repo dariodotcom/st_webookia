@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement
 @XmlType(name = "feedbackAdditionRequest")
-public class FeedbackAdditionRequest {
+public class FeedbackAdditionRequest extends RestRequest {
 
     private int mark;
     private String text;
@@ -26,6 +26,6 @@ public class FeedbackAdditionRequest {
     }
 
     public void setText(String text) {
-        this.text = text;
+        this.text = filter(text);
     }
 }
