@@ -66,7 +66,7 @@
 			privacyText = "Pubblico";
 			break;
 		case FRIENDS_ONLY:
-			privacyClass = "friendsOnly";
+			privacyClass = "friends";
 			privacyText = "Amici";
 			break;
 		default:

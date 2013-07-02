@@ -39,17 +39,23 @@ var $doc = document.getElementById.bind(document);
 	/*
 	 * ============ API ACCESS ============
 	 */
-	var Api = Webookia.Api = {}
-
-	Api.post = function(url, json, onSuccess, onError) {
-		$.ajax({
-			type : "POST",
-			beforeSend : function(req) {
-				req.setRequestHeader("Content-Type", "application/json");
-			},
-			url : API_URL + url,
-			data : JSON.stringify(json),
-		}).done(onSuccess).fail(onError);
+	var Api = {
+		post : function _apiPost(url, json, onSuccess, onError) {
+			$.ajax({
+				type : "POST",
+				beforeSend : function(req) {
+					req.setRequestHeader("Content-Type", "application/json");
+				},
+				url : API_URL + url,
+				data : JSON.stringify(json),
+			}).done(onSuccess).fail(onError);
+		},
+		get : function _apiGet(url, onSuccess, onError) {
+			$.ajax({
+				type : "GET",
+				url : API_URL + url
+			}).done(onSuccess).fail(onError);
+		}
 	}
 
 	// Loans
@@ -63,6 +69,32 @@ var $doc = document.getElementById.bind(document);
 		};
 		var url = "/loans/new";
 		Api.post(url, json, onsuccess, onerror);
+	}
+
+	Loan.prototype = {
+		getId : function _loanGetId() {
+			return this.id;
+		},
+
+		accept : function _loanAccept(onSuccess, onError) {
+			Api.get("/loans/loan/" + this.id + "/accept", onSuccess, onError);
+		},
+		refuse : function _loanRefuse(onSuccess, onError) {
+			Api.get("/loans/loan/" + this.id + "/refuse", onSuccess, onError);
+		},
+		ship : function _loanShip(onSuccess, onError) {
+			Api.get("/loans/loan/" + this.id + "/shipped", onSuccess, onError);
+		},
+		giveBack : function _loanGiveBack(onSuccess, onError) {
+			Api.get("/loans/loan/" + this.id + "/giveback", onSuccess, onError);
+		},
+		message : function _loanMessage(text, onSuccess, onError) {
+			var json = {
+				messageText : text
+			};
+			var url = "/loans/loan/" + this.id + "/messages";
+			Api.post(url, json, onSuccess, onError)
+		}
 	}
 
 	// Books
@@ -85,7 +117,7 @@ var $doc = document.getElementById.bind(document);
 			var json = {
 				status : status
 			};
-			var url = "books/book/" + this.id;
+			var url = "/books/book/" + this.id;
 			Api.post(url, json, onSuccess, onError);
 		},
 		review : function _review(text, mark, onSuccess, onError) {
@@ -93,11 +125,15 @@ var $doc = document.getElementById.bind(document);
 				mark : mark,
 				text : text
 			};
-			var url = "books/book/" + this.id + "/review";
+			var url = "/books/book/" + this.id + "/review";
 			Api.post(url, json, onSuccess, onError);
 		},
-		comment : function _comment() {
-
+		comment : function _comment(text, onSuccess, onError) {
+			var json = {
+				text : text
+			};
+			var url = "/books/book/" + this.id + "/review/comment";
+			Api.post(url, json, onSuccess, onError);
 		}
 	}
 
@@ -111,18 +147,97 @@ var $doc = document.getElementById.bind(document);
 	});
 
 	var Error = Webookia.Error = {
-		append : function _append(errorMsg) {
-			var error = $("<div class=\"error clearfix\"></div>");
-			$("<div class=\"errorText\"></div>").text(errorMsg).appendTo(error);
-			var close = $("<div class=\"close\"></div>").text("x");
-			close.appendTo(error);
-			close.click(function() {
-				error.remove();
-			});
-			error.appendTo(errorContainer);
-		}
+		append : function _append(errorMsg, parent) {
+			var error = $("<div class=\"error clearfix\"></div>").prependTo(
+					(parent ? parent : errorContainer));
 
+			$("<div class=\"errorText\"></div>").text(errorMsg).appendTo(error);
+
+			$("<div class=\"close\"></div>").text("x").click(function() {
+				error.remove()
+			}).appendTo(error);
+		}
 	}
+
+	// Book UI
+	Webookia.Initializer.plugin(function() {
+		if ($doc("bookUI")) {
+			var book = new Book($(".detailContainer .id").text());
+			var defaultOnSuccess = location.reload.bind(location);
+			var defaultOnError = function(resp) {
+				console.log(resp);
+			}
+
+			$("#bookPrivacy").change(function(event) {
+				var privacy = $(event.target).val();
+				book.privacy(privacy, defaultOnSuccess, defaultOnError);
+			});
+
+			$("#bookStatus").change(
+					function(event) {
+						var status = event.target.checked ? "AVAILABLE"
+								: "NOT_AVAILABLE";
+						book.status(status, defaultOnSuccess, defaultOnError)
+					});
+
+			$("#commentSubmit").click(function() {
+				var text = $("#commentText").val();
+				book.comment(text, defaultOnSuccess, defaultOnError)
+			});
+
+			$("#reviewSubmit").click(
+					function(event) {
+						var mark = Marker.valueOf($("#reviewMark"));
+						var text = $("#reviewText").val();
+						if (mark == 0 || text == "") {
+							Webookia.Error.append("Compila entrambi i campi.",
+									$(event.target.parentNode));
+							return;
+						}
+
+						book.review(text, mark, defaultOnSuccess,
+								defaultOnError);
+					});
+		}
+	});
+
+	// Loan UI
+	Webookia.Initializer.plugin(function() {
+		if ($doc("loanUI")) {
+			var loan = new Loan($(".details .id").text())
+			var defaultOnSuccess = location.reload.bind(location);
+			var defaultOnError = function(resp) {
+				console.log(resp);
+			}
+
+			$("#accepted").click(function() {
+				loan.accept(defaultOnSuccess, defaultOnError);
+			});
+
+			$("#refused").click(function() {
+				loan.refuse(defaultOnSuccess, defaultOnError);
+			});
+
+			$("#shipped").click(function() {
+				loan.ship(defaultOnSuccess, defaultOnError);
+			});
+
+			$("#given_back").click(function() {
+				loan.giveBack(defaultOnSuccess, defaultOnError);
+			});
+			
+			$("#messageSubmit").click(function(event){
+				var text = $("#messageText").val();
+				if(text == ""){
+					Webookia.Error.append("Non puoi mandare un messaggio vuoto.", $(event.target.parentNode));
+					return;
+				}
+				
+				loan.message(text, defaultOnSuccess, defaultOnError);
+			});
+
+		}
+	});
 
 	// Concrete UI
 	function toCoords(elem) {
@@ -235,8 +350,8 @@ var $doc = document.getElementById.bind(document);
 			function success(req) {
 				location.href = "/loans/detail?id=" + req.descriptor.id;
 			}
-			
-			function error(req){
+
+			function error(req) {
 				Webookia.Error.append(req.responseJSON.descriptor.message);
 			}
 
@@ -255,5 +370,90 @@ var $doc = document.getElementById.bind(document);
 			ConcreteUI.init();
 		}
 	});
+
+	Webookia.HTML = {}
+
+	// Marker
+	var Marker = Webookia.HTML.Marker = function(editable, initialValue, id) {
+		var div = this._div = $('<div class="marker"></div>');
+		var stars = this.stars = new Array();
+
+		this.currentMark = initialValue || 0;
+
+		div.attr('id', id);
+		div.data("marker", this);
+
+		if (editable) {
+			div.addClass('editable');
+			div.mouseout(this.onMarkerLeave.bind(this));
+		}
+
+		for ( var i = 0; i < this.maxValue; i++) {
+			var markValue = i + 1;
+			var star = $('<span class="star">&nbsp;</span>');
+
+			// Append created star
+			div.append(star);
+			stars.push(star);
+
+			// Add listeners
+			if (editable) {
+				star.mouseover(this.showMark.bind(this, markValue));
+				star.click(this.setMarkValue.bind(this, markValue));
+			}
+		}
+
+		this.showMark(this.currentMark);
+	}
+
+	Marker.valueOf = function(elem) {
+		return elem.data("marker").getValue();
+	}
+
+	Marker.prototype = {
+		maxValue : 5,
+
+		showMark : function(value) {
+			for ( var i = 0; i < 5; i++) {
+				var elem = this.stars[i];
+
+				if (i < value) {
+					elem.addClass("active");
+				} else {
+					elem.removeClass("active");
+				}
+			}
+		},
+
+		onMarkerLeave : function() {
+			this.showMark(this.currentMark);
+		},
+
+		setMarkValue : function(mark) {
+			if (mark <= 0 || mark > this.maxMark) {
+				return;
+			}
+
+			this.currentMark = mark;
+		},
+
+		getValue : function() {
+			return this.currentMark;
+		}
+	};
+
+	Webookia.Initializer
+			.plugin(function() {
+				var markers = document.querySelectorAll(".markerPlaceholder");
+				for ( var i = 0; i < markers.length; i++) {
+					var placeholder = $(markers[i]), id = placeholder
+							.attr('id'), text = placeholder.text(), mark = (text == "" ? null
+							: parseInt(text)), editable = placeholder
+							.hasClass("editable");
+
+					var marker = new Webookia.HTML.Marker(editable, mark, id);
+					placeholder.replaceWith(marker._div);
+				}
+			});
 
 })();

@@ -9,15 +9,16 @@
 	pageEncoding="ISO-8859-1"%>
 <%@ include file="shared/commons.jsp"%>
 
-<%!
-	private String textOf(PrivacyLevel level){
-		switch(level){
-		case FRIENDS_ONLY:return "Solo amici";
-		case PRIVATE: return "Nessuno";
-		default: return "Tutti";
+<%!private String textOf(PrivacyLevel level) {
+		switch (level) {
+		case FRIENDS_ONLY:
+			return "Solo amici";
+		case PRIVATE:
+			return "Nessuno";
+		default:
+			return "Tutti";
 		}
-	}
-%>
+	}%>
 
 <%
 	BookResource contextBook = ServletUtils.getRequestAttribute(
@@ -27,7 +28,7 @@
 			.getDescriptor());
 	UserDescriptor ownerDescriptor = contextBook.getOwner();
 	BookDescriptor contextBookDescriptor = contextBook.getDescriptor();
-	
+
 	boolean isOwner = contextBook.isOwner(viewer);
 %>
 
@@ -41,7 +42,7 @@
 			<div class="contentSection">
 				<h1 class="sectionTitle">Dettaglio libro</h1>
 				<div class="sectionContent">
-					<div class="details clearfix">
+					<div id="bookUI" class="details clearfix">
 						<div class="pictureContainer left">
 							<img class="bookPicture"
 								src="http://www.oasidellibro.it/wp-content/uploads/2010/04/Il-Signore-Degli-Anelli.jpg" />
@@ -51,9 +52,11 @@
 							<div class="contentSection">
 								<div class="sectionTitle">Dettagli</div>
 								<div class="sectionContent">
+									<div class="id hidden"><%=contextBookDescriptor.getId()%></div>
 									<div class="title"><%=contextBookDescriptor.getTitle()%></div>
 									<div class="author"><%=contextBookDescriptor.getAuthors()%></div>
 									<div class="publisher"><%=contextBookDescriptor.getPublisher()%></div>
+									<div class="bookStatus"><%=bookStatusToHMTL(contextBookDescriptor.getStatus())%>&nbsp;<%=bookPrivacyToHTML(contextBookDescriptor.getPrivacy())%></div>
 								</div>
 							</div>
 
@@ -68,18 +71,25 @@
 										questo libro a: </label><select name="privacy" id="bookPrivacy">
 										<%
 											for (PrivacyLevel level : PrivacyLevel.values()) {
-													String value = level.getClass().getName();
+													String value = level.name();
 													String text = textOf(level);
 													boolean selected = level.equals(contextBookDescriptor
 															.getPrivacy());
 										%>
-										<option value="<%=value%>" selected="selected"><%=text%></option>
+										<option value="<%=value%>"
+											<%=selected ? " selected=\"selected\"" : ""%>><%=text%></option>
 										<%
 											}
+
+												BookStatus status = contextBookDescriptor.getStatus();
+												boolean chSelected = status.equals(BookStatus.AVAILABLE);
+												boolean chActive = !status.equals(BookStatus.LENT);
 										%>
 
 									</select> <br> <input type="checkbox" name="available"
-										class="bookStatus" id="bookStatus" /> <label for="bookStatus"
+										class="bookStatus" id="bookStatus"
+										<%=chSelected ? "checked=\"checked\"" : ""%>
+										<%=chActive ? "" : " disabled"%> /> <label for="bookStatus"
 										class="statusLabel">Il libro è disponibile per il
 										prestito.</label>
 								</div>
@@ -93,7 +103,7 @@
 								<div class="sectionTitle">Recensione</div>
 								<div class="sectionContent">
 									<%
-										ReviewDescriptor review = detailedBook.getReview();
+										ReviewDescriptor review = contextBook.getReview();
 										if (review == null) {
 											if (isOwner) {
 									%>
@@ -105,9 +115,11 @@
 										<div class="arrow">&nbsp;</div>
 										<div class="messageBody">
 											<p class="messageHeader">Inserisci una recensione</p>
-											<form name="insertReview">
-												<textarea name="review" class="messageInput"></textarea>
-											</form>
+											<div class="markerPlaceholder editable" id="reviewMark"></div>
+											<textarea name="review" class="messageInput" id="reviewText"></textarea>
+											<br>
+											<button class="button" id="reviewSubmit">Invia</button>
+
 										</div>
 									</div>
 									<%
@@ -130,7 +142,7 @@
 												<%=ownerDescriptor.getSurname()%>
 												-
 												<%=review.getDate()%></p>
-											<div class="rank"><%=review.getMark()%></div>
+											<div class="markerPlaceholder"><%=review.getMark()%></div>
 											<p class="reviewText"><%=review.getText()%></p>
 										</div>
 									</div>
@@ -138,29 +150,36 @@
 										for (CommentDescriptor comment : review.getComments()) {
 												String authorId = comment.getAuthorId();
 												String ownerId = ownerDescriptor.getUserId();
-												String userClass = authorId.equals(ownerId) ? "self"
-														: "other";
-												UserDescriptor user = isOwner ? ownerDescriptor
-														: UserResource.getUser(comment.getAuthorId())
-																.getDescriptor();
-												String header = user.getName() + " " + user.getSurname()
-														+ " " + comment.getDate();
+
+												String userClass;
+												UserDescriptor msgAuthor;
+
+												if (authorId.equals(ownerId)) {
+													userClass = "self";
+													msgAuthor = ownerDescriptor;
+												} else {
+													userClass = "other";
+													msgAuthor = UserResource.getUser(authorId).getDescriptor();
+												}
 									%>
 									<div class="message comment <%=userClass%> clearfix">
 										<div class="userThumb">
-											<img class="profilePicture" src="<%=user.getThumbnail()%>">
+											<img class="profilePicture"
+												src="<%=msgAuthor.getThumbnail()%>">
 										</div>
 										<div class="arrow">&nbsp;</div>
 										<div class="messageBody">
-											<p class="messageHeader"><%=header%></p>
+											<p class="messageHeader"><%=msgAuthor.getFullName()%>
+												-
+												<%=comment.getDate()%></p>
 											<p class="reviewText"><%=comment.getText()%></p>
 										</div>
 									</div>
 									<%
 										}
 
-											if (viewer != null) {
-												String userClass = isOwner ? "self" : "other";
+										if (viewer != null) {
+											String userClass = isOwner ? "self" : "other";
 									%>
 									<div class="message comment <%=userClass%> clearfix">
 										<div class="userThumb">
@@ -170,9 +189,8 @@
 										<div class="arrow">&nbsp;</div>
 										<div class="messageBody">
 											<p class="messageHeader">Inserisci un commento:</p>
-											<form name="insertComment">
-												<textarea name="comment" class="messageInput"></textarea>
-											</form>
+											<textarea id="commentText" class="messageInput"></textarea>
+											<button class="button" id="commentSubmit">Invia</button>
 										</div>
 									</div>
 

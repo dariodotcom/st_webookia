@@ -20,6 +20,46 @@
 
 <%@ include file="shared/commons.jsp"%>
 
+<%!private final static String loanProgressionButton = "<button class=\"button\" id=\"%s\">%s</button>";
+
+	private String getButtonText(LoanStatus status) {
+		switch (status) {
+		case ACCEPTED:
+			return "Accetta";
+		case GIVEN_BACK:
+			return "Mi &egrave; stato restituito";
+		case REFUSED:
+			return "Rifiuta";
+		case SHIPPED:
+			return "Mi &egrave; stato consegnato";
+		default:
+			throw new IllegalArgumentException();
+		}
+	}
+
+	private String createButton(LoanStatus status, String loanId) {
+		String name = status.name().toLowerCase();
+
+		return String
+				.format(loanProgressionButton, name, getButtonText(status));
+	}
+
+	private String getProgressionButton(LoanStatus status, String loanId) {
+		String text = null;
+		if (status.equals(LoanStatus.INITIAL)) {
+			text = createButton(LoanStatus.ACCEPTED, loanId)
+					+ createButton(LoanStatus.REFUSED, loanId);
+		} else {
+			int index = LoanStatus.indexOf(status) + 1;
+			int length = LoanStatus.values().length;
+			if (index < length - 1) {
+				text = createButton(LoanStatus.valueOf(index), loanId);
+			}
+		}
+
+		return text;
+	}%>
+
 <%
 	LoanResource loanRes = ServletUtils.getRequestAttribute(request,
 			LoanResource.class, Loans.CONTEXT_LOAN);
@@ -50,6 +90,7 @@
 			ownerDesc.getSurname());
 	String borrowerName = String.format(nameFormat,
 			borrowerDesc.getName(), borrowerDesc.getSurname());
+	LoanStatus loanStatus = loanDesc.getStatus();
 %>
 
 <!doctype html>
@@ -59,10 +100,11 @@
 	<%@ include file="shared/header.jsp"%>
 	<div id="contentContainer">
 		<div id="content" class="topWidthElement">
-			<div class="contentSection">
+			<div class="contentSection" id="loanUI">
 				<h1 class="sectionTitle">Dettaglio prestito</h1>
 				<div class="sectionContent">
 					<div class="details loanDetails clearfix">
+						<div class="id hidden"><%=descriptor.getId()%></div>
 						<div class="pictureContainer left">
 							<img class="bookPicture"
 								src="http://www.oasidellibro.it/wp-content/uploads/2010/04/Il-Signore-Degli-Anelli.jpg" />
@@ -73,7 +115,9 @@
 								<h2 class="sectionTitle">Dettagli libro</h2>
 								<div class="sectionContent">
 									<div class="title"><%=bookDesc.getTitle()%></div>
-									<div class="author">di <%=bookDesc.getAuthors()%></div>
+									<div class="author">
+										di
+										<%=bookDesc.getAuthors()%></div>
 								</div>
 							</div>
 
@@ -82,7 +126,6 @@
 								<h2 class="sectionTitle">Dettagli richiesta</h2>
 								<div class="sectionContent">
 									<%
-										LoanStatus status = loanDesc.getStatus();
 										if (isOwner) {
 									%>
 									Mittente:
@@ -96,96 +139,119 @@
 										}
 									%>
 									<br>Stato del prestito:
-									<%=loanStatusToHTML(status)%>
+									<%=loanStatusToHTML(loanStatus)%>
 								</div>
 							</div>
+
+							<!-- Loan details -->
+							<%
+								Boolean canTakeAction;
+								if (isOwner) {
+									canTakeAction = loanStatus.equals(LoanStatus.INITIAL)
+											|| loanStatus.equals(LoanStatus.SHIPPED);
+								} else {
+									canTakeAction = loanStatus.equals(LoanStatus.ACCEPTED);
+								}
+
+								if (canTakeAction) {
+							%>
+							<div class="contentSection">
+								<h2 class="sectionTitle">Azioni</h2>
+								<div class="sectionContent">
+									<%=getProgressionButton(loanStatus, loanDesc.getId())%>
+								</div>
+							</div>
+							<%
+								}
+							%>
 						</div>
 					</div>
 				</div>
-
 			</div>
+			<%
+				if (loanStatus.equals(LoanStatus.GIVEN_BACK)) {
+			%>
 			<div class="contentSection">
 				<h1 class="sectionTitle">Feedback</h1>
 				<div class="sectionContent">
 					<%
 						LoanFeedbackDescriptor feedbacks = loanRes.getFeedbacks();
-						SingleFeedbackDescriptor ownerFeedback = feedbacks
-								.getOwnerFeedback();
-						SingleFeedbackDescriptor borrowerFeedback = feedbacks
-								.getBorrowerFeedback();
+							SingleFeedbackDescriptor ownerFeedback = feedbacks
+									.getOwnerFeedback();
+							SingleFeedbackDescriptor borrowerFeedback = feedbacks
+									.getBorrowerFeedback();
 
-						if (!loanDesc.getStatus().equals(LoanStatus.GIVEN_BACK)) {
-					%>
-					<p class="empty">Non &egrave; possibile rilasciare
-						feedback prima della fine del prestito.</span>
-					<%
-						} else {
-
-							boolean canSendFeedback = isOwner ? ownerFeedback == null
+							Boolean canSendFeedback = isOwner ? ownerFeedback == null
 									: borrowerFeedback == null;
 
-							// Owner feedback
 							if (ownerFeedback != null) {
-								String userClass = isOwner ? "self" : "other";
 					%>
-					<div class="message feedback <%=userClass%> clearfix">
+					<div class="message feedback self clearfix">
 						<div class="userThumb">
 							<img class="profilePicture" src="<%=ownerDesc.getThumbnail()%>">
 						</div>
 						<div class="arrow">&nbsp;</div>
 						<div class="messageBody">
-							<p class="messageHeader">Feedback</p>
-							<div class="rank"><%=ownerFeedback.getMark()%></div>
-							<p class="reviewText"><%=ownerFeedback.getText()%></p>
+							<p class="messageHeader"><%=ownerFeedback.getDate()%></p>
+							<div class="markerPlaceholder"><%=ownerFeedback.getMark()%></div>
+							<p class="messageText"><%=ownerFeedback.getText()%></p>
 						</div>
 					</div>
 					<%
-						} else {
+						} else if (!isOwner) {
 					%>
-					<div class="empty">Il proprietario non ha ancora rilasciato
-						feedback.</div>
+					<p class="empty">Il proprietario non ha ancora rilasciato un
+						feedback.</p>
 					<%
 						}
 
-							// Borrower feedback
-							if (ownerFeedback != null) {
-								String userClass = isOwner ? "other" : "self";
+							if (borrowerFeedback != null) {
 					%>
-					<div class="message feedback <%=userClass%> clearfix">
+					<div class="message feedback other clearfix">
 						<div class="userThumb">
 							<img class="profilePicture"
 								src="<%=borrowerDesc.getThumbnail()%>">
 						</div>
 						<div class="arrow">&nbsp;</div>
 						<div class="messageBody">
-							<p class="messageHeader">Feedback</p>
-							<div class="rank"><%=borrowerFeedback.getMark()%></div>
-							<p class="reviewText"><%=borrowerFeedback.getText()%></p>
+							<p class="messageHeader"><%=borrowerFeedback.getDate()%></p>
+							<div class="markerPlaceholder"><%=borrowerFeedback.getMark()%></div>
+							<p class="messageText"><%=borrowerFeedback.getText()%></p>
 						</div>
 					</div>
 					<%
-						} else {
+						} else if (isOwner) {
 					%>
-					<div class="empty">Il ricevente non ha ancora rilasciato
-						feedback.</div>
+					<p class="empty">Il prestatario non ha ancora rilasciato un
+						feedback.</p>
 					<%
 						}
 
 							if (canSendFeedback) {
-								UserDescriptor author = isOwner ? ownerDesc : borrowerDesc;
 					%>
-					<div class="message feedback self clearfix">
-						<p class="messageHeader">Inserisci feedback</p>
-						<form name="insertFeedback">
-							<textarea name="feedbackText" class="messageInput"></textarea>
-						</form>
+					<div id="sendFeedback"
+						class="message feedback <%=isOwner ? "self" : "other"%> clearfix">
+						<div class="userThumb">
+							<img class="profilePicture" src="<%=viewerDesc.getThumbnail()%>">
+						</div>
+						<div class="arrow">&nbsp;</div>
+						<div class="messageBody">
+							<p class="messageHeader">Feedback</p>
+							<div class="markerPlaceholder editable"></div>
+							<textarea name="message" class="messageInput"></textarea>
+							<div class="submitLine">
+								<button class="button">Invia</button>
+							</div>
+						</div>
 					</div>
 					<%
-						}
 						}
 					%>
 				</div>
 			</div>
+			<%
+				}
+			%>
 			<div class="contentSection">
 				<h1 class="sectionTitle">Messaggi</h1>
 				<div class="sectionContent">
@@ -197,14 +263,11 @@
 					<p class="empty">Non ci sono messaggi.</p>
 					<%
 						} else {
-					%>
-
-					<%
-						for (MessageDescriptor message : messages) {
-								String authorId = message.getAuthorUsername();
+							for (MessageDescriptor message : messages) {
+								String authorId = message.getAuthorUserId();
 								UserDescriptor author = authorId.equals(ownerId) ? ownerDesc
 										: borrowerDesc;
-								String userClass = authorId.equals(viewerId) ? "self"
+								String userClass = authorId.equals(ownerId) ? "self"
 										: "other";
 					%>
 					<div class="message <%=userClass%> clearfix">
@@ -225,16 +288,17 @@
 						}
 					%>
 
-					<div class="message review self clearfix">
+					<div
+						class="message review <%=viewerId.equals(ownerId) ? "self" : "other"%> clearfix"
+						id="sendMessage">
 						<div class="userThumb">
 							<img class="profilePicture" src="<%=viewerDesc.getThumbnail()%>">
 						</div>
 						<div class="arrow">&nbsp;</div>
 						<div class="messageBody">
-							<p class="messageHeader">Invia messaggio:</p>
-							<form name="sendMessage">
-								<textarea name="message" class="messageInput"></textarea>
-							</form>
+							<p class="messageHeader">Invia un messaggio:</p>
+							<textarea id="messageText" class="messageInput"></textarea>
+							<button class="button" id="messageSubmit">Invia</button>
 						</div>
 					</div>
 

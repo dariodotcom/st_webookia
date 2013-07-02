@@ -59,7 +59,7 @@
 									<div class="name"><%=owner.getFullName()%></div>
 									<div class="location">Milano, India</div>
 									<div class="coords hidden"><%=owner.getLocation()%></div>
-									<div class="id hidden">saddf</div>
+									<div class="id hidden"><%=book.getId()%></div>
 								</div>
 							</div>
 							<%
