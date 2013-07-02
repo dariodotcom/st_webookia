@@ -238,7 +238,7 @@ body.webookia a:link {
 	text-align: center;
 }
 
-#errorContainer .error{
+.error{
 	background-color: #ff7c7c;
 	border-radius: 2px;
 	height: 30px;
@@ -251,19 +251,19 @@ body.webookia a:link {
 	font-size: 15px;
 }
 
-#errorContainer .error .errorText{
+.error .errorText{
 	clear: right;
 	float: left;
 }
 
-#errorContainer .close{
+.error .close{
 	float: right;
 	cursor: pointer;
 	font-weight: bold;
 	color: rgba(0,0,0,.3)
 }
 
-#errorContainer .close:hover{
+.error .close:hover{
 	color: rgba(0,0,0,.6)
 }
 
@@ -432,27 +432,27 @@ button:hover {
 	float: right;
 }
 
-.bookPresentation .status.available{
+.status.available{
 	background: #6ebe48;
 }
 
-.bookPresentation .status.lent{
+.status.lent{
 	background: #dc6e24;
 }
 
-.bookPresentation .status.notAvailable{
+.status.notAvailable{
 	background: #dc4747;
 }
 
-.bookPresentation .privacy.public{
+.privacy.public{
 	background: #2f8be0;
 }
 
-.bookPresentation .privacy.friends{
+.privacy.friends{
 	background: #eae14b;
 }
 
-.bookPresentation .privacy.private{
+.privacy.private{
 	background: #ce59df;
 }
 
@@ -472,6 +472,10 @@ button:hover {
 }
 
 /* Messages */
+.message{
+	margin-bottom: 20px;
+}
+
 .message .messageBody{
  	width: 250px;
 }
@@ -743,4 +747,34 @@ a.button.select{
 
 .ask{
 	display: none;
+}
+
+/* Marker */
+/* Review */
+.message.review .messageBody{
+ 	width: 400px;
+}
+
+.message.review .messageInput{
+	max-width: 395px;
+	width: 580px;
+}
+
+.comment.self{
+	margin-left: 45px;
+}
+
+.marker .star{
+	display: inline-block;
+	width: 19px;
+	height: 18px;
+	background: url('../resources/star.png');
+}
+
+.marker .star.active{
+	background: url('../resources/star-active.png');
+}
+
+.marker.editable .star{
+	cursor: pointer;
 }
