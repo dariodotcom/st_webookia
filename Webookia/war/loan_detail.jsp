@@ -237,11 +237,9 @@
 						<div class="arrow">&nbsp;</div>
 						<div class="messageBody">
 							<p class="messageHeader">Feedback</p>
-							<div class="markerPlaceholder editable"></div>
-							<textarea name="message" class="messageInput"></textarea>
-							<div class="submitLine">
-								<button class="button">Invia</button>
-							</div>
+							<div class="markerPlaceholder editable" id="feedbackMark"></div>
+							<textarea id="feedbackText" class="messageInput"></textarea>
+							<button id="feedbackSubmit" class="button">Invia</button>
 						</div>
 					</div>
 					<%

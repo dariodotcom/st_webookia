@@ -94,6 +94,14 @@ var $doc = document.getElementById.bind(document);
 			};
 			var url = "/loans/loan/" + this.id + "/messages";
 			Api.post(url, json, onSuccess, onError)
+		},
+		feedback : function _loanFeedback(text, mark, onSuccess, onError) {
+			var json = {
+				mark : mark,
+				text : text
+			};
+			var url = "/loans/loan/" + this.id + "/feedback";
+			Api.post(url, json, onSuccess, onError);
 		}
 	}
 
@@ -225,17 +233,30 @@ var $doc = document.getElementById.bind(document);
 			$("#given_back").click(function() {
 				loan.giveBack(defaultOnSuccess, defaultOnError);
 			});
-			
-			$("#messageSubmit").click(function(event){
-				var text = $("#messageText").val();
-				if(text == ""){
-					Webookia.Error.append("Non puoi mandare un messaggio vuoto.", $(event.target.parentNode));
+
+			$("#messageSubmit").click(
+					function(event) {
+						var text = $("#messageText").val();
+						if (text == "") {
+							Webookia.Error.append(
+									"Non puoi mandare un messaggio vuoto.",
+									$(event.target.parentNode));
+							return;
+						}
+
+						loan.message(text, defaultOnSuccess, defaultOnError);
+					});
+
+			$("#feedbackSubmit").click(function(event) {
+				var text = $("#feedbackText").val();
+				var mark = Marker.valueOf($("#feedbackMark"));
+				if(text == "" || mark == 0){
+					Webookia.Error.append("Compila tutti i campi.", $(event.target.parentNode));
 					return;
 				}
 				
-				loan.message(text, defaultOnSuccess, defaultOnError);
+				loan.feedback(text, mark, defaultOnSuccess, defaultOnError);
 			});
-
 		}
 	});
 

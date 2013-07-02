@@ -1,4 +1,23 @@
-<!-- Indices written at Tue, 18 Jun 2013 16:33:20 CEST -->
+<!-- Indices written at Tue, 2 Jul 2013 23:15:33 CEST -->
 
-<datastore-indexes/>
+<datastore-indexes>
 
+    <!-- Used 38 times in query history -->
+    <datastore-index kind="Loan" ancestor="false" source="auto">
+        <property name="lentBookRef" direction="asc"/>
+        <property name="date" direction="desc"/>
+    </datastore-index>
+
+    <!-- Used 62 times in query history -->
+    <datastore-index kind="Comment" ancestor="false" source="auto">
+        <property name="reviewRef" direction="asc"/>
+        <property name="date" direction="desc"/>
+    </datastore-index>
+
+    <!-- Used 47 times in query history -->
+    <datastore-index kind="Message" ancestor="false" source="auto">
+        <property name="relativeLoanRef" direction="asc"/>
+        <property name="date" direction="desc"/>
+    </datastore-index>
+
+</datastore-indexes>
