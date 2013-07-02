@@ -13,13 +13,13 @@ public class MessageDescriptor implements Descriptor {
 
     /* Constructor */
     MessageDescriptor(Message message) {
-        authorId = message.getAuthor().getId();
+        authorId = message.getAuthor().getUserId();
         date = Settings.DATE_FORMAT.format(message.getDate());
         text = message.getText();
     }
 
     @XmlElement(name = "authorId")
-    public String getAuthorUsername() {
+    public String getAuthorUserId() {
         return authorId;
     }
 
