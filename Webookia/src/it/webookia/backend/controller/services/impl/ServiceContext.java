@@ -99,6 +99,9 @@ public class ServiceContext {
         String unfiltered = request.getParameter(arg0);
         
         // Filter content from user
+        if(unfiltered == null){
+            return null;
+        }
         return new HTMLInputFilter().filter(unfiltered);
     }
 

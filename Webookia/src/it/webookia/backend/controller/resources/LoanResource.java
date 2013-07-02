@@ -306,9 +306,9 @@ public class LoanResource {
         feedback.setText(text);
 
         if (requestor.matches(borrower)) {
-            decoratedLoan.setOwnerFeedback(feedback);
-        } else if (requestor.matches(owner)) {
             decoratedLoan.setBorrowerFeedback(feedback);
+        } else if (requestor.matches(owner)) {
+            decoratedLoan.setOwnerFeedback(feedback);
         } else {
             String message = "You must be involved in the load to do this";
             throw new ResourceException(

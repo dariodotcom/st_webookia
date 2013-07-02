@@ -2,9 +2,9 @@ package it.webookia.backend.descriptor;
 
 import it.webookia.backend.model.Comment;
 import it.webookia.backend.model.Review;
+import it.webookia.backend.utils.Settings;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "review")
 public class ReviewDescriptor implements Descriptor {
 
-    private Date date;
+    private String date;
     private int mark;
     private String text;
     private List<CommentDescriptor> comments;
@@ -23,7 +23,7 @@ public class ReviewDescriptor implements Descriptor {
     /* Constructor */
     ReviewDescriptor(Review review) {
         comments = new ArrayList<CommentDescriptor>();
-        date = review.getDate();
+        date = Settings.DATE_FORMAT.format(review.getDate());
         mark = review.getMark().intValue();
         text = review.getText();
         for (Comment comment : review.getComments()) {
@@ -32,11 +32,11 @@ public class ReviewDescriptor implements Descriptor {
     }
 
     @XmlElement(name = "date")
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -71,12 +71,12 @@ public class ReviewDescriptor implements Descriptor {
     public static class CommentDescriptor implements Descriptor {
 
         private String authorId;
-        private Date date;
+        private String date;
         private String text;
 
         public CommentDescriptor(Comment comment) {
             authorId = comment.getAuthor().getUserId();
-            date = comment.getDate();
+            date = Settings.DATE_FORMAT.format(comment.getDate());
             text = comment.getText();
         }
 
@@ -90,11 +90,11 @@ public class ReviewDescriptor implements Descriptor {
         }
 
         @XmlElement(name = "date")
-        public Date getDate() {
+        public String getDate() {
             return date;
         }
 
-        public void setDate(Date date) {
+        public void setDate(String date) {
             this.date = date;
         }
 

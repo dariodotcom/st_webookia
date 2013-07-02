@@ -17,6 +17,10 @@ public class Feedback implements Serializable, Storable {
 
     private static final long serialVersionUID = 1L;
 
+    public Feedback(){
+        this.date = new Date();
+    }
+    
     @Attribute(primaryKey = true)
     private Key key;
 
