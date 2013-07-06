@@ -134,6 +134,10 @@ public class UserEntity implements Serializable, Storable {
         this.thumbnailUrl = thumbnailUrl;
     }
 
+    public String getFullName(){
+        return String.format("%s %s", name, surname);
+    }
+    
     // Relationships getters
     public List<ConcreteBook> getOwnedBooks() {
         return booksRef.getModelList();

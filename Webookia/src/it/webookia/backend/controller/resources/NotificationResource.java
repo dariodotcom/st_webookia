@@ -51,7 +51,9 @@ public class NotificationResource {
                 entityID = relatedBook.getId();
             } else {
                 Loan loan = (Loan) contextEntity;
-                notificationSender = loan.getBorrower();
+                UserEntity owner = loan.getLentBook().getOwner();
+                notificationSender =
+                    target.matches(owner) ? loan.getBorrower() : owner;
                 entityID = loan.getId();
             }
         } catch (ClassCastException e) {
@@ -83,7 +85,7 @@ public class NotificationResource {
         } catch (StorageException e) {
             throw new ResourceException(ResourceErrorType.NOT_FOUND, e);
         }
-        
+
         if (notification == null) {
             String message = "notification " + id + "not found";
             throw new ResourceException(ResourceErrorType.NOT_FOUND, message);

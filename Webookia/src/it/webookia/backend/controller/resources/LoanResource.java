@@ -149,17 +149,18 @@ public class LoanResource {
         if (response == true) {
             lentBookRes.changeStatus(BookStatus.LENT);
             decoratedLoan.setStatus(LoanStatus.ACCEPTED);
+            
+            // Send notification
+            UserResource borrower = new UserResource(decoratedLoan.getBorrower());
+            NotificationResource.createNotification(
+                borrower,
+                NotificationType.LOAN_ACCEPTED,
+                decoratedLoan);
+            
         } else {
             decoratedLoan.setStatus(LoanStatus.REFUSED);
         }
         loanStorage.persist(decoratedLoan);
-
-        // Send notification
-        UserResource borrower = new UserResource(decoratedLoan.getBorrower());
-        NotificationResource.createNotification(
-            borrower,
-            NotificationType.LOAN_STATUS_CHANGED,
-            decoratedLoan);
     }
 
     /**
@@ -193,7 +194,7 @@ public class LoanResource {
         UserResource owner = new UserResource(lentBook.getOwner());
         NotificationResource.createNotification(
             owner,
-            NotificationType.LOAN_STATUS_CHANGED,
+            NotificationType.LOAN_SHIPPED,
             decoratedLoan);
     }
 
@@ -230,7 +231,7 @@ public class LoanResource {
         UserResource borrower = new UserResource(decoratedLoan.getBorrower());
         NotificationResource.createNotification(
             borrower,
-            NotificationType.LOAN_STATUS_CHANGED,
+            NotificationType.LOAN_GIVEN_BACK,
             decoratedLoan);
     }
 

@@ -1,8 +1,13 @@
 package it.webookia.backend.controller.services;
 
+import it.webookia.backend.controller.resources.UserResource;
+import it.webookia.backend.controller.resources.exception.ResourceErrorType;
+import it.webookia.backend.controller.resources.exception.ResourceException;
+import it.webookia.backend.controller.services.impl.Jsp;
 import it.webookia.backend.controller.services.impl.Service;
 import it.webookia.backend.controller.services.impl.ServiceContext;
 import it.webookia.backend.controller.services.impl.ServiceServlet;
+import it.webookia.backend.controller.services.impl.Verb;
 import it.webookia.backend.utils.servlets.Context;
 
 import java.io.IOException;
@@ -13,9 +18,11 @@ public class Users extends ServiceServlet {
 
     private static final long serialVersionUID = 351675044359094818L;
 
+    public static String SHOW_USER = "SHOW_USER";
+
     public Users() {
         super(Context.USERS);
-        // TODO Auto-generated constructor stub
+        registerService(Verb.GET, "profile", new UserProfileService());
     }
 
     public static class UserProfileService implements Service {
@@ -23,6 +30,26 @@ public class Users extends ServiceServlet {
         @Override
         public void service(ServiceContext context) throws ServletException,
                 IOException {
+            String userId = context.getRequestParameter("uid");
+
+            if (userId == null) {
+                if (!context.isUserLoggedIn()) {
+                    context.sendError(new ResourceException(
+                        ResourceErrorType.BAD_REQUEST,
+                        "No profile to show."));
+                    return;
+                }
+
+                userId = context.getAuthenticatedUserId();
+            }
+
+            try {
+                UserResource user = UserResource.getUser(userId);
+                context.setRequestAttribute(SHOW_USER, user);
+                context.forwardToJsp(Jsp.USER_JSP);
+            } catch (ResourceException e) {
+                context.sendError(e);
+            }
 
         }
     }
