@@ -27,9 +27,6 @@ public class SearchParameters {
                 try {
                     field.set(parameters, param);
                 } catch (IllegalArgumentException | IllegalAccessException e) {
-                    System.out.println("Parameter "
-                        + paramName
-                        + " not found in request");
                     e.printStackTrace();
                 }
             }

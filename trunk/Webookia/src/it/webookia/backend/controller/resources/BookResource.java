@@ -262,11 +262,13 @@ public class BookResource {
 
         // Send notification
         UserEntity owner = decoratedBook.getOwner();
+        System.out.println(owner.getFullName());
+        System.out.println(author.getEntity().getFullName());
         if (!author.matches(owner)) {
             NotificationResource.createNotification(
                 new UserResource(owner),
                 NotificationType.NEW_REVIEW_COMMENT,
-                decoratedBook);
+                comment);
         }
     }
 

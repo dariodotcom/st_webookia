@@ -15,7 +15,7 @@ public class NotificationDescriptor implements Descriptor {
     private String id;
     private NotificationType type;
     private String date;
-    private String authorId;
+    private String author;
     private String contextId;
     private boolean read;
 
@@ -24,8 +24,9 @@ public class NotificationDescriptor implements Descriptor {
         id = notification.getId();
         type = notification.getType();
         date = Settings.DATE_FORMAT.format(notification.getDate());
-        authorId = notification.getSender().getId();
+        author = notification.getSender().getFullName();
         contextId = notification.getTargetId();
+        read = notification.isRead();
     }
 
     @XmlElement(name = "id")
@@ -57,11 +58,11 @@ public class NotificationDescriptor implements Descriptor {
 
     @XmlElement(name = "author")
     public String getAuthorId() {
-        return authorId;
+        return author;
     }
 
     public void setAuthorId(String authorId) {
-        this.authorId = authorId;
+        this.author = authorId;
     }
 
     @XmlElement(name = "contextId")

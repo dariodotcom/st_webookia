@@ -109,6 +109,18 @@ public class DescriptorFactory {
         return list;
     }
 
+    public static ListDescriptor<SingleFeedbackDescriptor> createFeedbackListDescriptor(
+            List<Feedback> input) {
+        ListDescriptor<SingleFeedbackDescriptor> output =
+            new ListDescriptor<SingleFeedbackDescriptor>();
+
+        for (Feedback f : input) {
+            output.addDescriptor(new SingleFeedbackDescriptor(f));
+        }
+
+        return output;
+    }
+
     /* NOTIFICATIONS */
     public static Descriptor createNotificationList(List<Notification> input) {
         ListDescriptor<NotificationDescriptor> output =

@@ -9,7 +9,8 @@ public enum Jsp {
     LOAN_JSP("/loans.jsp"),
     ERROR_JSP("/error.jsp"),
     SEARCH_JSP("/search.jsp"),
-    CONCRETE_JSP("/concretes.jsp");
+    CONCRETE_JSP("/concretes.jsp"),
+    USER_JSP("/user.jsp");
 
     private String url;
 

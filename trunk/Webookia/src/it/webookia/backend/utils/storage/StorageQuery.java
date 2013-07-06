@@ -16,9 +16,12 @@ import it.webookia.backend.meta.NotificationMeta;
 import it.webookia.backend.meta.UserEntityMeta;
 import it.webookia.backend.model.ConcreteBook;
 import it.webookia.backend.model.DetailedBook;
+import it.webookia.backend.model.Feedback;
 import it.webookia.backend.model.Loan;
 import it.webookia.backend.model.Notification;
 import it.webookia.backend.model.UserEntity;
+import it.webookia.backend.utils.CollectionUtils;
+import it.webookia.backend.utils.Mapper;
 import it.webookia.backend.utils.Settings;
 import it.webookia.backend.utils.foreignws.facebook.FacebookConnector;
 import it.webookia.backend.utils.servlets.SearchParameters;
@@ -74,15 +77,42 @@ public class StorageQuery {
             .asList();
     }
 
+    public static List<Feedback> getSentFeedbacks(UserEntity user) {
+        LoanMeta loan = LoanMeta.get();
+        List<Loan> sentLoans =
+            Datastore
+                .query(loan)
+                .filter(loan.borrowerRef.equal(user.getKey()))
+                .asList();
+
+        return CollectionUtils.map(sentLoans, new Mapper<Loan, Feedback>() {
+            @Override
+            public Feedback map(Loan input) {
+                return input.getBorrowerFeedback();
+            }
+        });
+    }
+
     public static List<Notification> getNotificationOf(UserEntity user,
             int limit) {
         Key userKey = user.getKey();
         NotificationMeta notification = NotificationMeta.get();
         return Datastore
             .query(notification)
-            .filter(notification.senderRef.equal(userKey))
+            .filter(notification.receiverRef.equal(userKey))
+            .sort(notification.date.desc)
             .limit(limit)
             .asList();
+    }
+
+    public static int getNotificationCount(UserEntity user) {
+        Key userKey = user.getKey();
+        NotificationMeta notification = NotificationMeta.get();
+        return Datastore
+            .query(notification)
+            .filter(notification.receiverRef.equal(userKey))
+            .filter(notification.read.equal(false))
+            .count();
     }
 
     public static List<Loan> getUserReceivedLoans(UserEntity receiver, int page) {
@@ -105,26 +135,22 @@ public class StorageQuery {
         return query.asList();
     }
 
-    public static List<DetailedBook> lookUpDetailedBook(
-            SearchParameters params) {
+    public static List<DetailedBook> lookUpDetailedBook(SearchParameters params) {
         DetailedBookMeta detailedBook = DetailedBookMeta.get();
         ModelQuery<DetailedBook> query = Datastore.query(detailedBook);
 
         if (!StringUtils.isEmpty(params.getTitle())) {
             String param = params.getTitle();
-            System.out.println("title: " + param);
             query.filterInMemory(detailedBook.title.contains(param));
         }
 
         if (!StringUtils.isEmpty(params.getAuthors())) {
             String param = params.getAuthors();
-            System.out.println("authors: " + param);
             query.filterInMemory(detailedBook.authors.contains(param));
         }
 
         if (!StringUtils.isEmpty(params.getISBN())) {
             String param = params.getISBN();
-            System.out.println("isbn: " + param);
             query.filterInMemory(detailedBook.isbn.equal(param));
         }
 

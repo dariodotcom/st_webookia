@@ -14,7 +14,6 @@ public class ServletUtils {
 
     /* Authenticate userd id getters and setters */
     public static String getAuthenticatedUserId(HttpServletRequest req) {
-
         return (String) req.getSession().getAttribute(AUTH_USER);
     }
 

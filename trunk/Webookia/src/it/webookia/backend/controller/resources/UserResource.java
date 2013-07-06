@@ -9,6 +9,7 @@ import it.webookia.backend.descriptor.Descriptor;
 import it.webookia.backend.descriptor.DescriptorFactory;
 import it.webookia.backend.descriptor.ListDescriptor;
 import it.webookia.backend.descriptor.LoanDescriptor;
+import it.webookia.backend.descriptor.SingleFeedbackDescriptor;
 import it.webookia.backend.descriptor.UserDescriptor;
 import it.webookia.backend.model.Loan;
 import it.webookia.backend.model.Notification;
@@ -49,7 +50,7 @@ public class UserResource {
             entity.setThumbnailUrl(connector.getThumbnail());
             userStorage.persist(entity);
         }
-        
+
         return new UserResource(entity);
     }
 
@@ -133,6 +134,11 @@ public class UserResource {
             .getOwnedBooks());
     }
 
+    public ListDescriptor<SingleFeedbackDescriptor> getSentFeedbacks() {
+        return DescriptorFactory.createFeedbackListDescriptor(StorageQuery
+            .getSentFeedbacks(decoratedUser));
+    }
+
     /**
      * Retrieves a {@link Descriptor} that describes the notifications received
      * by the user.
@@ -152,6 +158,18 @@ public class UserResource {
         List<Notification> list =
             StorageQuery.getNotificationOf(decoratedUser, 15);
         return DescriptorFactory.createNotificationList(list);
+    }
+
+    public int getUnreadNotificationCount(UserResource requestor)
+            throws ResourceException {
+        if (!requestor.matches(decoratedUser)) {
+            throw new ResourceException(
+                ResourceErrorType.UNAUTHORIZED_ACTION,
+                "You cannot see this user's notifications");
+        }
+
+        return StorageQuery.getNotificationCount(decoratedUser);
+
     }
 
     public ListDescriptor<LoanDescriptor> getReceivedLoanRequest(int page) {

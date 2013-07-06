@@ -47,4 +47,12 @@ public class ResponseFactory {
         JsonResponse resp = new JsonSuccessResponse(descriptor);
         return Response.ok().entity(resp).build();
     }
+
+    public static Response ok() {
+        return Response.ok().build();
+    }
+
+    public static Response ok(Object o) {
+        return Response.ok(o).build();
+    }
 }
