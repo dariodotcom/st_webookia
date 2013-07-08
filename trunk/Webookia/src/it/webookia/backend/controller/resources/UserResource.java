@@ -16,6 +16,7 @@ import it.webookia.backend.model.Notification;
 import it.webookia.backend.model.UserEntity;
 import it.webookia.backend.utils.foreignws.facebook.AccessToken;
 import it.webookia.backend.utils.foreignws.facebook.FacebookConnector;
+import it.webookia.backend.utils.foreignws.facebook.FacebookConnectorException;
 import it.webookia.backend.utils.storage.StorageFacade;
 import it.webookia.backend.utils.storage.StorageQuery;
 
@@ -34,21 +35,30 @@ public class UserResource {
      * @param token
      *            - the user Facebook {@link AccessToken}
      * @return an {@link UserResource} to manage the authenticated user.
+     * 
+     * @throws ResourceException
+     *             if an error occurs while retrieving informations from
+     *             Facebook.
      */
-    public static UserResource authenticateUser(AccessToken token) {
+    public static UserResource authenticateUser(AccessToken token)
+            throws ResourceException {
         FacebookConnector connector = FacebookConnector.forToken(token);
         String id = connector.getUserId();
         UserEntity entity = StorageQuery.getUserById(id);
 
-        if (entity == null) {
-            entity = new UserEntity();
-            entity.setUserId(id);
-            entity.setToken(token);
-            entity.setName(connector.getFirstName());
-            entity.setSurname(connector.getLastName());
-            entity.setLocation(connector.getLocation());
-            entity.setThumbnailUrl(connector.getThumbnail());
-            userStorage.persist(entity);
+        try {
+            if (entity == null) {
+                entity = new UserEntity();
+                entity.setUserId(id);
+                entity.setToken(token);
+                entity.setName(connector.getFirstName());
+                entity.setSurname(connector.getLastName());
+                entity.setLocation(connector.getLocation());
+                entity.setThumbnailUrl(connector.getThumbnail());
+                userStorage.persist(entity);
+            }
+        } catch (FacebookConnectorException e) {
+            throw new ResourceException(ResourceErrorType.CONNECTOR_ERROR, e);
         }
 
         return new UserResource(entity);
@@ -98,24 +108,33 @@ public class UserResource {
      * 
      * @param changedFields
      *            - the list of the names of the fields to update.
+     * @throws ResourceException
+     *             if an error occurs while retrieving informations from
+     *             Facebook.
      */
-    public void updateFields(List<String> changedFields) {
+    public void updateFields(List<String> changedFields)
+            throws ResourceException {
         FacebookConnector connector = FacebookConnector.forUser(decoratedUser);
 
-        if (changedFields.contains("first_name")) {
-            decoratedUser.setName(connector.getFirstName());
-        }
+        try {
 
-        if (changedFields.contains("last_name")) {
-            decoratedUser.setSurname(connector.getLastName());
-        }
+            if (changedFields.contains("first_name")) {
+                decoratedUser.setName(connector.getFirstName());
+            }
 
-        if (changedFields.contains("location")) {
-            decoratedUser.setLocation(connector.getLocation());
-        }
+            if (changedFields.contains("last_name")) {
+                decoratedUser.setSurname(connector.getLastName());
+            }
 
-        if (changedFields.contains("picture")) {
-            decoratedUser.setThumbnailUrl(connector.getThumbnail());
+            if (changedFields.contains("location")) {
+                decoratedUser.setLocation(connector.getLocation());
+            }
+
+            if (changedFields.contains("picture")) {
+                decoratedUser.setThumbnailUrl(connector.getThumbnail());
+            }
+        } catch (FacebookConnectorException e) {
+            throw new ResourceException(ResourceErrorType.CONNECTOR_ERROR, e);
         }
 
         userStorage.persist(decoratedUser);

@@ -7,11 +7,13 @@ public class Location implements Serializable {
     private static final long serialVersionUID = 3596168218456779058L;
 
     private final double latitude, longitude;
+    private final String name;
 
-    public Location(double latitude, double longitude) {
+    public Location(String name, double latitude, double longitude) {
         super();
         this.latitude = latitude;
         this.longitude = longitude;
+        this.name = name;
     }
 
     public long getSerialVersionUID() {
@@ -24,6 +26,10 @@ public class Location implements Serializable {
 
     public double getLongitude() {
         return longitude;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override
