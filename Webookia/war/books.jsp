@@ -51,7 +51,7 @@
 						%>
 						<div class="bookPresentation">
 							<img class="bookPicture"
-								src="http://www.oasidellibro.it/wp-content/uploads/2010/04/Il-Signore-Degli-Anelli.jpg" />
+								src="<%=b.getThumbnail()%>" />
 							<div class="bookInfo">
 								<div class="title"><%=b.getTitle()%></div>
 								<div class="author"><%=b.getAuthors()%></div>

@@ -39,7 +39,7 @@ var $doc = document.getElementById.bind(document);
 	/*
 	 * ============ API ACCESS ============
 	 */
-	var Api = {
+	var Api = Webookia.Api = {
 		post : function _apiPost(url, json, onSuccess, onError) {
 			$.ajax({
 				type : "POST",
@@ -247,16 +247,19 @@ var $doc = document.getElementById.bind(document);
 						loan.message(text, defaultOnSuccess, defaultOnError);
 					});
 
-			$("#feedbackSubmit").click(function(event) {
-				var text = $("#feedbackText").val();
-				var mark = Marker.valueOf($("#feedbackMark"));
-				if(text == "" || mark == 0){
-					Webookia.Error.append("Compila tutti i campi.", $(event.target.parentNode));
-					return;
-				}
-				
-				loan.feedback(text, mark, defaultOnSuccess, defaultOnError);
-			});
+			$("#feedbackSubmit").click(
+					function(event) {
+						var text = $("#feedbackText").val();
+						var mark = Marker.valueOf($("#feedbackMark"));
+						if (text == "" || mark == 0) {
+							Webookia.Error.append("Compila tutti i campi.",
+									$(event.target.parentNode));
+							return;
+						}
+
+						loan.feedback(text, mark, defaultOnSuccess,
+								defaultOnError);
+					});
 		}
 	});
 
@@ -392,6 +395,122 @@ var $doc = document.getElementById.bind(document);
 		}
 	});
 
+	// Notifications
+	function textFor(notification) {
+		var message;
+
+		switch (notification.type) {
+		case "NEW_LOAN_REQUEST":
+			message = " ti ha chiesto un prestito";
+			break;
+		case "LOAN_ACCEPTED":
+			message = " ha accettato la tua richiesta";
+			break;
+		case "LOAN_SHIPPED":
+			message = " ha ricevuto il tuo libro";
+			break;
+		case "LOAN_GIVEN_BACK":
+			message = " ha recuperato il suo libro";
+			break;
+		case "NEW_LOAN_MESSAGE":
+			message = " ti ha inviato un messaggio";
+			break;
+		case "NEW_REVIEW_COMMENT":
+			message = " ha commentato una tua recensione";
+			break;
+		default:
+			message = "Una notifica";
+		}
+
+		console.log(notification);
+		return notification.author + message;
+	}
+
+	function notificationClick(notification) {
+		var context;
+		console.log(notification);
+		console.log(notification.contextId);
+
+		switch (notification.type) {
+		default:
+			context = "/loans/detail?id=";
+		}
+
+		function goAway() {
+			location.href = context + notification.contextId;
+		}
+
+		Api.get("/user/self/notification/" + notification.id + "/read", goAway, goAway);
+
+	}
+
+	Webookia.Initializer
+			.plugin(function() {
+				var container = $("#notificationContainer");
+				var panel = container.find(".notificationPanel");
+				var button = container.find(".notificationButton");
+				var body = panel.find(".calloutBody");
+
+				Api.get("/user/self/notifications/unreadCount", function(count){
+					if(count == 0){
+						return;
+					}
+					button.append($("<div class=\"unreadCount\"></div>").text(count));
+				}, function(){});
+				
+				
+				var populate = function(response) {
+					notifications = response.descriptor.content;
+					body.empty();
+
+					if (notifications.length == 0) {
+						body
+								.append($("<div class=\"empty\">Non hai notifiche.</div>"));
+						return;
+					}
+
+					$(notifications).each(
+							function(index, notification) {
+								var notif = $("<div class=\"notification\"></div>")
+										.text(textFor(notification))
+										.click(notificationClick.bind(window,notification))
+										.append($("<div>").addClass("date").text(notification.date));
+
+								if (!notification.read) {
+									notif.addClass("unread");
+								}
+
+								notif.appendTo(body);
+							});
+				}
+
+				var onError = function() {
+					body.empty();
+					body
+							.append($("<div class=\"empty\">Errore nella ricezione delle notifiche. Per favore, effettua di nuovo il login.</div>"));
+				}
+
+				panel.hide();
+
+				button.click(function(event) {
+					Webookia.Api.get("/user/self/notifications", populate,
+							onError);
+
+					var position = button.offset();
+					container.addClass("open");
+					panel.show();
+					panel.offset({
+						top : position.top + button.height() - 5,
+						left : position.left - 13
+					});
+				});
+
+				$(document).mouseup(function() {
+					panel.hide();
+					container.removeClass("open");
+				})
+			});
+
 	Webookia.HTML = {}
 
 	// Marker
@@ -462,6 +581,52 @@ var $doc = document.getElementById.bind(document);
 			return this.currentMark;
 		}
 	};
+
+	// TABS
+	function TabbedPanel(container) {
+		var tabs = this.tabs = container.find(".tabs .tab"), panels = this.panels = container
+				.find(".panels .panel"), selectedIndex = 0, self = this;
+
+		this.selectedIndex = -1;
+
+		if (tabs.length != panels.length) {
+			throw new Error("Tabs/panels mismatch");
+		}
+
+		tabs.each(function(i, tabElem) {
+			var tab = $(tabElem), panel = $(panels[i])
+
+			if (tab.hasClass("selected")) {
+				selectedIndex = i;
+			}
+
+			panel.hide();
+			tab.click(self.selectTab.bind(self, i));
+
+		});
+
+		this.selectTab(selectedIndex);
+		console.log(this);
+	}
+
+	TabbedPanel.prototype = {
+		selectTab : function _selectTab(index) {
+			if (this.selectedIndex >= 0) {
+				$(this.panels[this.selectedIndex]).hide();
+				$(this.tabs[this.selectedIndex]).removeClass("selected");
+			}
+
+			$(this.panels[index]).show();
+			$(this.tabs[index]).addClass("selected");
+			this.selectedIndex = index;
+		}
+	}
+
+	Webookia.Initializer.plugin(function() {
+		$(".tabbedContainer").each(function(index, elem) {
+			new TabbedPanel($(elem));
+		});
+	});
 
 	Webookia.Initializer
 			.plugin(function() {

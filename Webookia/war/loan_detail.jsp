@@ -107,7 +107,7 @@
 						<div class="id hidden"><%=descriptor.getId()%></div>
 						<div class="pictureContainer left">
 							<img class="bookPicture"
-								src="http://www.oasidellibro.it/wp-content/uploads/2010/04/Il-Signore-Degli-Anelli.jpg" />
+								src="<%=bookDesc.getThumbnail()%>" />
 						</div>
 						<div class="detailContainer left">
 							<!-- Book details -->

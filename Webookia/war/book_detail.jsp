@@ -45,7 +45,7 @@
 					<div id="bookUI" class="details clearfix">
 						<div class="pictureContainer left">
 							<img class="bookPicture"
-								src="http://www.oasidellibro.it/wp-content/uploads/2010/04/Il-Signore-Degli-Anelli.jpg" />
+								src="<%=contextBookDescriptor.getThumbnail()%>" />
 						</div>
 						<div class="detailContainer left">
 							<!-- Details -->
