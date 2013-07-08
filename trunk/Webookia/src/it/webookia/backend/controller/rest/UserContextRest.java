@@ -28,21 +28,21 @@ public class UserContextRest {
         return new UserRest(null);
     }
 
-    @Path("{username}")
-    public UserRest handleUser(@PathParam(value = "username") String username) {
-        return new UserRest(username);
+    @Path("{userid}")
+    public UserRest handleUser(@PathParam(value = "userid") String userid) {
+        return new UserRest(userid);
     }
 
     @Produces("application/json")
     public class UserRest {
 
-        private String username;
+        private String userid;
 
-        public UserRest(String username) {
-            if (username == null) {
-                this.username = ServletUtils.getAuthenticatedUserId(request);
+        public UserRest(String userid) {
+            if (userid == null) {
+                this.userid = ServletUtils.getAuthenticatedUserId(request);
             } else {
-                this.username = username;
+                this.userid = userid;
             }
         }
 
@@ -51,7 +51,7 @@ public class UserContextRest {
             try {
 
                 Descriptor descriptor =
-                    UserResource.getUser(username).getDescriptor();
+                    UserResource.getUser(userid).getDescriptor();
                 return ResponseFactory.createFrom(descriptor);
             } catch (ResourceException e) {
                 return ResponseFactory.createFrom(e);
@@ -61,7 +61,7 @@ public class UserContextRest {
         @Path("/notifications")
         @GET
         public Response getNotifications() {
-            if (username == null) {
+            if (userid == null) {
                 return ResponseFactory.createFrom(new ResourceException(
                     ResourceErrorType.NOT_LOGGED_IN,
                     "No user logged in."));
@@ -73,7 +73,7 @@ public class UserContextRest {
                 UserResource requestor = UserResource.getUser(requestorId);
 
                 Descriptor notificationDescriptor =
-                    UserResource.getUser(username).getNotifications(requestor);
+                    UserResource.getUser(userid).getNotifications(requestor);
                 return ResponseFactory.createFrom(notificationDescriptor);
             } catch (ResourceException e) {
                 return ResponseFactory.createFrom(e);
@@ -83,7 +83,7 @@ public class UserContextRest {
         @Path("/notifications/unreadCount")
         @GET
         public Response unreadCount() {
-            if (username == null) {
+            if (userid == null) {
                 return ResponseFactory.createFrom(new ResourceException(
                     ResourceErrorType.NOT_LOGGED_IN,
                     "No user logged in."));
@@ -95,7 +95,7 @@ public class UserContextRest {
                 UserResource requestor = UserResource.getUser(requestorId);
 
                 int count =
-                    UserResource.getUser(username).getUnreadNotificationCount(
+                    UserResource.getUser(userid).getUnreadNotificationCount(
                         requestor);
                 return ResponseFactory.ok(count);
             } catch (ResourceException e) {
@@ -106,7 +106,7 @@ public class UserContextRest {
         @Path("/notification/{id}/read")
         @GET
         public Response markAsRead(@PathParam("id") String id) {
-            if (username == null) {
+            if (userid == null) {
                 return ResponseFactory.createFrom(new ResourceException(
                     ResourceErrorType.NOT_LOGGED_IN,
                     "No user logged in."));
