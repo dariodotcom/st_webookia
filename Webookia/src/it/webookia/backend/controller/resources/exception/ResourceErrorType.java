@@ -9,7 +9,8 @@ public enum ResourceErrorType {
 	ALREADY_EXSISTING("Entity already exsists"),
 	RESOURCE_UNAVAILABLE("Resource unavailable"),
 	ILLEGAL_STATE("Illegal state"),
-	BAD_REQUEST("Bad request");
+	BAD_REQUEST("Bad request"),
+	CONNECTOR_ERROR("Error connecting to Facebook.");
 
 	private String errorName;
 	private String friendlyText;

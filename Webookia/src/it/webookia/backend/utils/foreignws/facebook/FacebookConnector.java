@@ -1,5 +1,6 @@
 package it.webookia.backend.utils.foreignws.facebook;
 
+import java.awt.print.Book;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -39,6 +40,7 @@ public class FacebookConnector {
     // private AccessToken token;
     private FacebookClient graphAPIClient;
     private User self;
+    private AccessToken token;
 
     /**
      * Retrieves the url that leads to the Facebook login page
@@ -59,11 +61,11 @@ public class FacebookConnector {
      *            right to access his data.
      * @return the {@link AccessToken} corresponding to the user who has just
      *         logged in.
-     * @throws OAuthException
+     * @throws FacebookConnectorException
      *             if authorization fails.
      */
     public static AccessToken performOauthValidation(String oauthCode)
-            throws OAuthException {
+            throws FacebookConnectorException {
         Client client = Client.create();
         String url =
             String.format(
@@ -79,7 +81,7 @@ public class FacebookConnector {
         if (matcher.matches()) {
             return AccessToken.create(matcher.group(1));
         } else {
-            throw new OAuthException(response);
+            throw new FacebookConnectorException(response);
         }
     }
 
@@ -110,6 +112,7 @@ public class FacebookConnector {
 
     private FacebookConnector(AccessToken token) {
         this.graphAPIClient = new DefaultFacebookClient(token.toString());
+        this.token = token;
         this.self =
             graphAPIClient.fetchObject(
                 "me",
@@ -161,7 +164,14 @@ public class FacebookConnector {
         return friendsId;
     }
 
-    public Location getLocation() {
+    /**
+     * Retrieves a user's {@link Location}
+     * 
+     * @return the user's {@link Location}
+     * @throws FacebookConnectorException
+     *             if getting the location is not feasible.
+     */
+    public Location getLocation() throws FacebookConnectorException {
         User user =
             graphAPIClient.fetchObject(
                 "me",
@@ -170,7 +180,7 @@ public class FacebookConnector {
         NamedFacebookType loc = user.getLocation();
 
         if (loc == null) {
-            return null;
+            throw new FacebookConnectorException();
         }
 
         String id = loc.getId();
@@ -179,10 +189,16 @@ public class FacebookConnector {
         com.restfb.types.Location userLocation = page.getLocation();
 
         return new Location(
+            userLocation.getCity(),
             userLocation.getLatitude(),
             userLocation.getLongitude());
     }
 
+    /**
+     * Retrieves the url of the user thumbnail from Facebook.
+     * 
+     * @return the url of the thumbnail of the user.
+     */
     public String getThumbnail() {
         Picture p =
             graphAPIClient.fetchObject(
@@ -194,11 +210,38 @@ public class FacebookConnector {
         return p.getUrl();
     }
 
-    public void postBookSharingStory(ConcreteBook book){
+    /**
+     * Posts an user's {@link BookActivity} relating one of his {@link Book} on
+     * his Facebook profile.
+     * 
+     * @param activity
+     *            - the activity to share
+     * @param book
+     *            - the book involved in the activity.
+     */
+    void postBookActivityStory(BookActivity activity, ConcreteBook book) {
         String context = "/books/detail?id=";
         String bookUrl = Settings.CURRENT_HOST + context + book.getId();
-        String serviceUrl = "https://graph.facebook.com/me/webookia:share?access_token=%s&method=POST&book=%s";
-        
+        String serviceUrl =
+            "https://graph.facebook.com/me/webookia:%s?access_token=%s&method=POST&book=%s";
+        String requestUrl = String.format(serviceUrl, activity, token, bookUrl);
 
+        Client c = Client.create();
+        WebResource res = c.resource(requestUrl);
+        res.get(String.class);
+
+        System.out.println("Shared book:" + requestUrl);
+    }
+
+    /**
+     * Possible activities on books.
+     * 
+     */
+    public static enum BookActivity {
+        SHARE, REVIEW;
+
+        public String toString() {
+            return name().toLowerCase();
+        }
     }
 }
