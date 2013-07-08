@@ -64,6 +64,7 @@
 				<img class="profilePicture"
 					src="<%=hUserDescriptor.getThumbnail()%>" /> <span
 					class="username"><%=hUserDescriptor.getName()%> <%=hUserDescriptor.getSurname()%></span>
+					<span class="logout">(<a href="/authentication/logout">logout</a>)</span>
 				<%
 					}
 				%>
