@@ -109,7 +109,7 @@ public class LoanRest {
                     getRequestor(),
                     feedbackRequest.getMark(),
                     feedbackRequest.getText());
-                return ResponseFactory.createFrom(loan.getDescriptor());
+                return ResponseFactory.createFrom(loan.getFeedbacks());
             } catch (ResourceException e) {
                 return ResponseFactory.createFrom(e);
             }
