@@ -26,7 +26,6 @@
 							SearchParameters.class, SearchContainer.PARAMETERS);
 
 					if (params == null) {
-						System.out.println("params null");
 						params = new SearchParameters();
 					}
 				%>

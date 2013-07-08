@@ -10,7 +10,7 @@
 	pageEncoding="ISO-8859-1"%>
 
 
-<%! public String contextDisplayName(Context context) {
+<%!public String contextDisplayName(Context context) {
 		switch (context) {
 		case AUTHENTICATION:
 			return "";
@@ -30,7 +30,6 @@
 	}%>
 
 <%
-
 	HttpSession hSession = request.getSession();
 	UserDescriptor hUserDescriptor = null;
 
@@ -45,7 +44,6 @@
 
 	String hLoginUrl = FacebookConnector.getOauthDialogUrl();
 %>
-
 <div id="headerContainer">
 	<div id="header" class="topWidthElement">
 		<div id="topbar" class="headerContent topWidthElement clearfix">
@@ -76,6 +74,20 @@
 					<input class="searchSubmit" type="submit"></input>
 				</form>
 			</div>
+			<%
+				if (hUserDescriptor != null) {
+			%>
+			<div id="notificationContainer">
+				<div class="topBarInteraction notificationButton" title="Notifiche">
+					&nbsp;</div>
+				<div class="notificationPanel callout">
+					<div class="calloutArrow">&nbsp;</div>
+					<div class="calloutBody">&nbsp;</div>
+				</div>
+			</div>
+			<%
+				}
+			%>
 		</div>
 		<div id="menuContainer" class="headerContent topWidthElement">
 			<ul id="menu">
