@@ -24,6 +24,7 @@ import it.webookia.backend.utils.CollectionUtils;
 import it.webookia.backend.utils.Mapper;
 import it.webookia.backend.utils.Settings;
 import it.webookia.backend.utils.foreignws.facebook.FacebookConnector;
+import it.webookia.backend.utils.foreignws.gmaps.GMapsDistanceSorter;
 import it.webookia.backend.utils.servlets.SearchParameters;
 import it.webookia.backend.utils.storage.filters.BookSearchFilter;
 
@@ -163,7 +164,8 @@ public class StorageQuery {
         ModelQuery<ConcreteBook> query = Datastore.query(concreteBook);
 
         query.filterInMemory(new BookSearchFilter(requestor, detail.getKey()));
-
+        query.sortInMemory(new GMapsDistanceSorter(requestor.getLocation()));
+        
         return query.asList();
     }
 }

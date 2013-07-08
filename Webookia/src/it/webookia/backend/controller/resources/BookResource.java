@@ -18,8 +18,8 @@ import it.webookia.backend.model.ConcreteBook;
 import it.webookia.backend.model.DetailedBook;
 import it.webookia.backend.model.Review;
 import it.webookia.backend.model.UserEntity;
-import it.webookia.backend.utils.foreignws.isbndb.IsbnDBException;
-import it.webookia.backend.utils.foreignws.isbndb.IsbnResolver;
+import it.webookia.backend.utils.foreignws.isbndb.GBooksIsbnResolver;
+import it.webookia.backend.utils.foreignws.isbndb.IsbnResolverException;
 import it.webookia.backend.utils.servlets.SearchParameters;
 import it.webookia.backend.utils.storage.Mark;
 import it.webookia.backend.utils.storage.PermissionManager;
@@ -63,11 +63,11 @@ public class BookResource {
 
         if (details == null) {
             try {
-                details = new IsbnResolver(isbn).resolve();
-                detailedBookStorage.persist(details);
-            } catch (IsbnDBException e) {
-                throw new ResourceException(ResourceErrorType.SERVER_FAULT, e);
+                details = new GBooksIsbnResolver(isbn).resolve();
+            } catch (IsbnResolverException e) {
+                throw new ResourceException(ResourceErrorType.NOT_FOUND, e);
             }
+            detailedBookStorage.persist(details);
         }
 
         ConcreteBook book = new ConcreteBook();
@@ -109,7 +109,10 @@ public class BookResource {
 
         BookResource bookResource = new BookResource(book);
 
-        if (!PermissionManager.user(requestor.getEntity()).canAccess(book)) {
+        UserEntity reqEntity =
+            requestor == null ? null : requestor.getEntity();
+
+        if (!PermissionManager.user(reqEntity).canAccess(book)) {
             String message = "Not authorized to access requested book";
             throw new ResourceException(
                 ResourceErrorType.UNAUTHORIZED_ACTION,

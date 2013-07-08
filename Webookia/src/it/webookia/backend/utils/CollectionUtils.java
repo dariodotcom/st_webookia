@@ -28,4 +28,14 @@ public class CollectionUtils {
         return result.toString();
     }
 
+    public static <E> List<E> toList(E[] input) {
+        List<E> output = new ArrayList<E>();
+
+        for (E in : input) {
+            output.add(in);
+        }
+
+        return output;
+    }
+
 }
