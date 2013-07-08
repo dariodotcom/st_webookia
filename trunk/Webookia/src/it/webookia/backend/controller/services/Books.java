@@ -132,7 +132,6 @@ public class Books extends ServiceServlet {
                 String id = book.getDescriptor().getId();
                 String newUrl = "/books/detail?id=" + id;
                 context.sendRedirect(newUrl);
-
             } catch (ResourceException e) {
                 context.sendError(e);
                 return;

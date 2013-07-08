@@ -4,7 +4,7 @@ package it.webookia.backend.utils.foreignws.isbndb;
  * The Class {@code IsbnDBException} represents an error occurred while
  * performing a ISBN resolver request.
  */
-public class IsbnDBException extends Exception {
+public class IsbnResolverException extends Exception {
 
     private static final long serialVersionUID = -8902283222248135231L;
 
@@ -17,7 +17,7 @@ public class IsbnDBException extends Exception {
      * @param cause
      *            - the {@code Throwable} that caused this exception.
      */
-    public IsbnDBException(String message, Throwable cause) {
+    public IsbnResolverException(String message, Throwable cause) {
         super("IsbnDBException: " + message, cause);
     }
 
@@ -27,7 +27,7 @@ public class IsbnDBException extends Exception {
      * @param message
      *            - a {@code String} explanation of the error that occurred.
      */
-    public IsbnDBException(String message) {
+    public IsbnResolverException(String message) {
         super("IsbnDBException: " + message);
     }
 

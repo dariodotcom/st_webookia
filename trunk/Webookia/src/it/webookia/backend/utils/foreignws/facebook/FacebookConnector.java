@@ -13,7 +13,9 @@ import com.restfb.types.Page;
 import com.restfb.types.User;
 import com.restfb.Parameter;
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.WebResource;
 
+import it.webookia.backend.model.ConcreteBook;
 import it.webookia.backend.model.UserEntity;
 import it.webookia.backend.utils.Settings;
 import it.webookia.backend.utils.storage.Location;
@@ -190,5 +192,13 @@ public class FacebookConnector {
                 Parameter.with("height", 30),
                 Parameter.with("width", 30));
         return p.getUrl();
+    }
+
+    public void postBookSharingStory(ConcreteBook book){
+        String context = "/books/detail?id=";
+        String bookUrl = Settings.CURRENT_HOST + context + book.getId();
+        String serviceUrl = "https://graph.facebook.com/me/webookia:share?access_token=%s&method=POST&book=%s";
+        
+
     }
 }

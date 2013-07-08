@@ -26,4 +26,8 @@ public class Location implements Serializable {
         return longitude;
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s,%s", latitude, longitude);
+    }
 }

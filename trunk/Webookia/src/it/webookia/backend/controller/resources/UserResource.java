@@ -75,6 +75,8 @@ public class UserResource {
             throw new ResourceException(ResourceErrorType.NOT_FOUND, message);
         }
 
+        System.out.println(user.getToken());
+
         return new UserResource(user);
     }
 

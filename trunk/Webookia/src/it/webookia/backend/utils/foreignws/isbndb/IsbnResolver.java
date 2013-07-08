@@ -39,10 +39,10 @@ public class IsbnResolver {
      * 
      * @return - the BookDetail containing information about the book whose isbn
      *         was passed in the constructor.
-     * @throws IsbnDBException
+     * @throws IsbnResolverException
      *             if the service request has failed.
      * */
-    public DetailedBook resolve() throws IsbnDBException {
+    public DetailedBook resolve() throws IsbnResolverException {
         if (result != null) {
             return result;
         }
@@ -51,7 +51,7 @@ public class IsbnResolver {
 
         BookList bookList = response.getBookList();
         if (bookList == null) {
-            throw new IsbnDBException("Request returned null element");
+            throw new IsbnResolverException("Request returned null element");
         }
 
         result = new DetailedBook();
@@ -63,7 +63,7 @@ public class IsbnResolver {
 
     // Helpers
 
-    private ISBNdb performServiceRequest() throws IsbnDBException {
+    private ISBNdb performServiceRequest() throws IsbnResolverException {
         JAXBContext context = null;
         Unmarshaller um = null;
         String uri = String.format(serviceURI, accessKey, isbn);
@@ -74,7 +74,7 @@ public class IsbnResolver {
             return (ISBNdb) um.unmarshal(new URL(uri));
         } catch (JAXBException | MalformedURLException e) {
             String message = "Error while performing request to isbndb.com";
-            throw new IsbnDBException(message, e);
+            throw new IsbnResolverException(message, e);
         }
     }
 

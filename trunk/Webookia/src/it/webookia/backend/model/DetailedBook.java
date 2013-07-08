@@ -34,6 +34,7 @@ public class DetailedBook implements Serializable, Storable {
     private List<String> authors;
     private String publisher;
     private String thumbnail;
+    private String gBooksLink;
 
     // Storable
     @Override
@@ -84,6 +85,14 @@ public class DetailedBook implements Serializable, Storable {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    public String getGBooksLink() {
+        return gBooksLink;
+    }
+
+    public void setGBooksLink(String gBooksLink) {
+        this.gBooksLink = gBooksLink;
     }
 
     /**
