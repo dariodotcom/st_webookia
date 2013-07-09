@@ -7,13 +7,20 @@ import it.webookia.backend.model.UserEntity;
 import org.slim3.datastore.AbstractCriterion;
 import org.slim3.datastore.InMemoryFilterCriterion;
 
+/**
+ * Filter to select all the books owned by a customer.
+ */
 public class BookOwnershipFilter extends AbstractCriterion implements
         InMemoryFilterCriterion {
 
     private UserEntity owner;
 
-    public BookOwnershipFilter(UserEntity owner) throws NullPointerException {
-
+    /**
+     * Constructs a new filter for the books of given user.
+     * 
+     * @param owner - the customer owner of books.
+     */
+    public BookOwnershipFilter(UserEntity owner) {
         super(ConcreteBookMeta.get().ownerRef);
         this.owner = owner;
     }

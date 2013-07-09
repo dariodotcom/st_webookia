@@ -3,6 +3,13 @@ package it.webookia.backend.utils.foreignws.facebook;
 import com.restfb.Facebook;
 import com.restfb.types.NamedFacebookType;
 
+/**
+ * Class to handle response to queries to retrieve customer picture from
+ * Facebook
+ * 
+ * @author Chiara
+ * 
+ */
 public class Picture extends NamedFacebookType {
 
     private static final long serialVersionUID = -2854932488997969939L;
