@@ -70,8 +70,8 @@
 				%>
 			</div>
 			<div id="searchContainer">
-				<form name="searchForm">
-					<input class="searchText" type="text" placeholder="Cerca libro..."></input>
+				<form name="searchForm" action="/search/result" method="post">
+					<input class="searchText" name="title" type="text" placeholder="Cerca libro..."></input>
 					<input class="searchSubmit" type="submit"></input>
 				</form>
 			</div>
