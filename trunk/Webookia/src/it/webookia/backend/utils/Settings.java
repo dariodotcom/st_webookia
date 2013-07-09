@@ -4,7 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 public class Settings {
-    public final static String CURRENT_HOST = "http://79.45.201.27:8888";
+    public final static String CURRENT_HOST = "http://webookia.appspot.com";
 
     public final static int LOAN_PAGINATION_SIZE = 15;
 

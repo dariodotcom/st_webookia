@@ -1,21 +1,29 @@
 package it.webookia.backend.utils.storage.filters;
 
-import it.webookia.backend.enums.PrivacyLevel;
+import it.webookia.backend.meta.ConcreteBookMeta;
 import it.webookia.backend.model.ConcreteBook;
 import it.webookia.backend.model.UserEntity;
+import it.webookia.backend.utils.storage.PermissionManager;
 
-import org.slim3.datastore.AbstractAttributeMeta;
 import org.slim3.datastore.AbstractCriterion;
 import org.slim3.datastore.InMemoryFilterCriterion;
 
+/**
+ * Filter to check that an user can access a concrete book.
+ */
 public class BookVisibilityFilter extends AbstractCriterion implements
         InMemoryFilterCriterion {
 
     private UserEntity user;
 
-    public BookVisibilityFilter(AbstractAttributeMeta<?, ?> attributeMeta,
-            UserEntity user) throws NullPointerException {
-        super(attributeMeta);
+    /**
+     * Constructs a new filter.
+     * 
+     * @param user
+     *            - the user to check the visibility for.
+     */
+    public BookVisibilityFilter(UserEntity user) {
+        super(ConcreteBookMeta.get().key);
         this.user = user;
     }
 
@@ -26,23 +34,7 @@ public class BookVisibilityFilter extends AbstractCriterion implements
                 "Expected book, got something else");
         }
 
-        ConcreteBook book = (ConcreteBook) model;
-        PrivacyLevel privacy = book.getPrivacy();
-
-        if (privacy.equals(PrivacyLevel.PUBLIC)) {
-            return true;
-        }
-
-        if (user == null) {
-            return false;
-        }
-
-        if (privacy.equals(PrivacyLevel.PRIVATE)) {
-            return false;
-        }
-
-        // TODO: check friendships.
-
-        return false;
+        ConcreteBook concreteBook = (ConcreteBook) model;
+        return PermissionManager.user(user).canAccess(concreteBook);
     }
 }

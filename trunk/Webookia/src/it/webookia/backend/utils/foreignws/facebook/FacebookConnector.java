@@ -21,6 +21,10 @@ import it.webookia.backend.model.UserEntity;
 import it.webookia.backend.utils.Settings;
 import it.webookia.backend.utils.storage.Location;
 
+/**
+ * Component that allows to connect to Facebook and retrieve informations about
+ * customers.
+ */
 public class FacebookConnector {
 
     private final static String oauthDialogPattern =
@@ -109,7 +113,8 @@ public class FacebookConnector {
     public static FacebookConnector forToken(AccessToken token) {
         return new FacebookConnector(token);
     }
-
+    
+    // Private constructor
     private FacebookConnector(AccessToken token) {
         this.graphAPIClient = new DefaultFacebookClient(token.toString());
         this.token = token;
@@ -219,7 +224,7 @@ public class FacebookConnector {
      * @param book
      *            - the book involved in the activity.
      */
-    void postBookActivityStory(BookActivity activity, ConcreteBook book) {
+    public void postBookActivityStory(BookActivity activity, ConcreteBook book) {
         String context = "/books/detail?id=";
         String bookUrl = Settings.CURRENT_HOST + context + book.getId();
         String serviceUrl =

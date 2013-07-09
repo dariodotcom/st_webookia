@@ -1,6 +1,7 @@
 package it.webookia.backend.utils.foreignws.isbndb;
 
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 
 import it.webookia.backend.model.DetailedBook;
@@ -31,6 +32,9 @@ public class GBooksIsbnResolver {
             throw new IsbnResolverException(
                 "Error retrieving book informations",
                 e);
+        } catch (UniformInterfaceException e){
+            System.err.println(e.getResponse());
+            throw new IsbnResolverException("Error performing request to GBooks.",e);
         }
 
         DetailedBook book = new DetailedBook();

@@ -14,6 +14,9 @@ import org.slim3.datastore.InMemorySortCriterion;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 
+/**
+ * Class to sort books according to their distance from the position of a user
+ */
 public class GMapsDistanceSorter implements InMemorySortCriterion {
 
     public final static String service =
@@ -22,6 +25,12 @@ public class GMapsDistanceSorter implements InMemorySortCriterion {
     private Location reference;
     private Map<ConcreteBook, Float> distanceCache;
 
+    /**
+     * Constructs a new sorter that can be used to sort books.
+     * 
+     * @param reference
+     *            - the location that is used as reference to compute distances.
+     */
     public GMapsDistanceSorter(Location reference) {
         this.reference = reference;
         this.distanceCache = new HashMap<ConcreteBook, Float>();
@@ -42,7 +51,6 @@ public class GMapsDistanceSorter implements InMemorySortCriterion {
         }
 
         return getDistance(book1).compareTo(getDistance(book2));
-
     }
 
     private Float getDistance(ConcreteBook b) {
