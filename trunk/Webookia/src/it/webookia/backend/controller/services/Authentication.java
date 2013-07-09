@@ -28,7 +28,7 @@ public class Authentication extends ServiceServlet {
 
     /**
      * User login service. Implements the authorization process with Facebook
-     * throught OAuth.
+     * through OAuth.
      */
     private class LoginService implements Service {
         @Override
@@ -92,6 +92,12 @@ public class Authentication extends ServiceServlet {
         }
     }
 
+    /**
+     * Implements logout service.
+     * 
+     * @author Dario
+     * 
+     */
     private class LogoutService implements Service {
         @Override
         public void service(ServiceContext context) throws ServletException,

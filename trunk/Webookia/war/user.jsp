@@ -1,3 +1,5 @@
+<%@page import="it.webookia.backend.model.Feedback"%>
+<%@page import="java.util.List"%>
 <%@page import="it.webookia.backend.descriptor.SingleFeedbackDescriptor"%>
 <%@page import="it.webookia.backend.utils.storage.PermissionManager"%>
 <%@page import="it.webookia.backend.controller.services.Users"%>
@@ -8,16 +10,28 @@
 <%@page import="it.webookia.backend.descriptor.ListDescriptor"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
+<%!public int averageMark(List<SingleFeedbackDescriptor> input) {
+		int sum = 0;
+		for (SingleFeedbackDescriptor f : input) {
+			sum += f.getMark();
+		}
 
+		return (int) (sum / input.size());
+	}%>
 <%
 	UserResource userToShow = ServletUtils.getRequestAttribute(request,
 			UserResource.class, Users.SHOW_USER);
 
 	UserDescriptor descriptor = userToShow.getDescriptor();
 	UserResource viewer = ServletUtils.getAuthenticatedUser(request);
+
+	List<SingleFeedbackDescriptor> feedbacksAsOwner = userToShow
+			.getFeedbacksAsOwner().getList();
+	List<SingleFeedbackDescriptor> feedbacksAsBorrower = userToShow
+			.getFeedbacksAsBorrower().getList();
+	int ownerFeedbackSize = feedbacksAsOwner.size();
+	int borrowerFeedbackSize = feedbacksAsBorrower.size();
 %>
-
-
 <!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <%@ include file="shared/head.jsp"%>
@@ -37,17 +51,44 @@
 						<div class="detailContainer left">
 							<!-- Details -->
 							<div class="heading"><%=descriptor.getFullName()%></div>
-							<div class="location">Lonate Pozzolo</div>
+							<div class="detail">
+								<div class="detailName">Città</div>
+								<div class="detailValue"><%=descriptor.getLocation()%></div>
+							</div>
+							<div class="location"><%=descriptor.getLocation().getName()%></div>
+							<div class="detail">
+								<div class="detailName">Feedback come proprietario</div>
+								<div class="detailValue">
+									<div class="markerPlaceholder"><%=averageMark(feedbacksAsOwner)%></div>
+								</div>
+							</div>
+							<div class="detail">
+								<div class="detailName">Feedback come prestatario</div>
+								<div class="detailValue">
+									<div class="markerPlaceholder"><%=averageMark(feedbacksAsBorrower)%></div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-
 			<div class="tabbedContainer">
 				<div class="tabs">
 					<div class="tab selected">Libreria</div>
-					<div class="tab">Reputazione</div>
-					<div class="tab">Reputazione</div>
+					<%
+						String ownerFeedbackCount = ownerFeedbackSize > 0 ? " ("
+								+ ownerFeedbackSize + ")" : "";
+					%>
+					<div class="tab">
+						Feedback da proprietario<%=ownerFeedbackCount%>
+					</div>
+					<%
+						String borrowerFeedbackCount = ownerFeedbackSize > 0 ? " ("
+								+ ownerFeedbackSize + ")" : "";
+					%>
+					<div class="tab">
+						Feedback da prestatario<%=borrowerFeedbackCount%>
+					</div>
 				</div>
 				<div class="panels">
 					<div class="panel">
@@ -75,13 +116,29 @@
 						</div>
 					</div>
 					<div class="panel feedbackList">
-					<%
-
-					
-					%>
-					
+						<%
+							for (SingleFeedbackDescriptor feedback : feedbacksAsOwner) {
+						%>
+						<div class="anonymousFeedback">
+							<div class="markerPlaceholder"><%=feedback.getMark()%></div>
+							<div class="text"><%=feedback.getText()%></div>
+						</div>
+						<%
+							}
+						%>
 					</div>
-					<div class="panel">Reputazione 2</div>
+					<div class="panel">
+						<%
+							for (SingleFeedbackDescriptor feedback : feedbacksAsBorrower) {
+						%>
+						<div class="anonymousFeedback">
+							<div class="markerPlaceholder"><%=feedback.getMark()%></div>
+							<div class="text"><%=feedback.getText()%></div>
+						</div>
+						<%
+							}
+						%>
+					</div>
 				</div>
 			</div>
 		</div>

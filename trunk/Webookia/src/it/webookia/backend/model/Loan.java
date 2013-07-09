@@ -26,11 +26,12 @@ public class Loan implements Serializable, Storable {
     public Loan() {
 
         borrowerRef = new ModelRef<UserEntity>(UserEntity.class);
+        ownerRef = new ModelRef<UserEntity>(UserEntity.class);
         lentBookRef = new ModelRef<ConcreteBook>(ConcreteBook.class);
         borrowerFeedbackRef = new ModelRef<Feedback>(Feedback.class);
         ownerFeedbackRef = new ModelRef<Feedback>(Feedback.class);
         date = new Date();
-        
+
         messagesRef =
             new InverseModelListRef<Message, Loan>(
                 Message.class,
@@ -52,6 +53,7 @@ public class Loan implements Serializable, Storable {
     // Relationships
     private ModelRef<ConcreteBook> lentBookRef;
     private ModelRef<UserEntity> borrowerRef;
+    private ModelRef<UserEntity> ownerRef;
     private ModelRef<Feedback> borrowerFeedbackRef;
     private ModelRef<Feedback> ownerFeedbackRef;
 
@@ -89,6 +91,10 @@ public class Loan implements Serializable, Storable {
         return borrowerRef;
     }
 
+    public ModelRef<UserEntity> getOwnerRef() {
+        return ownerRef;
+    }
+
     public InverseModelListRef<Message, Loan> getMessagesRef() {
         return messagesRef;
     }
@@ -108,6 +114,14 @@ public class Loan implements Serializable, Storable {
 
     public void setBorrower(UserEntity borrower) {
         borrowerRef.setModel(borrower);
+    }
+
+    public UserEntity getOwner() {
+        return ownerRef.getModel();
+    }
+
+    public void setOwner(UserEntity owner) {
+        ownerRef.setModel(owner);
     }
 
     public ConcreteBook getLentBook() {
