@@ -6,6 +6,11 @@ package it.webookia.backend.enums;
 public enum PrivacyLevel {
     PUBLIC, FRIENDS_ONLY, PRIVATE;
 
+    /**
+     * Gives the default privacy
+     * 
+     * @return - the default privacy.
+     */
     public static PrivacyLevel getDefault() {
         return PUBLIC;
     }
