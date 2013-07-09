@@ -78,7 +78,16 @@ public class StorageQuery {
             .asList();
     }
 
-    public static List<Feedback> getSentFeedbacks(UserEntity user) {
+    /**
+     * Retrieves the list of feedbacks a user has received as the owner of a
+     * book.
+     * 
+     * @param user
+     *            - the user
+     * @return a {@link List} of feedbacks
+     */
+    public static List<Feedback> getFeedbacksAsOwner(UserEntity user) {
+        // Query all the received loan requests.
         LoanMeta loan = LoanMeta.get();
         List<Loan> sentLoans =
             Datastore
@@ -86,10 +95,36 @@ public class StorageQuery {
                 .filter(loan.borrowerRef.equal(user.getKey()))
                 .asList();
 
+        // Retrieve the borrower feedback from those requests.
         return CollectionUtils.map(sentLoans, new Mapper<Loan, Feedback>() {
             @Override
             public Feedback map(Loan input) {
                 return input.getBorrowerFeedback();
+            }
+        });
+    }
+
+    /**
+     * Retrieves the list of feedbacks a user has received as borrower.
+     * 
+     * @param user
+     *            - the user
+     * @return a {@link List} of feedbacks.
+     */
+    public static List<Feedback> getFeedbacksAsBorrower(UserEntity user) {
+        // Query all the loans user has asked
+        LoanMeta loan = LoanMeta.get();
+        List<Loan> sentLoans =
+            Datastore
+                .query(loan)
+                .filter(loan.ownerRef.equal(user.getKey()))
+                .asList();
+
+        // Retrieve owner feedbacks from those feedbacks
+        return CollectionUtils.map(sentLoans, new Mapper<Loan, Feedback>() {
+            @Override
+            public Feedback map(Loan input) {
+                return input.getOwnerFeedback();
             }
         });
     }
@@ -165,7 +200,7 @@ public class StorageQuery {
 
         query.filterInMemory(new BookSearchFilter(requestor, detail.getKey()));
         query.sortInMemory(new GMapsDistanceSorter(requestor.getLocation()));
-        
+
         return query.asList();
     }
 }

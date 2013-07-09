@@ -11,6 +11,7 @@ import it.webookia.backend.descriptor.ListDescriptor;
 import it.webookia.backend.descriptor.LoanDescriptor;
 import it.webookia.backend.descriptor.SingleFeedbackDescriptor;
 import it.webookia.backend.descriptor.UserDescriptor;
+import it.webookia.backend.model.Feedback;
 import it.webookia.backend.model.Loan;
 import it.webookia.backend.model.Notification;
 import it.webookia.backend.model.UserEntity;
@@ -155,9 +156,16 @@ public class UserResource {
             .getOwnedBooks());
     }
 
-    public ListDescriptor<SingleFeedbackDescriptor> getSentFeedbacks() {
-        return DescriptorFactory.createFeedbackListDescriptor(StorageQuery
-            .getSentFeedbacks(decoratedUser));
+    public ListDescriptor<SingleFeedbackDescriptor> getFeedbacksAsOwner() {
+        List<Feedback> feedbacks =
+            StorageQuery.getFeedbacksAsOwner(decoratedUser);
+        return DescriptorFactory.createFeedbackListDescriptor(feedbacks);
+    }
+
+    public ListDescriptor<SingleFeedbackDescriptor> getFeedbacksAsBorrower() {
+        List<Feedback> feedbacks =
+            StorageQuery.getFeedbacksAsBorrower(decoratedUser);
+        return DescriptorFactory.createFeedbackListDescriptor(feedbacks);
     }
 
     /**
@@ -190,7 +198,6 @@ public class UserResource {
         }
 
         return StorageQuery.getNotificationCount(decoratedUser);
-
     }
 
     public ListDescriptor<LoanDescriptor> getReceivedLoanRequest(int page) {

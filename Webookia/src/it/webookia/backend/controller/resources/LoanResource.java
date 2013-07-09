@@ -59,6 +59,7 @@ public class LoanResource {
         // Create loan
         Loan loan = new Loan();
         loan.setLentBook(book);
+        loan.setOwner(book.getOwner());
         loan.setBorrower(requestor.getEntity());
         loan.setStatus(LoanStatus.INITIAL);
         loanStorage.persist(loan);
