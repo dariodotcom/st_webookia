@@ -11,6 +11,7 @@ body.webookia {
 
 body.webookia a:link {
 	text-decoration: none;
+	color: rgb(60,87,157);
 }
 
 .topWidthElement {
@@ -235,6 +236,14 @@ body.webookia a:link {
     color: #777777;
     vertical-align: super;
     margin-left: 5px;
+}
+
+#userCorner .logout{
+	vertical-align: super;	
+}
+
+#userCorner .logout a:hover{
+	text-decoration: underline;
 }
 
 /* Tabs*/
