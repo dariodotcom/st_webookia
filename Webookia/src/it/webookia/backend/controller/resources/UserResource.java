@@ -56,7 +56,34 @@ public class UserResource {
                 entity.setSurname(connector.getLastName());
                 entity.setLocation(connector.getLocation());
                 entity.setThumbnailUrl(connector.getThumbnail());
+
+                // Update friends
+                List<String> friendIds = connector.getFriendIds();
+                System.out.println("checking for " + friendIds.size() + " friends.");
+
+                for (String friendId : friendIds) {
+                    UserEntity friend = StorageQuery.getUserById(friendId);
+
+                    System.out.println("checking " + friendId);
+                    if (friend == null) {
+                        System.out.println(friendId + " is not on Webookia");
+                        continue;
+                    }
+
+                    // Persist friendship
+                    friend.addFriend(entity);
+                    userStorage.persist(friend);
+                    entity.addFriend(friend);
+                    System.out.println(friendId
+                        + " and "
+                        + id
+                        + " are now friends");
+                    System.out.println(friend.getFriendList());
+                    System.out.println("\n\n\n\n\n\n\n\n\n\n");
+                }
+
                 userStorage.persist(entity);
+                System.out.println(entity.getFriendList());
             }
         } catch (FacebookConnectorException e) {
             throw new ResourceException(ResourceErrorType.CONNECTOR_ERROR, e);
