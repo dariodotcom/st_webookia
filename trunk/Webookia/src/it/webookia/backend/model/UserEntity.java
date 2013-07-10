@@ -5,6 +5,7 @@ import it.webookia.backend.utils.storage.Location;
 import it.webookia.backend.utils.storage.Storable;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.appengine.api.datastore.Key;
@@ -37,6 +38,8 @@ public class UserEntity implements Serializable, Storable {
     private String thumbnailUrl;
     private String pictureUrl;
 
+    private List<String> friendList;
+
     @Attribute(lob = true)
     private Location location;
 
@@ -61,6 +64,8 @@ public class UserEntity implements Serializable, Storable {
                 "receiverRef",
                 this,
                 new Sort("date", SortDirection.DESCENDING));
+
+        this.friendList = new ArrayList<String>();
     }
 
     // Storable
@@ -134,10 +139,18 @@ public class UserEntity implements Serializable, Storable {
         this.thumbnailUrl = thumbnailUrl;
     }
 
-    public String getFullName(){
+    public String getFullName() {
         return String.format("%s %s", name, surname);
     }
-    
+
+    public List<String> getFriendList() {
+        return friendList;
+    }
+
+    public void setFriendList(List<String> friendList) {
+        this.friendList = friendList;
+    }
+
     // Relationships getters
     public List<ConcreteBook> getOwnedBooks() {
         return booksRef.getModelList();
@@ -145,6 +158,36 @@ public class UserEntity implements Serializable, Storable {
 
     public List<Notification> getNotifications() {
         return notificationsRef.getModelList();
+    }
+
+    public boolean isFriendWith(UserEntity otherUser) {
+        return this.friendList.contains(otherUser.getUserId());
+    }
+
+    public void addFriend(UserEntity friend) {
+        String friendId = friend.getUserId();
+
+        if (this.friendList.contains(friendId)) {
+            throw new IllegalStateException(getUserId()
+                + " and "
+                + friend.getUserId()
+                + "are already friends.");
+        }
+        
+        this.friendList.add(friendId);
+    }
+    
+    public void removeFriend(UserEntity friend){
+        String friendId = friend.getUserId();
+
+        if (!this.friendList.contains(friendId)) {
+            throw new IllegalStateException(getUserId()
+                + " and "
+                + friend.getUserId()
+                + "are not friends.");
+        }
+        
+        this.friendList.remove(friendId);
     }
 
     /**

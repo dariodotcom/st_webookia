@@ -48,8 +48,10 @@ public class PermissionManager {
             return false;
         } else if (user.equals(owner)) {
             return true;
+        } else if (privacy.equals(PrivacyLevel.FRIENDS_ONLY)){
+            return this.user.isFriendWith(owner);
         } else {
-            return false; // TODO Check friendship
+            return false;
         }
     }
 
