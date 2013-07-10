@@ -22,25 +22,51 @@ public class Users extends ServiceServlet {
 
     public Users() {
         super(Context.USERS);
+        registerDefaultService(Verb.GET, new UserLanding());
         registerService(Verb.GET, "profile", new UserProfileService());
     }
 
-    public static class UserProfileService implements Service {
+    public static class UserLanding implements Service {
+        @Override
+        public void service(ServiceContext context) throws ServletException,
+                IOException {
+            // TODO Auto-generated method stub
 
+        }
+    }
+
+    public static class SelfProfileService implements Service {
+        @Override
+        public void service(ServiceContext context) throws ServletException,
+                IOException {
+            if (!context.isUserLoggedIn()) {
+                context.sendError(new ResourceException(
+                    ResourceErrorType.BAD_REQUEST,
+                    "No profile to show."));
+                return;
+            }
+
+            String userId = context.getAuthenticatedUserId();
+
+            try {
+                UserResource user = UserResource.getUser(userId);
+                context.setRequestAttribute(SHOW_USER, user);
+                context.forwardToJsp(Jsp.USER_JSP);
+            } catch (ResourceException e) {
+                context.sendError(e);
+            }
+        }
+    }
+
+    public static class UserProfileService implements Service {
         @Override
         public void service(ServiceContext context) throws ServletException,
                 IOException {
             String userId = context.getRequestParameter("uid");
 
             if (userId == null) {
-                if (!context.isUserLoggedIn()) {
-                    context.sendError(new ResourceException(
-                        ResourceErrorType.BAD_REQUEST,
-                        "No profile to show."));
-                    return;
-                }
-
-                userId = context.getAuthenticatedUserId();
+                new SelfProfileService().service(context);
+                return;
             }
 
             try {
@@ -50,7 +76,6 @@ public class Users extends ServiceServlet {
             } catch (ResourceException e) {
                 context.sendError(e);
             }
-
         }
     }
 }

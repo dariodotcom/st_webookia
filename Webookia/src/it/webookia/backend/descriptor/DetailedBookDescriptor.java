@@ -8,7 +8,7 @@ import it.webookia.backend.model.DetailedBook;
 import it.webookia.backend.utils.CollectionUtils;
 
 @XmlRootElement
-@XmlType(name="bookDetailDescriptor")
+@XmlType(name = "bookDetailDescriptor")
 public class DetailedBookDescriptor implements Descriptor {
 
     private String detailId;
@@ -17,6 +17,7 @@ public class DetailedBookDescriptor implements Descriptor {
     private String isbn;
     private String publisher;
     private String thumbnail;
+    private String gBooksLink;
 
     public DetailedBookDescriptor(DetailedBook detailedBook) {
         detailId = detailedBook.getId();
@@ -25,6 +26,7 @@ public class DetailedBookDescriptor implements Descriptor {
         title = detailedBook.getTitle();
         publisher = detailedBook.getPublisher();
         thumbnail = detailedBook.getThumbnail();
+        gBooksLink = detailedBook.getGBooksLink();
     }
 
     @XmlElement(name = "detailId")
@@ -56,4 +58,10 @@ public class DetailedBookDescriptor implements Descriptor {
     public String getThumbnail() {
         return thumbnail;
     }
+
+    @XmlElement(name = "gBooksLink")
+    public String getGBooksLink() {
+        return gBooksLink;
+    }
+
 }

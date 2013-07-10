@@ -92,7 +92,7 @@ public class StorageQuery {
         List<Loan> sentLoans =
             Datastore
                 .query(loan)
-                .filter(loan.borrowerRef.equal(user.getKey()))
+                .filter(loan.ownerRef.equal(user.getKey()))
                 .asList();
 
         // Retrieve the borrower feedback from those requests.
@@ -117,7 +117,7 @@ public class StorageQuery {
         List<Loan> sentLoans =
             Datastore
                 .query(loan)
-                .filter(loan.ownerRef.equal(user.getKey()))
+                .filter(loan.borrowerRef.equal(user.getKey()))
                 .asList();
 
         // Retrieve owner feedbacks from those feedbacks

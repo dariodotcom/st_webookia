@@ -189,12 +189,13 @@ public class FacebookConnector {
         }
 
         String id = loc.getId();
-
+        String name = loc.getName();
+        
         Page page = graphAPIClient.fetchObject(id, Page.class);
         com.restfb.types.Location userLocation = page.getLocation();
 
         return new Location(
-            userLocation.getCity(),
+            name,
             userLocation.getLatitude(),
             userLocation.getLongitude());
     }
@@ -234,8 +235,6 @@ public class FacebookConnector {
         Client c = Client.create();
         WebResource res = c.resource(requestUrl);
         res.get(String.class);
-
-        System.out.println("Shared book:" + requestUrl);
     }
 
     /**

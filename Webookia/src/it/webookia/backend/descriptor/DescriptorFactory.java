@@ -115,6 +115,9 @@ public class DescriptorFactory {
             new ListDescriptor<SingleFeedbackDescriptor>();
 
         for (Feedback f : input) {
+            if(f == null){
+                continue;
+            }
             output.addDescriptor(new SingleFeedbackDescriptor(f));
         }
 

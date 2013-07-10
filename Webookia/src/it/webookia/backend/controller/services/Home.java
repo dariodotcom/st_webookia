@@ -25,7 +25,12 @@ public class Home extends ServiceServlet {
         @Override
         public void service(ServiceContext context) throws ServletException,
                 IOException {
-            context.forwardToJsp(Jsp.HOME);
+
+            if (context.isUserLoggedIn()) {
+                new Users.SelfProfileService().service(context);
+            } else {
+                context.forwardToJsp(Jsp.HOME);
+            }
         }
 
     }
