@@ -109,8 +109,7 @@ public class BookResource {
 
         BookResource bookResource = new BookResource(book);
 
-        UserEntity reqEntity =
-            requestor == null ? null : requestor.getEntity();
+        UserEntity reqEntity = requestor == null ? null : requestor.getEntity();
 
         if (!PermissionManager.user(reqEntity).canAccess(book)) {
             String message = "Not authorized to access requested book";
@@ -265,8 +264,6 @@ public class BookResource {
 
         // Send notification
         UserEntity owner = decoratedBook.getOwner();
-        System.out.println(owner.getFullName());
-        System.out.println(author.getEntity().getFullName());
         if (!author.matches(owner)) {
             NotificationResource.createNotification(
                 new UserResource(owner),
@@ -305,6 +302,21 @@ public class BookResource {
     public UserDescriptor getOwner() {
         UserEntity owner = decoratedBook.getOwner();
         return DescriptorFactory.createUserDescriptor(owner);
+    }
+
+    /**
+     * Checks if an user can borrow this book.
+     * @param user - the user
+     * @return true if the user can borrow this book.
+     */
+    public boolean canBeLentBy(UserResource user) {
+        if(user == null){
+            return false;
+        }
+        
+        return PermissionManager
+            .user(user.getEntity())
+            .canBorrow(decoratedBook);
     }
 
     ConcreteBook getEntity() {

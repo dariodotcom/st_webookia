@@ -84,6 +84,7 @@ public class UserDescriptor implements Descriptor {
         private LocationDescriptor(Location location) {
             latitude = location.getLatitude();
             longitude = location.getLongitude();
+            name = location.getName();
         }
 
         @XmlElement(name = "latitude")

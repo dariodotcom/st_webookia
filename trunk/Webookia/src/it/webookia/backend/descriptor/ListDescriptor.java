@@ -36,5 +36,9 @@ public class ListDescriptor<E extends Descriptor> implements Descriptor,
     public Iterator<E> iterator() {
         return list.iterator();
     }
+    
+    public int size(){
+        return list.size();
+    }
 
 }
