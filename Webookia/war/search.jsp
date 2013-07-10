@@ -75,16 +75,15 @@
 					%>
 					<p class="paragraph">La ricerca ha restituito i seguenti
 						risultati. Selezionane uno per proseguire nella ricerca.</p>
-					<div class="resultList">
+					<div class="list bookList narrowList withBorder">
 						<%
 							for (DetailedBookDescriptor book : resultBox.getList()) {
 						%>
-						<div class="result clearfix">
+						<div class="listElement clearfix">
 							<div class="pictureContainer left">
-								<img class="bookPicture"
-									src="http://www.oasidellibro.it/wp-content/uploads/2010/04/Il-Signore-Degli-Anelli.jpg" />
+								<img class="bookPicture" src="<%=book.getThumbnail()%>" />
 							</div>
-							<div class="resultDetails left">
+							<div class="elementDetails left">
 								<div class="detail title"><%=book.getTitle()%></div>
 								<div class="detail author">
 									di

@@ -45,21 +45,28 @@
 					<%
 						} else {
 					%>
-					<div class="bookGrid clearfix">
+					<div class="list bookList narrowList withBorder">
 						<%
-							for (BookDescriptor b : books.getList()) {
+							for (BookDescriptor book : books.getList()) {
 						%>
-						<div class="bookPresentation">
-							<img class="bookPicture"
-								src="<%=b.getThumbnail()%>" />
-							<div class="bookInfo">
-								<div class="title"><%=b.getTitle()%></div>
-								<div class="author"><%=b.getAuthors()%></div>
+						<div class="listElement clearfix">
+							<div class="pictureContainer left">
+								<img class="bookPicture" src="<%=book.getThumbnail()%>" />
+							</div>
+							<div class="elementDetails left">
+								<div class="detail title"><%=book.getTitle()%></div>
+								<div class="detail author">
+									di
+									<%=book.getAuthors()%></div>
+								<div class="detail isbn"><%=book.getIsbn()%></div>
 								<div class="property">
-									<%=bookStatusToHMTL(b.getStatus())%>
-									<%=bookPrivacyToHTML(b.getPrivacy())%>
+									<%=bookStatusToHMTL(book.getStatus())%>
+									<%=bookPrivacyToHTML(book.getPrivacy())%>
 								</div>
-								<div class="bookView"><%=viewLinkFor(ConcreteBook.class, b.getId())%></div>
+							</div>
+							<div class="selectButton right">
+								<a href="/books/detail?id=<%=book.getId()%>"
+									class="button select animate">Visualizza</a>
 							</div>
 						</div>
 						<%

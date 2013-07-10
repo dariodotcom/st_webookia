@@ -9,9 +9,21 @@ body.webookia {
 	font-size: 14px;
 }
 
-body.webookia a:link {
+a:link {
 	text-decoration: none;
-	color: rgb(60,87,157);
+	color: #3b5998;
+}
+
+img{
+	vertical-align: bottom;
+}
+
+a:hover{
+	text-decoration: underline;
+}
+
+a:visited{
+	color: #768199;
 }
 
 .topWidthElement {
@@ -472,24 +484,30 @@ h2.sectionTitle{
 .button{
 	display: inline-block;
 	background-color: #3b5998;
-	padding: 2px 7px;
+	padding: 4px 8px !important;
 	border-radius: 2px;
 	border: none;
 	font-family: 'Alef';
 	font-weight: bold;
-	color: #f7f7f7;
+	color: #f7f7f7 !important;
 	font-size: 16px;
 	margin-left: 5px;
 	text-decoration: none;
 	box-shadow: 0 -3px 0 0 rgba(0,0,0,.3) inset;
 }
 
+a.button{
+	padding: 8px;
+}
+
+a.button:hover,
 a.button:visited{
 	color: white;
+	text-decoration: none;
 }
 
 .submitInput:hover,
-button:hover {
+.button:hover {
 	background-color: #6d84b4;
 	cursor: pointer;
 }
@@ -702,43 +720,6 @@ button:hover {
 	margin: 0 auto;
 }
 
-
-.resultList{
-	margin: 0 auto;
-	width: 660px;
-}
-
-.result{
-	padding: 10px;
-	border-top: 1px solid #bbbbbb;
-}
-
-.result:last-child{
-	border-bottom: 1px solid #bbbbbb;
-}
-
-.result .pictureContainer .bookPicture{
-	height: 120px;
-}
-
-.result .resultDetails{
-	margin-left: 10px;
-	max-width: 440px;
-}
-
-.result:hover{
-	background: #eeeeee;
-}
-
-.result .resultDetails .detail{
-	color: #444444;
-	margin-bottom: 10px;
-}
-
-.result .resultDetails .detail.title{
-	font-size: 22px;
-}
-
 a.button.select{
 	margin-top: 40px;
 }
@@ -886,37 +867,71 @@ a.button.select{
 	cursor: pointer;
 }
 
-/* 
- * USER PROFILE
- */
+/** DETAIL **/
 .userThumb.big .profilePicture{
 	width: 80px;
 	height: 80px;
 }
 
-#userUI .details{
-	width: 300px;
-	background: rgba(0,0,0,.09);
-	box-shadow: 0 0 3px 0 rgba(0,0,0,.1) inset;
+.details{
+	width: 620px;
+	background: white;
+	box-shadow: 0 0 1px 0 rgba(0,0,0,.15),
+				0 0 3px 0 rgba(0,0,0,.1),
+				0 1px 0 1px rgba(0,0,0,.15);
 	padding: 15px;
 	border-radius: 2px;
+	margin: 0 auto;
 }
 
-#userUI .details .heading{
+.details .heading{
 	font-weight: bold;
 	font-family: alef;
 	font-size: 25px;
-	color: white;
-	text-shadow: 0 0 2px rgba(0,0,0,.5);
+	color: rgba(0,0,0,.65);
+	text-shadow: 0 1px 0 rgba(0,0,0,.2);
+	margin-bottom: 10px;
 }
 
-#userUI .tabbedContainer{
-	
+.details .bookPicture{
+	max-width: 125px;
 }
 
+.details .detailContainer{
+	width: 350px;
+	clear: right;
+}
 
+.details .detail{
+	display: block;
+	border-bottom: 1px solid rgba(0,0,0,.1);
+	margin-top: 12px;
+}
+
+.details .detailName{
+	float: left;
+	color: rgba(0,0,0,.6);
+}
+
+.details .detailValue{
+	float: right;	
+}
+
+.gBooksLink{
+	display: block;
+	margin-top: 10px;
+}
+
+.details .bottomLine{
+	margin-top: 15px;
+	text-align: center;
+	clear: both;
+}
+
+/** TABBED PANELS **/
 .tabbedContainer{
-	margin: 20px;
+	width: 650px;
+	margin: 40px auto;
 }
 
 .tabbedContainer .tabs{
@@ -940,43 +955,64 @@ a.button.select{
 	background-color: white;
 	border-color: rgba(0,0,0,.3);
 	border-radius: 2px 2px 0 0;
+	font-weight: bold;
 }
 
 .tabbedContainer .panels{
-	padding: 10px;
 	border-width: 0 1px 1px 1px;
 	border-color: rgba(0,0,0,.3);
 	border-style: solid;
 	background: white;
+	border-radius: 0 0 2px 2px;
 }
 
-.bookList .listElement{
+/** LISTS **/
+.list .listElement{
 	padding: 15px;
 }
 
-.bookList .listElement:not(:first-child){
-	border-top: 1px solid #bbbbbb;
-}
-
-.bookList .listElement .pictureContainer .bookPicture{
-	height: 100px;
-}
-
-.bookList .listElement .resultDetails{
-	margin-left: 10px;
-	max-width: 440px;
-}
-
-.bookList .listElement:hover{
+.list .listElement:hover{
 	background: #eeeeee;
 }
 
-.bookList .listElement .resultDetails .detail{
-	color: #444444;
-	margin-bottom: 10px;
+.list .listElement:not(:first-child){
+	border-top: 1px solid #bbbbbb;
 }
 
-.bookList .listElement .resultDetails .detail.title{
+.list .listElement .elementDetails{
+	margin-left: 15px;
+	max-width: 440px;
+}
+
+.list .listElement .elementDetails .detail{
+	color: #444444;
+	margin-bottom: 5px;
+	line-height: 25px;
+}
+
+.list .listElement .elementDetails .detail.title{
 	font-size: 22px;
 }
 
+.list.bookList .listElement .pictureContainer .bookPicture{
+	max-width: 70px;
+}
+
+.list.narrowList{
+	margin: 0 auto;
+	width: 660px;
+}
+
+.list.feedbackList .anonymousFeedback .text{
+	margin-top: 10px;
+}
+
+.list.withBorder{
+	border: 1px solid #bbbbbb;
+	border-radius: 2px;
+	background: white;
+}
+
+.list .empty{
+	padding: 20px;
+}
