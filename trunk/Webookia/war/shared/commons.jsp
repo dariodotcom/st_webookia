@@ -1,3 +1,5 @@
+<%@page import="it.webookia.backend.utils.StringUtils"%>
+<%@page import="it.webookia.backend.descriptor.UserDescriptor"%>
 <%@page import="it.webookia.backend.enums.PrivacyLevel"%>
 <%@page import="it.webookia.backend.enums.BookStatus"%>
 <%@page import="it.webookia.backend.utils.servlets.Context"%>
@@ -95,4 +97,14 @@
 		}
 		String link = "/" + context + "/detail?id=" + id;
 		return String.format(pattern, link);
+	}
+
+	public String profileLink(UserDescriptor user) {
+		return String.format("<a href=\"%s\">%s</a>", "/users/profile?uid="
+				+ user.getUserId(), user.getFullName());
+
+	}
+	
+	public String NANullFix(String input){
+		return StringUtils.isEmpty(input) ? "Non disponibile" : input;
 	}%>

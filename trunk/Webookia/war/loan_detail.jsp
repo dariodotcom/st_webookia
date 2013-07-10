@@ -106,44 +106,36 @@
 					<div class="details loanDetails clearfix">
 						<div class="id hidden"><%=descriptor.getId()%></div>
 						<div class="pictureContainer left">
-							<img class="bookPicture"
-								src="<%=bookDesc.getThumbnail()%>" />
+							<img class="bookPicture" src="<%=bookDesc.getThumbnail()%>" />
 						</div>
 						<div class="detailContainer left">
 							<!-- Book details -->
-							<div class="contentSection">
-								<h2 class="sectionTitle">Dettagli libro</h2>
-								<div class="sectionContent">
-									<div class="title"><%=bookDesc.getTitle()%></div>
-									<div class="author">
-										di
-										<%=bookDesc.getAuthors()%></div>
-								</div>
+							<div class="heading"><%=bookDesc.getTitle()%></div>
+							<div class="detail clearfix">
+								<div class="detailName">Autore</div>
+								<div class="detailValue"><%=bookDesc.getAuthors()%></div>
+							</div>
+							<div class="detail clearfix">
+								<%
+									if (isOwner) {
+								%>
+								<div class="detailName">Mittente</div>
+								<div class="detailValue"><%=borrowerName%></div>
+								<%
+									} else {
+								%>
+								<div class="detailName">Destinatario</div>
+								<div class="detailValue"><%=ownerName%></div>
+								<%
+									}
+								%>
+							</div>
+							<div class="detail clearfix">
+								<div class="detailName">Stato</div>
+								<div class="detailValue"><%=loanStatusToHTML(loanStatus)%></div>
 							</div>
 
-							<!-- Loan details -->
-							<div class="contentSection">
-								<h2 class="sectionTitle">Dettagli richiesta</h2>
-								<div class="sectionContent">
-									<%
-										if (isOwner) {
-									%>
-									Mittente:
-									<%=borrowerName%>
-									<%
-										} else {
-									%>
-									Destinatario:
-									<%=ownerName%>.
-									<%
-										}
-									%>
-									<br>Stato del prestito:
-									<%=loanStatusToHTML(loanStatus)%>
-								</div>
-							</div>
-
-							<!-- Loan details -->
+							<!-- Actions -->
 							<%
 								Boolean canTakeAction;
 								if (isOwner) {
@@ -155,12 +147,7 @@
 
 								if (canTakeAction) {
 							%>
-							<div class="contentSection">
-								<h2 class="sectionTitle">Azioni</h2>
-								<div class="sectionContent">
-									<%=getProgressionButton(loanStatus, loanDesc.getId())%>
-								</div>
-							</div>
+							<div class="bottomLine"><%=getProgressionButton(loanStatus, loanDesc.getId())%></div>
 							<%
 								}
 							%>
@@ -172,7 +159,7 @@
 				if (loanStatus.equals(LoanStatus.GIVEN_BACK)) {
 			%>
 			<div class="contentSection">
-				<h1 class="sectionTitle">Feedback</h1>
+				<h2 class="sectionTitle">Feedback</h2>
 				<div class="sectionContent">
 					<%
 						LoanFeedbackDescriptor feedbacks = loanRes.getFeedbacks();
@@ -251,7 +238,7 @@
 				}
 			%>
 			<div class="contentSection">
-				<h1 class="sectionTitle">Messaggi</h1>
+				<h2 class="sectionTitle">Messaggi</h2>
 				<div class="sectionContent">
 					<%
 						List<MessageDescriptor> messages = loanRes.getMessages().getList();

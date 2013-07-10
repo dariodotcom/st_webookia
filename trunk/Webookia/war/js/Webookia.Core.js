@@ -418,6 +418,9 @@ var $doc = document.getElementById.bind(document);
 		case "NEW_REVIEW_COMMENT":
 			message = " ha commentato una tua recensione";
 			break;
+		case "LOAN_FEEDBACK_ADDED":
+			message = " ti ha inviato un feedback";
+			break;
 		default:
 			message = "Una notifica";
 		}

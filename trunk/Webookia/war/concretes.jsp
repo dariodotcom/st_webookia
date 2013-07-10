@@ -57,7 +57,7 @@
 								</div>
 								<div class="concreteDetail">
 									<div class="name"><%=owner.getFullName()%></div>
-									<div class="location"><%=owner.getLocation()%></div>
+									<div class="location"><%=owner.getLocation().getName()%></div>
 									<div class="coords hidden"><%=owner.getLocation()%></div>
 									<div class="id hidden"><%=book.getId()%></div>
 								</div>

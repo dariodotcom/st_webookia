@@ -63,16 +63,18 @@
 				%>
 				<img class="profilePicture"
 					src="<%=hUserDescriptor.getThumbnail()%>" /> <span
-					class="username"><%=hUserDescriptor.getName()%> <%=hUserDescriptor.getSurname()%></span>
-					<span class="logout">(<a href="/authentication/logout">logout</a>)</span>
+					class="username"><a href="/home/"><%=hUserDescriptor.getFullName()%></a></span>
+				<span class="logout">(<a href="/authentication/logout">logout</a>)
+				</span>
 				<%
 					}
 				%>
 			</div>
 			<div id="searchContainer">
 				<form name="searchForm" action="/search/result" method="post">
-					<input class="searchText" name="title" type="text" placeholder="Cerca libro..."></input>
-					<input class="searchSubmit" type="submit"></input>
+					<input class="searchText" name="title" type="text"
+						placeholder="Cerca libro..."></input> <input class="searchSubmit"
+						type="submit"></input>
 				</form>
 			</div>
 			<%

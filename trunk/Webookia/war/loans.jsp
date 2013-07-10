@@ -67,7 +67,7 @@
 						%>
 						<tr class="elem">
 							<td class="property"><%=book.getTitle()%></td>
-							<td class="property"><%=borrower.getFullName()%></td>
+							<td class="property"><%=profileLink(borrower)%></td>
 							<td class="property"><%=descr.getStartDate()%></td>
 							<td class="property"><%=loanStatusToHTML(descr.getStatus())%></td>
 							<td class="property"><%=viewLinkFor(Loan.class, descr.getId())%></td>
