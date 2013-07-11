@@ -480,8 +480,8 @@ h2.sectionTitle{
 	padding: 0 4px;
 }
 
-.submitInput,
-.button{
+a.submitInput,
+a.button{
 	display: inline-block;
 	background-color: #3b5998;
 	padding: 4px 8px !important;
@@ -866,6 +866,10 @@ a.button.select{
 .marker.editable .star{
 	cursor: pointer;
 }
+.picureContainer .welcomeImage{
+	width: 80px;
+	height: 80px;
+}
 
 /** DETAIL **/
 .userThumb.big .profilePicture{
@@ -1015,4 +1019,20 @@ a.button.select{
 
 .list .empty{
 	padding: 20px;
+}
+
+.userList .profilePicture{
+	width: 64px;
+}
+
+.selectButton{
+	vertical-align: super;
+}
+
+.welcomeText{
+	width: 50%;
+}
+
+.welcomeImage{
+	width: 50%;
 }
