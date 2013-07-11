@@ -398,7 +398,7 @@ var $doc = document.getElementById.bind(document);
 	// Notifications
 	function textFor(notification) {
 		var message;
-
+		
 		switch (notification.type) {
 		case "NEW_LOAN_REQUEST":
 			message = " ti ha chiesto un prestito";
@@ -449,6 +449,10 @@ var $doc = document.getElementById.bind(document);
 
 	Webookia.Initializer
 			.plugin(function() {
+				if(!$doc("notificationContainer")){
+					return;
+				}
+				
 				var container = $("#notificationContainer");
 				var panel = container.find(".notificationPanel");
 				var button = container.find(".notificationButton");
