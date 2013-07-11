@@ -25,6 +25,7 @@ public class BookDescriptor extends DetailedBookDescriptor {
     private String ownerId;
     private BookStatus status;
     private PrivacyLevel privacy;
+    private String gBookLink;
 
     /* Constructor */
     BookDescriptor(ConcreteBook book) {
@@ -34,6 +35,7 @@ public class BookDescriptor extends DetailedBookDescriptor {
         ownerId = book.getOwner().getUserId();
         status = book.getStatus();
         privacy = book.getPrivacy();
+        gBookLink = book.getDetailedBook().getGBooksLink();
     }
 
     @XmlElement(name = "bookId")
@@ -54,5 +56,10 @@ public class BookDescriptor extends DetailedBookDescriptor {
     @XmlElement(name = "ownerId")
     public String getOwnerId() {
         return ownerId;
+    }
+
+    @XmlElement(name = "gBookLink")
+    public String getGBookLink() {
+        return gBookLink;
     }
 }

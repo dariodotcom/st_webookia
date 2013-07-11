@@ -1,5 +1,7 @@
 package it.webookia.backend.descriptor;
 
+import java.util.List;
+
 import it.webookia.backend.model.UserEntity;
 import it.webookia.backend.utils.storage.Location;
 
@@ -16,6 +18,7 @@ public class UserDescriptor implements Descriptor {
     private String surname;
     private LocationDescriptor location;
     private String thumbnail;
+    private List<String> friendsIds;
 
     UserDescriptor(UserEntity user) {
         userId = user.getUserId();
@@ -23,6 +26,7 @@ public class UserDescriptor implements Descriptor {
         surname = user.getSurname();
         thumbnail = user.getThumbnailUrl();
         location = new LocationDescriptor(user.getLocation());
+        friendsIds = user.getFriendList();
     }
 
     // Setters and Getters
@@ -69,6 +73,15 @@ public class UserDescriptor implements Descriptor {
 
     public void setThumbnail(String thumbnailUrl) {
         this.thumbnail = thumbnailUrl;
+    }
+
+    @XmlElement(name = "friendsIds")
+    public List<String> getFriendsIds() {
+        return friendsIds;
+    }
+
+    public void setFriendsIds(List<String> friendsIds) {
+        this.friendsIds = friendsIds;
     }
 
     public String getFullName() {

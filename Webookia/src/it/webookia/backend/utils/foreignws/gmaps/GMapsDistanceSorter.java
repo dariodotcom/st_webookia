@@ -93,10 +93,16 @@ public class GMapsDistanceSorter implements InMemorySortCriterion {
                     .getText()
                     .split(" ");
 
-            System.out.println(result[1].equals("km"));
-            return Float.parseFloat(result[0])
-                * (result[1].equals("km") ? 1000 : 1);
-
+            boolean isKilometres = result[1].equals("km");
+            
+            System.out.println(result[0]);
+            
+            Float distance = Float.parseFloat(result[0].replace(",",""))
+                * (isKilometres ? 1000 : 1);
+            
+            System.out.println(distance);
+            
+            return distance; 
         }
 
         public static class Row {

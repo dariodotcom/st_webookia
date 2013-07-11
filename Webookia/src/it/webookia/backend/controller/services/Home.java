@@ -29,7 +29,7 @@ public class Home extends ServiceServlet {
             if (context.isUserLoggedIn()) {
                 new Users.SelfProfileService().service(context);
             } else {
-                context.forwardToJsp(Jsp.HOME);
+                context.forwardToJsp(Jsp.WELCOME_JSP);
             }
         }
 

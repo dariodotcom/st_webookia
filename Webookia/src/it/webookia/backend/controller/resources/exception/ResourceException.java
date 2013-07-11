@@ -12,12 +12,14 @@ public class ResourceException extends Exception {
     private ResourceErrorType errorType;
 
     /**
-     * Constructs a {@link ResourceException} which contains only the error
-     * type.
+     * Constructs a {@link ResourceException} which contains the error type and
+     * a brief explanation of this.
      * 
      * @param errorType
      *            - the {@link ResourceErrorType} that describes the cause of
      *            the error.
+     * @param message
+     *            - the explanation of the occurred error.
      */
     public ResourceException(ResourceErrorType errorType, String message) {
         super(errorType.getFriendlyText() + ": " + message);
