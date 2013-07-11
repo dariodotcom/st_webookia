@@ -25,13 +25,27 @@ public class Users extends ServiceServlet {
         registerDefaultService(Verb.GET, new UserLanding());
         registerService(Verb.GET, "profile", new UserProfileService());
     }
-
+    
     public static class UserLanding implements Service {
         @Override
         public void service(ServiceContext context) throws ServletException,
                 IOException {
-            // TODO Auto-generated method stub
+            if (!context.isUserLoggedIn()) {
+                context.sendError(new ResourceException(
+                    ResourceErrorType.BAD_REQUEST,
+                    "No profile to show."));
+                return;
+            }
 
+            String userId = context.getAuthenticatedUserId();
+
+            try {
+                UserResource user = UserResource.getUser(userId);
+                context.setRequestAttribute(SHOW_USER, user);
+                context.forwardToJsp(Jsp.USERS_JSP);
+            } catch (ResourceException e) {
+                context.sendError(e);
+            }
         }
     }
 

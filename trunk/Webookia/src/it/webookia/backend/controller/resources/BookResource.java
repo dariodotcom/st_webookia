@@ -18,6 +18,8 @@ import it.webookia.backend.model.ConcreteBook;
 import it.webookia.backend.model.DetailedBook;
 import it.webookia.backend.model.Review;
 import it.webookia.backend.model.UserEntity;
+import it.webookia.backend.utils.foreignws.facebook.FacebookConnector;
+import it.webookia.backend.utils.foreignws.facebook.FacebookConnector.BookActivity;
 import it.webookia.backend.utils.foreignws.isbndb.GBooksIsbnResolver;
 import it.webookia.backend.utils.foreignws.isbndb.IsbnResolverException;
 import it.webookia.backend.utils.servlets.SearchParameters;
@@ -28,7 +30,7 @@ import it.webookia.backend.utils.storage.StorageFacade;
 import it.webookia.backend.utils.storage.StorageQuery;
 
 /**
- * Class to manage Book entities
+ * Class to manage book entities.
  * */
 public class BookResource {
 
@@ -41,7 +43,7 @@ public class BookResource {
     private static StorageFacade<Comment> commentStorage =
         new StorageFacade<Comment>(Comment.class);
 
-    // Class methods
+    /* Class methods */
 
     /**
      * Creates a new {@link ConcreteBook} that represents a real book owned by a
@@ -52,7 +54,7 @@ public class BookResource {
      *            - the book ISBN.
      * @param user
      *            - the {@link UserResource} representing the book owner.
-     * @return the newly created book
+     * @return the newly created book.
      * @throws {@link ResourceException} if the creation fails.
      * */
     public static BookResource createBook(String isbn, UserResource user)
@@ -77,6 +79,11 @@ public class BookResource {
         book.setPrivacy(PrivacyLevel.getDefault());
 
         concreteBookStorage.persist(book);
+
+        // Post activity on facebook
+        FacebookConnector.forUser(user.getEntity()).postBookActivityStory(
+            BookActivity.SHARE,
+            book);
 
         return new BookResource(book);
     }
@@ -121,6 +128,16 @@ public class BookResource {
         return bookResource;
     }
 
+    /**
+     * Retrieves a list of detailed books that matches with the inserted
+     * reserarch parameters.
+     * 
+     * @param params
+     *            - a list of research parameters including the title, the
+     *            authors and the isbn of the book.
+     * @return a {@link ListDescriptor<DetailedBookDescriptor>} with all the
+     *         matched books.
+     */
     public static ListDescriptor<DetailedBookDescriptor> lookupDetailedBooks(
             SearchParameters params) {
         List<DetailedBook> books = StorageQuery.lookUpDetailedBook(params);
@@ -131,6 +148,10 @@ public class BookResource {
             String detailId, UserResource requestor) throws ResourceException {
         DetailedBook detail;
 
+        if(requestor == null){
+            throw new ResourceException(ResourceErrorType.NOT_LOGGED_IN, "Login required!");
+        }
+        
         try {
             detail = detailedBookStorage.get(detailId);
         } catch (StorageException e) {
@@ -226,9 +247,13 @@ public class BookResource {
         bookReview.setMark(mark);
         bookReview.setText(text);
         reviewStorage.persist(bookReview);
-
         decoratedBook.setReview(bookReview);
         concreteBookStorage.persist(decoratedBook);
+        
+        // Post activity on facebook
+        FacebookConnector.forUser(author.getEntity()).postBookActivityStory(
+            BookActivity.REVIEW,
+            decoratedBook);
     }
 
     /**

@@ -190,7 +190,7 @@ public class FacebookConnector {
 
         String id = loc.getId();
         String name = loc.getName();
-        
+
         Page page = graphAPIClient.fetchObject(id, Page.class);
         com.restfb.types.Location userLocation = page.getLocation();
 
