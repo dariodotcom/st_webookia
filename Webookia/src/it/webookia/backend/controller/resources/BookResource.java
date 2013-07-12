@@ -20,7 +20,7 @@ import it.webookia.backend.model.Review;
 import it.webookia.backend.model.UserEntity;
 import it.webookia.backend.utils.foreignws.facebook.FacebookConnector;
 import it.webookia.backend.utils.foreignws.facebook.FacebookConnector.BookActivity;
-import it.webookia.backend.utils.foreignws.isbndb.GBooksIsbnResolver;
+import it.webookia.backend.utils.foreignws.isbndb.GoogleBooksIsbnResolver;
 import it.webookia.backend.utils.foreignws.isbndb.IsbnResolverException;
 import it.webookia.backend.utils.servlets.SearchParameters;
 import it.webookia.backend.utils.storage.Mark;
@@ -65,7 +65,7 @@ public class BookResource {
 
         if (details == null) {
             try {
-                details = new GBooksIsbnResolver(isbn).resolve();
+                details = new GoogleBooksIsbnResolver(isbn).resolve();
             } catch (IsbnResolverException e) {
                 throw new ResourceException(ResourceErrorType.NOT_FOUND, e);
             }
