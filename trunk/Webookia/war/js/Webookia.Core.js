@@ -467,7 +467,7 @@ var $doc = document.getElementById.bind(document);
 				
 				
 				var populate = function(response) {
-					notifications = response.descriptor.list;
+					notifications = response.descriptor.elements;
 					body.empty();
 
 					if (notifications.length == 0) {

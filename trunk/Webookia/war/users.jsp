@@ -31,6 +31,15 @@
 			<div class="contentSection">
 				<h1 class="sectionTitle">Amici</h1>
 				<div class="sectionContent">
+					<p class="paragraph">
+						In questa pagina visualizzi tutti i tuoi amici iscritti a Webookia
+						. Se vuoi aggiungere nuovi amici visita la community su facebook e
+						invitali per cominciare a scambiare libri con loro! E ricorda che
+						solo i tuoi amici su facebook possono essere aggiunti alla
+						community.<br> Vai su <a
+							href="https://www.facebook.com/WebookiaCommunity"> Webookia
+							Community </a>
+					</p>
 					<div class="list userList narrowList withBorder">
 						<%
 							if (friendIds.isEmpty()) {
@@ -45,7 +54,7 @@
 						<div class="listElement clearfix">
 							<div class="pictureContainer left">
 								<div class="userThumb">
-									<img class="profilePicture" src="<%=user.getThumbnail()%>" />
+									<img class="profilePicture" src="<%=user.getPicture()%>" />
 								</div>
 							</div>
 							<div class="elementDetails left">
