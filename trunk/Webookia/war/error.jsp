@@ -1,3 +1,4 @@
+<%@page import="java.util.Date"%>
 <%@page
 	import="it.webookia.backend.controller.resources.exception.ResourceException"%>
 <%@page import="it.webookia.backend.descriptor.BookDescriptor"%>
@@ -15,7 +16,8 @@
 
 	switch (ex.getErrorType()) {
 	case NOT_LOGGED_IN:
-		errorText = "Devi essere autenticato per accedere a questa sezione. Premi il pulsante \"Login\" in alto a destra per autenticarti.";
+		errorText = "Per proseguire devi effettuare l'autenticazione. "
+				+ "Premi il pulsante \"Login\" in alto a destra per autenticarti.";
 		break;
 	case NOT_FOUND:
 		errorText = "La risorsa richiesta non è stata trovata. Torna alla home e riprova.";
@@ -42,24 +44,26 @@
 <%@ include file="shared/head.jsp"%>
 <body class="webookia">
 	<%@ include file="shared/header.jsp"%>
-
 	<div id="contentContainer">
 		<div id="content" class="topWidthElement">
-			<div class="errorHeader">C'&egrave; stato un errore.</div>
-
-			<div class="errorText">
-				<%=errorText%><br>
+			<div class="errorNotificationContainer shadowBox">
+				<div class="errorHeading">C'&egrave; stato un errore.</div>
+				<div class="errorBody"><%=errorText%></div>
 			</div>
 
+			<%
+				if (Settings.DEBUG_MODE) {
+			%>
 			<div class="contentSection">
 				<h1 class="sectionTitle">Stack dell'errore:</h1>
 				<%
 					Throwable cause = ex;
-					boolean isCause = false;
-					while (cause != null) {
-						StackTraceElement[] stackTrace = cause.getStackTrace();
-						String elemClass = "stackTrace" + (isCause ? " cause" : "");
-						String text = (isCause ? "Caused by " : "") + cause.toString();
+						boolean isCause = false;
+						while (cause != null) {
+							StackTraceElement[] stackTrace = cause.getStackTrace();
+							String elemClass = "stackTrace" + (isCause ? " cause" : "");
+							String text = (isCause ? "Caused by " : "")
+									+ cause.toString();
 				%>
 				<pre class="<%=elemClass%>"><%=text%></pre>
 				<br>
@@ -70,13 +74,16 @@
 				<br>
 				<%
 					}
-						cause = cause.getCause();
-						isCause = true;
-					}
+							cause = cause.getCause();
+							isCause = true;
+						}
 				%>
 			</div>
-
+			<%
+				}
+			%>
 		</div>
 	</div>
+		<%@ include file="shared/footer.jsp"%>
 </body>
 </html>

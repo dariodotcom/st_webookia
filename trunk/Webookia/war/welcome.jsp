@@ -19,7 +19,7 @@
 	<div id="contentContainer">
 		<div id="userUI" class="content topWidthElement">
 			<h1 class="sectionTitle">Benvenuto su WeBookia!</h1>
-			<div class="sectionContent">
+			<div class="sectionContent clearfix">
 				<div class="welcomeText left">
 					WeBookia &egrave; una vera e propria biblioteca virtuale in cui
 					potrai cercare online il libro che desideri ed ottenerlo in
@@ -29,13 +29,14 @@
 					garantisce di trovare sempre la soluzione migliore per le tue
 					esigenze. <br> Inizia subito a scambiare libri con WeBookia
 					premendo il pulsante "Login" in alto a destra di questa pagina! <br>
-					Per rimanere sempre aggiornato seguici sulla nostra pagina
-					Facebook <a href="http://www.facebook.com/WebookiaCommunity">WeBookia Community</a>.
+					Per rimanere sempre aggiornato seguici sulla nostra pagina Facebook
+					<a href="http://www.facebook.com/WebookiaCommunity">WeBookia
+						Community</a>.
 				</div>
 				<img class="welcomeImage right" src="/resources/snoopy.png">
 			</div>
-
 		</div>
 	</div>
+	<%@ include file="shared/footer.jsp"%>
 </body>
 </html>

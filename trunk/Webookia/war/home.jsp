@@ -13,5 +13,6 @@
 	<div id="contentContainer">
 		<div id="content" class="topWidthElement"></div>
 	</div>
+	<%@ include file="shared/footer.jsp"%>
 </body>
 </html>
