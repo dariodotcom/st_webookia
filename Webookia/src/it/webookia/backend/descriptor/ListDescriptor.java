@@ -13,32 +13,32 @@ import javax.xml.bind.annotation.XmlType;
 public class ListDescriptor<E extends Descriptor> implements Descriptor,
         Iterable<E> {
 
-    private List<E> list;
+    private List<E> elements;
 
     public ListDescriptor() {
-        this.list = new ArrayList<E>();
+        this.elements = new ArrayList<E>();
     }
 
-    @XmlElement(name = "content")
+    @XmlElement(name = "elements")
     public List<E> getList() {
-        return list;
+        return elements;
     }
 
     public void setList(List<E> internalList) {
-        this.list = internalList;
+        this.elements = internalList;
     }
 
     public void addDescriptor(E descriptor) {
-        this.list.add(descriptor);
+        this.elements.add(descriptor);
     }
 
     @Override
     public Iterator<E> iterator() {
-        return list.iterator();
+        return elements.iterator();
     }
     
     public int size(){
-        return list.size();
+        return elements.size();
     }
 
 }

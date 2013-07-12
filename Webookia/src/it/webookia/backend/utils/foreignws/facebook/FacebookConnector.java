@@ -215,6 +215,22 @@ public class FacebookConnector {
                 Parameter.with("width", 30));
         return p.getUrl();
     }
+    
+    /**
+     * Retrieves the url of the user picture from Facebook sized 80x80.
+     * 
+     * @return the url of the picture of the user.
+     */
+    public String getProfilePicture() {
+        Picture p =
+            graphAPIClient.fetchObject(
+                "me/picture",
+                Picture.class,
+                Parameter.with("redirect", false),
+                Parameter.with("height", 80),
+                Parameter.with("width", 80));
+        return p.getUrl();
+    }
 
     /**
      * Posts an user's {@link BookActivity} relating one of his {@link Book} on

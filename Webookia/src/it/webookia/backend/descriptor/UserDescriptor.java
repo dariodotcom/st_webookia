@@ -19,6 +19,7 @@ public class UserDescriptor implements Descriptor {
     private LocationDescriptor location;
     private String thumbnail;
     private List<String> friendsIds;
+    private String picture;
 
     UserDescriptor(UserEntity user) {
         userId = user.getUserId();
@@ -27,9 +28,19 @@ public class UserDescriptor implements Descriptor {
         thumbnail = user.getThumbnailUrl();
         location = new LocationDescriptor(user.getLocation());
         friendsIds = user.getFriendList();
+        picture = user.getPictureUrl();
     }
 
     // Setters and Getters
+    @XmlElement(name = "picture", required = true)
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
     @XmlElement(name = "userId", required = true)
     public String getUserId() {
         return userId;
