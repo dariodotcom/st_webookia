@@ -1,11 +1,4 @@
-<!-- Indices written at Wed, 10 Jul 2013 20:13:26 CEST -->
+<!-- Indices written at Fri, 12 Jul 2013 11:36:19 CEST -->
 
-<datastore-indexes>
+<datastore-indexes/>
 
-    <!-- Used 1 time in query history -->
-    <datastore-index kind="Notification" ancestor="false" source="auto">
-        <property name="receiverRef" direction="asc"/>
-        <property name="date" direction="desc"/>
-    </datastore-index>
-
-</datastore-indexes>
