@@ -648,5 +648,4 @@ var $doc = document.getElementById.bind(document);
 					placeholder.replaceWith(marker._div);
 				}
 			});
-
 })();

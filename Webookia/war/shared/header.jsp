@@ -37,6 +37,7 @@
 			Context.class, ServiceServlet.CONTEXT);
 
 	String authUserId = ServletUtils.getAuthenticatedUserId(request);
+	boolean hUserLoggedIn = authUserId != null;
 	if (authUserId != null) {
 		hUserDescriptor = UserResource.getUser(authUserId)
 				.getDescriptor();
@@ -96,10 +97,11 @@
 			<ul id="menu">
 				<%
 					for (Context context : Context.values()) {
-						if(!context.showInMenu()){
+						if (!context.showInMenu()
+								|| (context.requiresLogin() && !hUserLoggedIn)) {
 							continue;
 						}
-						
+
 						String extraClass = context.equals(hCurrentContext) ? " selected"
 								: "";
 				%>
