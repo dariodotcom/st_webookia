@@ -18,6 +18,7 @@ public class Home extends ServiceServlet {
     public Home() {
         super(Context.HOME);
         registerDefaultService(Verb.GET, new HomeService());
+        registerDefaultService(Verb.GET,new PrivacyService());
     }
 
     private class HomeService implements Service {
