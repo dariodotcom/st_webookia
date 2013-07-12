@@ -324,6 +324,7 @@ a:visited{
 /** Error Notification **/
 .shadowBox.errorNotificationContainer{
 	margin-top: 40px;
+	width: 620px;
 }
 
 .errorNotificationContainer .errorHeading{

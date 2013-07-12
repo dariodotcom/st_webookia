@@ -34,6 +34,9 @@
 	case ALREADY_EXSISTING:
 		errorText = "Una risorsa come quella di cui hai richiesto la creazione esiste già.";
 		break;
+	case CONNECTOR_ERROR:
+		errorText = "L'autenticazione tramite Facebook è fallita. Clicca sul pulsante \"Login\" in alto a destra per riprovare.";
+		break;
 	default:
 		errorText = "La tua richiesta non è valida. Torna alla home e riprova";
 	}
@@ -48,7 +51,8 @@
 		<div id="content" class="topWidthElement">
 			<div class="errorNotificationContainer shadowBox">
 				<div class="errorHeading">C'&egrave; stato un errore.</div>
-				<div class="errorBody"><%=errorText%></div>
+				<div class="errorBody"><%=errorText%><br><a href="/home/">Torna alla homepage</a></div>
+				
 			</div>
 
 			<%
