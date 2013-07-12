@@ -59,7 +59,7 @@ public class BookResource {
      * */
     public static BookResource createBook(String isbn, UserResource user)
             throws ResourceException {
-        // TODO [BOOK] check that user does not already have this book.
+        assertLoggedIn(user);
 
         DetailedBook details = StorageQuery.getDetailedBookByISBN(isbn);
 
@@ -99,6 +99,7 @@ public class BookResource {
      * */
     public static BookResource getBook(String id, UserResource requestor)
             throws ResourceException {
+        assertLoggedIn(requestor);
         ConcreteBook book;
 
         try {
@@ -148,10 +149,8 @@ public class BookResource {
             String detailId, UserResource requestor) throws ResourceException {
         DetailedBook detail;
 
-        if(requestor == null){
-            throw new ResourceException(ResourceErrorType.NOT_LOGGED_IN, "Login required!");
-        }
-        
+        assertLoggedIn(requestor);
+
         try {
             detail = detailedBookStorage.get(detailId);
         } catch (StorageException e) {
@@ -189,7 +188,14 @@ public class BookResource {
      * @throws ResourceException
      *             when trying to change the status illegally.
      * */
-    public void changeStatus(BookStatus newStatus) throws ResourceException {
+    public void changeStatus(BookStatus newStatus, UserResource requestor)
+            throws ResourceException {
+        if (!isOwner(requestor)) {
+            throw new ResourceException(
+                ResourceErrorType.UNAUTHORIZED_ACTION,
+                "You need to be the book owner to do this");
+        }
+
         decoratedBook.setStatus(newStatus);
         concreteBookStorage.persist(decoratedBook);
     }
@@ -199,8 +205,15 @@ public class BookResource {
      * 
      * @param newPrivacy
      *            - the new privacy level.
+     * @throws ResourceException
      * */
-    public void changePrivacy(PrivacyLevel newPrivacy) {
+    public void changePrivacy(PrivacyLevel newPrivacy, UserResource requestor)
+            throws ResourceException {
+        if (!isOwner(requestor)) {
+            throw new ResourceException(
+                ResourceErrorType.UNAUTHORIZED_ACTION,
+                "You need to be the book owner to do this");
+        }
         decoratedBook.setPrivacy(newPrivacy);
         concreteBookStorage.persist(decoratedBook);
     }
@@ -249,7 +262,7 @@ public class BookResource {
         reviewStorage.persist(bookReview);
         decoratedBook.setReview(bookReview);
         concreteBookStorage.persist(decoratedBook);
-        
+
         // Post activity on facebook
         FacebookConnector.forUser(author.getEntity()).postBookActivityStory(
             BookActivity.REVIEW,
@@ -331,14 +344,16 @@ public class BookResource {
 
     /**
      * Checks if an user can borrow this book.
-     * @param user - the user
+     * 
+     * @param user
+     *            - the user
      * @return true if the user can borrow this book.
      */
     public boolean canBeLentBy(UserResource user) {
-        if(user == null){
+        if (user == null) {
             return false;
         }
-        
+
         return PermissionManager
             .user(user.getEntity())
             .canBorrow(decoratedBook);
@@ -346,5 +361,14 @@ public class BookResource {
 
     ConcreteBook getEntity() {
         return decoratedBook;
+    }
+
+    private static void assertLoggedIn(UserResource user)
+            throws ResourceException {
+        if (user == null) {
+            throw new ResourceException(
+                ResourceErrorType.NOT_LOGGED_IN,
+                "You need to be logged in.");
+        }
     }
 }

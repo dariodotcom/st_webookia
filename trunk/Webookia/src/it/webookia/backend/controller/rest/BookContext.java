@@ -79,7 +79,7 @@ public class BookContext {
             BookResource book = BookResource.createBook(isbn, requestor);
             PrivacyLevel privacy = creationRequest.getPrivacy();
             if (privacy != null) {
-                book.changePrivacy(privacy);
+                book.changePrivacy(privacy, requestor);
             }
 
             return ResponseFactory.createFrom(book.getDescriptor());
