@@ -35,4 +35,14 @@ public class Home extends ServiceServlet {
 
     }
 
+    private class PrivacyService implements Service {
+        @Override
+        public void service(ServiceContext context) throws ServletException,
+                IOException {
+
+            context.forwardToJsp(Jsp.PRIVACY_JSP);
+
+        }
+    }
+
 }
