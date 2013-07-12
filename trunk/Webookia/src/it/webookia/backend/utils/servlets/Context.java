@@ -5,7 +5,7 @@ public enum Context {
     BOOKS("books", true, true),
     LOANS("loans", true, true),
     USERS("users", true, true),
-    SEARCH("search", true, true),
+    SEARCH("search", false, true),
     AUTHENTICATION("authentication", false, false)
     ;
 
