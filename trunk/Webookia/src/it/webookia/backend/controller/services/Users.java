@@ -32,8 +32,8 @@ public class Users extends ServiceServlet {
                 IOException {
             if (!context.isUserLoggedIn()) {
                 context.sendError(new ResourceException(
-                    ResourceErrorType.BAD_REQUEST,
-                    "No profile to show."));
+                    ResourceErrorType.NOT_LOGGED_IN,
+                    "You need to login to access this section."));
                 return;
             }
 
