@@ -46,11 +46,11 @@ public class BookRest {
         try {
             BookResource book = getContextBook();
             if (req.getPrivacy() != null) {
-                book.changePrivacy(req.getPrivacy());
+                book.changePrivacy(req.getPrivacy(), getRequestor());
             }
 
             if (req.getStatus() != null) {
-                book.changeStatus(req.getStatus());
+                book.changeStatus(req.getStatus(), getRequestor());
             }
             return ResponseFactory.createFrom(book.getDescriptor());
         } catch (ResourceException e) {

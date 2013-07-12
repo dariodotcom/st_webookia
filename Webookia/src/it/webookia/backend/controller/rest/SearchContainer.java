@@ -2,6 +2,7 @@ package it.webookia.backend.controller.rest;
 
 import it.webookia.backend.controller.resources.BookResource;
 import it.webookia.backend.controller.resources.UserResource;
+import it.webookia.backend.controller.resources.exception.ResourceErrorType;
 import it.webookia.backend.controller.resources.exception.ResourceException;
 import it.webookia.backend.controller.rest.responses.ResponseFactory;
 import it.webookia.backend.descriptor.BookDescriptor;
@@ -39,6 +40,12 @@ public class SearchContainer {
 
         String userId = ServletUtils.getAuthenticatedUserId(request);
         UserResource user;
+
+        if (userId == null) {
+            return ResponseFactory.createFrom(new ResourceException(
+                ResourceErrorType.NOT_LOGGED_IN,
+                "No user logged in."));
+        }
 
         try {
             user = UserResource.getUser(userId);

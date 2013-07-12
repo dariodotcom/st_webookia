@@ -29,6 +29,8 @@ public class LoanResource {
         new StorageFacade<Message>(Message.class);
     private static StorageFacade<Feedback> feedbackStorage =
         new StorageFacade<Feedback>(Feedback.class);
+    private static StorageFacade<ConcreteBook> bookStorage =
+        new StorageFacade<ConcreteBook>(ConcreteBook.class);
 
     // Class methods
     /**
@@ -131,9 +133,10 @@ public class LoanResource {
      */
     public void respond(UserResource requestor, boolean response)
             throws ResourceException {
+        assertLoggedIn(requestor);
+
         UserEntity bookOwner = decoratedLoan.getLentBook().getOwner();
         ConcreteBook lentBook = decoratedLoan.getLentBook();
-        BookResource lentBookRes = new BookResource(lentBook);
 
         if (!requestor.matches(bookOwner)) {
             String message = "You must be the book owner to accept";
@@ -148,16 +151,17 @@ public class LoanResource {
 
         // Modify resource statuses
         if (response == true) {
-            lentBookRes.changeStatus(BookStatus.LENT);
+            changeBookStatus(lentBook, BookStatus.AVAILABLE);
             decoratedLoan.setStatus(LoanStatus.ACCEPTED);
-            
+
             // Send notification
-            UserResource borrower = new UserResource(decoratedLoan.getBorrower());
+            UserResource borrower =
+                new UserResource(decoratedLoan.getBorrower());
             NotificationResource.createNotification(
                 borrower,
                 NotificationType.LOAN_ACCEPTED,
                 decoratedLoan);
-            
+
         } else {
             decoratedLoan.setStatus(LoanStatus.REFUSED);
         }
@@ -176,6 +180,8 @@ public class LoanResource {
      *             if an error occurs.
      */
     public void bookReceived(UserResource requestor) throws ResourceException {
+        assertLoggedIn(requestor);
+
         UserEntity borrower = decoratedLoan.getBorrower();
         ConcreteBook lentBook = decoratedLoan.getLentBook();
 
@@ -210,10 +216,10 @@ public class LoanResource {
      *             if an error occurs.
      */
     public void bookReturned(UserResource requestor) throws ResourceException {
+        assertLoggedIn(requestor);
+
         ConcreteBook lentBook = decoratedLoan.getLentBook();
         UserEntity bookOwner = lentBook.getOwner();
-
-        BookResource lentBookRes = new BookResource(lentBook);
 
         if (!requestor.matches(bookOwner)) {
             String message = "You must be the book owner to accept";
@@ -224,7 +230,7 @@ public class LoanResource {
 
         assertBookStatus(lentBook, BookStatus.LENT);
         assertLoanStatus(decoratedLoan, LoanStatus.SHIPPED);
-        lentBookRes.changeStatus(BookStatus.AVAILABLE);
+        changeBookStatus(lentBook, BookStatus.AVAILABLE);
         decoratedLoan.setStatus(LoanStatus.GIVEN_BACK);
         loanStorage.persist(decoratedLoan);
 
@@ -249,6 +255,8 @@ public class LoanResource {
      */
     public void sendContextMessage(UserResource author, String messageText)
             throws ResourceException {
+        assertLoggedIn(author);
+
         if (!PermissionManager.user(author.getEntity()).canSendMessage(
             decoratedLoan)) {
             String message = "You must be involved in the loan to do this";
@@ -292,6 +300,8 @@ public class LoanResource {
      */
     public void addFeedback(UserResource requestor, int intMark, String text)
             throws ResourceException {
+        assertLoggedIn(requestor);
+
         assertLoanStatus(decoratedLoan, LoanStatus.GIVEN_BACK);
         UserEntity borrower = decoratedLoan.getBorrower();
         UserEntity owner = decoratedLoan.getLentBook().getOwner();
@@ -394,5 +404,18 @@ public class LoanResource {
                 ResourceErrorType.ILLEGAL_STATE,
                 message);
         }
+    }
+
+    private void assertLoggedIn(UserResource user) throws ResourceException {
+        if (user == null) {
+            throw new ResourceException(
+                ResourceErrorType.NOT_LOGGED_IN,
+                "You need to be logged in.");
+        }
+    }
+
+    private void changeBookStatus(ConcreteBook book, BookStatus status) {
+        book.setStatus(status);
+        bookStorage.persist(book);
     }
 }

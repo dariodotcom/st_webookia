@@ -25,7 +25,7 @@ public class UserContextRest {
 
     @Path("self")
     public UserRest handleSelf() {
-        return new UserRest(null);
+        return new UserRest();
     }
 
     @Path("{userid}")
@@ -38,18 +38,23 @@ public class UserContextRest {
 
         private String userid;
 
+        public UserRest() {
+            this.userid = ServletUtils.getAuthenticatedUserId(request);
+        }
+
         public UserRest(String userid) {
-            if (userid == null) {
-                this.userid = ServletUtils.getAuthenticatedUserId(request);
-            } else {
-                this.userid = userid;
-            }
+            this.userid = userid;
         }
 
         @GET
         public Response getUser() {
+            if (userid == null) {
+                return ResponseFactory.createFrom(new ResourceException(
+                    ResourceErrorType.NOT_LOGGED_IN,
+                    "No user logged in."));
+            }
+            
             try {
-
                 Descriptor descriptor =
                     UserResource.getUser(userid).getDescriptor();
                 return ResponseFactory.createFrom(descriptor);
