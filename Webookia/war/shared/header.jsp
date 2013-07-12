@@ -96,6 +96,10 @@
 			<ul id="menu">
 				<%
 					for (Context context : Context.values()) {
+						if(!context.showInMenu()){
+							continue;
+						}
+						
 						String extraClass = context.equals(hCurrentContext) ? " selected"
 								: "";
 				%>

@@ -120,12 +120,17 @@
 									if (isOwner) {
 								%>
 								<div class="detailName">Mittente</div>
-								<div class="detailValue"><%=borrowerName%></div>
+								<div class="detailValue">
+									<a href="/users/profile?uid=<%=borrowerId%>"> <%=borrowerName%>
+									</a>
+								</div>
 								<%
 									} else {
 								%>
 								<div class="detailName">Destinatario</div>
-								<div class="detailValue"><%=ownerName%></div>
+								<div class="detailValue">
+									<a href="/users/profile?uid=<%=ownerId%>"><%=ownerName%></a>
+								</div>
 								<%
 									}
 								%>

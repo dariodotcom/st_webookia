@@ -67,7 +67,7 @@
 						%>
 						<tr class="elem">
 							<td class="property"><%=book.getTitle()%></td>
-							<td class="property"><%=profileLink(borrower)%></td>
+							<td class="property"><a href="/users/profile?uid=<%= borrower.getUserId()%>"> <%=profileLink(borrower)%></a></td>
 							<td class="property"><%=descr.getStartDate()%></td>
 							<td class="property"><%=loanStatusToHTML(descr.getStatus())%></td>
 							<td class="property"><%=viewLinkFor(Loan.class, descr.getId())%></td>
@@ -95,7 +95,7 @@
 					<table class="elemList">
 						<tr class="listHead">
 							<td class="property">Libro</td>
-							<td class="property">Destinatario</td>
+							<td class="property"> Destinatario</td> 
 							<td class="property">Data richiesta</td>
 							<td class="property">Stato</td>
 							<td class="property"></td>
@@ -109,7 +109,8 @@
 						%>
 						<tr class="elem">
 							<td class="property"><%=book.getTitle()%></td>
-							<td class="property"><%=owner.getFullName()%></td>
+							<td class="property"><a
+								href="/users/profile?uid=<%=owner.getUserId()%>"><%=owner.getFullName()%> </a> </td> 
 							<td class="property"><%=descr.getStartDate()%></td>
 							<td class="property"><%=loanStatusToHTML(descr.getStatus())%></td>
 							<td class="property"><%=viewLinkFor(Loan.class, descr.getId())%></td>

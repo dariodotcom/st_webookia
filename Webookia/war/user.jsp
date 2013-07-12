@@ -50,7 +50,7 @@
 					<div class="details clearfix">
 						<div class="pictureContainer left">
 							<div class="userThumb big">
-								<img class="profilePicture" src="<%=descriptor.getThumbnail()%>">
+								<img class="profilePicture" src="<%=descriptor.getPicture()%>">
 							</div>
 						</div>
 						<div class="detailContainer left">
@@ -70,6 +70,12 @@
 								<div class="detailName">Feedback come prestatario</div>
 								<div class="detailValue">
 									<div class="markerPlaceholder"><%=averageMark(feedbacksAsBorrower)%></div>
+								</div>
+							</div>
+							<div class="detail clearfix">
+								<div class="detailName">
+									<a href="https://www.facebook.com/<%=descriptor.getUserId()%>">
+										Visualizza il profilo facebook</a><br>
 								</div>
 							</div>
 						</div>
