@@ -103,7 +103,7 @@
 			<div class="contentSection" id="loanUI">
 				<h1 class="sectionTitle">Dettaglio prestito</h1>
 				<div class="sectionContent">
-					<div class="details loanDetails clearfix">
+					<div class="details shadowBox loanDetails clearfix">
 						<div class="id hidden"><%=descriptor.getId()%></div>
 						<div class="pictureContainer left">
 							<img class="bookPicture" src="<%=bookDesc.getThumbnail()%>" />
