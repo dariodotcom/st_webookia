@@ -56,6 +56,7 @@ public class UserResource {
                 entity.setSurname(connector.getLastName());
                 entity.setLocation(connector.getLocation());
                 entity.setThumbnailUrl(connector.getThumbnail());
+                entity.setPictureUrl(connector.getProfilePicture());
 
                 // Update friends
                 List<String> friendIds = connector.getFriendIds();
