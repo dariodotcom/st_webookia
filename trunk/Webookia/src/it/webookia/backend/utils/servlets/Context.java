@@ -6,7 +6,8 @@ public enum Context {
     LOANS("loans", true, true),
     USERS("users", true, true),
     SEARCH("search", true, true),
-    AUTHENTICATION("authentication", false, false);
+    AUTHENTICATION("authentication", false, false)
+    ;
 
     private String contextName;
     private boolean showInMenu;

@@ -12,7 +12,8 @@ public enum Jsp {
     CONCRETE_JSP("/concretes.jsp"),
     USER_JSP("/user.jsp"),
     USERS_JSP("/users.jsp"),
-    WELCOME_JSP("/welcome.jsp")
+    WELCOME_JSP("/welcome.jsp"),
+    PRIVACY_JSP("/privacy.jsp")
     ;
 
     private String url;
