@@ -6,6 +6,11 @@ package it.webookia.backend.enums;
 public enum BookStatus {
     LENT, AVAILABLE, NOT_AVAILABLE;
 
+    /**
+     * Class constructor.
+     * 
+     * @return the default book status value
+     */
     public static BookStatus getDefault() {
         return AVAILABLE;
     }

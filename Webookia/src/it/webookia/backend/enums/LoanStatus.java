@@ -3,7 +3,7 @@ package it.webookia.backend.enums;
 import it.webookia.backend.model.Loan;
 
 /**
- * Enumeration of possible {@link Loan} statuses.
+ * Enumeration of possible {@link Loan} status.
  */
 public enum LoanStatus {
     INITIAL, ACCEPTED, SHIPPED, GIVEN_BACK, REFUSED;
