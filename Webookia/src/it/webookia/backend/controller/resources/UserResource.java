@@ -21,13 +21,29 @@ import it.webookia.backend.utils.foreignws.facebook.FacebookConnectorException;
 import it.webookia.backend.utils.storage.StorageFacade;
 import it.webookia.backend.utils.storage.StorageQuery;
 
+/**
+ * Class to manage user entities.
+ * 
+ */
 public class UserResource {
 
     // Static reference to an instance of storage facade to get/store users
     private static StorageFacade<UserEntity> userStorage =
         new StorageFacade<UserEntity>(UserEntity.class);
 
-    // ## Class Methods
+    // User accessed through this instance of UserResource
+    private UserEntity decoratedUser;
+
+    /**
+     * Class constructor -- Only other resources can create directly instances.
+     * Higher level components can't manage entities directly so constructors
+     * are useless for them.
+     * 
+     * @param u
+     */
+    UserResource(UserEntity u) {
+        this.decoratedUser = u;
+    }
 
     /**
      * Authenticates an user by its Access Token. If no user corresponding to
@@ -48,6 +64,7 @@ public class UserResource {
         UserEntity entity = StorageQuery.getUserById(id);
 
         try {
+            // First time a user logs in
             if (entity == null) {
                 entity = new UserEntity();
                 entity.setUserId(id);
@@ -60,7 +77,9 @@ public class UserResource {
 
                 // Update friends
                 List<String> friendIds = connector.getFriendIds();
-                System.out.println("checking for " + friendIds.size() + " friends.");
+                System.out.println("checking for "
+                    + friendIds.size()
+                    + " friends.");
 
                 for (String friendId : friendIds) {
                     UserEntity friend = StorageQuery.getUserById(friendId);
@@ -117,20 +136,8 @@ public class UserResource {
         return new UserResource(user);
     }
 
-    // ## Instance Methods
-
-    // User accessed through this instance of UserResource
-    private UserEntity decoratedUser;
-
-    // Only other resources can create directly instances. Higher level
-    // components can't manage entities directly so constructors are useless for
-    // them.
-    UserResource(UserEntity u) {
-        this.decoratedUser = u;
-    }
-
     /**
-     * Iussues an update of fields with name contained in the given list,
+     * Issues an update of fields with name contained in the given list,
      * retrieving new value from facebook.
      * 
      * @param changedFields
@@ -177,17 +184,35 @@ public class UserResource {
         return DescriptorFactory.createUserDescriptor(decoratedUser);
     }
 
+    /**
+     * Retrieves a list of {@link Descriptor} of books belonging to the managed
+     * user.
+     * 
+     * @return a {@link Descriptor} of books.
+     */
     public ListDescriptor<BookDescriptor> getUserBooks() {
         return DescriptorFactory.createBookListDescriptor(decoratedUser
             .getOwnedBooks());
     }
 
+    /**
+     * Retrieves a list of {@link Descriptor} of feedback belonging to the
+     * managed user as owner.
+     * 
+     * @return a {@link Descriptor} of feedbacks.
+     */
     public ListDescriptor<SingleFeedbackDescriptor> getFeedbacksAsOwner() {
         List<Feedback> feedbacks =
             StorageQuery.getFeedbacksAsOwner(decoratedUser);
         return DescriptorFactory.createFeedbackListDescriptor(feedbacks);
     }
 
+    /**
+     * Retrieves a list of {@link Descriptor} of feedback belonging to the
+     * managed user as borrower.
+     * 
+     * @return a {@link Descriptor} of feedbacks.
+     */
     public ListDescriptor<SingleFeedbackDescriptor> getFeedbacksAsBorrower() {
         List<Feedback> feedbacks =
             StorageQuery.getFeedbacksAsBorrower(decoratedUser);
@@ -198,6 +223,8 @@ public class UserResource {
      * Retrieves a {@link Descriptor} that describes the notifications received
      * by the user.
      * 
+     * @param requestor
+     *            is the user logged in
      * @return a {@link Descriptor} of received notifications.
      * @throws ResourceException
      *             when requestor is not managed user.
@@ -215,6 +242,15 @@ public class UserResource {
         return DescriptorFactory.createNotificationList(list);
     }
 
+    /**
+     * Retrieves the number of unread notifications received by the user.
+     * 
+     * @param requestor
+     *            is the user logged in
+     * @return the number of unread notifications
+     * @throws ResourceException
+     *             when requestor is not managed user.
+     */
     public int getUnreadNotificationCount(UserResource requestor)
             throws ResourceException {
         if (!requestor.matches(decoratedUser)) {
@@ -226,12 +262,28 @@ public class UserResource {
         return StorageQuery.getNotificationCount(decoratedUser);
     }
 
+    /**
+     * Retrieves a {@link Descriptor} that describes a list of received loan
+     * requests by the user.
+     * 
+     * @param page
+     *            number of results to be shown in the same page
+     * @return a {@link Descriptor} of the received loan requests.
+     */
     public ListDescriptor<LoanDescriptor> getReceivedLoanRequest(int page) {
         List<Loan> loanList =
             StorageQuery.getUserReceivedLoans(decoratedUser, page);
         return DescriptorFactory.createLoanListDescriptor(loanList);
     }
 
+    /**
+     * Retrieves a {@link Descriptor} that describes a list of sent loan
+     * requests by the user.
+     * 
+     * @param page
+     *            number of results to be shown in the same page
+     * @return a {@link Descriptor} of the sent loan requests.
+     */
     public ListDescriptor<LoanDescriptor> getSentLoanRequest(int page) {
         List<Loan> loanList =
             StorageQuery.getUserSentLoans(decoratedUser, page);
@@ -239,23 +291,46 @@ public class UserResource {
     }
 
     /**
-     * @return the id of managed user.
+     * Retrieves the id of the managed user.
+     * 
+     * @return the id
      */
-
     public String getUserId() {
         return decoratedUser.getUserId();
     }
 
     // ## Package visible methods, this can be used by other resources.
 
+    /**
+     * Retrieves the concrete user associated to the user resource.
+     * 
+     * @return the decorated user
+     */
     UserEntity getEntity() {
         return decoratedUser;
     }
 
+    /**
+     * Verifies if the current instance of user resource matches with the
+     * concrete user.ú
+     * 
+     * @param user
+     *            the current user to be verifed
+     * @return true if the concrete user matches with the user resource, false
+     *         otherwise.
+     */
     boolean matches(UserEntity user) {
         return this.decoratedUser.equals(user);
     }
 
+    /**
+     * Verifies if the current instance of user resource is friend with the
+     * concrete user.
+     * 
+     * @param user
+     *            the instance of the user resource.
+     * @return true if they are friends, false otherwise.
+     */
     boolean isFriendWith(UserEntity user) {
         return StorageQuery.getUserFriends(decoratedUser).contains(user);
     }

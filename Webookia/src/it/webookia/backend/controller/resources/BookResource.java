@@ -43,7 +43,19 @@ public class BookResource {
     private static StorageFacade<Comment> commentStorage =
         new StorageFacade<Comment>(Comment.class);
 
-    /* Class methods */
+    // Book that this instance is managing
+    private ConcreteBook decoratedBook;
+
+    /**
+     * Class constructor.
+     * 
+     * @param book
+     */
+    BookResource(ConcreteBook book) {
+        this.decoratedBook = book;
+    }
+
+    // Class methods
 
     /**
      * Creates a new {@link ConcreteBook} that represents a real book owned by a
@@ -61,8 +73,9 @@ public class BookResource {
             throws ResourceException {
         assertLoggedIn(user);
 
+        // Verifies first if the book is already in the db
         DetailedBook details = StorageQuery.getDetailedBookByISBN(isbn);
-
+        // if not, looks for it on Google Books
         if (details == null) {
             try {
                 details = new GoogleBooksIsbnResolver(isbn).resolve();
@@ -80,7 +93,7 @@ public class BookResource {
 
         concreteBookStorage.persist(book);
 
-        // Post activity on facebook
+        // Posts the activity on facebook
         FacebookConnector.forUser(user.getEntity()).postBookActivityStory(
             BookActivity.SHARE,
             book);
@@ -145,6 +158,29 @@ public class BookResource {
         return DescriptorFactory.createDetailedBookListDescriptor(books);
     }
 
+    /**
+     * Retrieves a list of concrete books that matches with the required book
+     * key
+     * 
+     * @param detailId
+     *            is the book id a user is looking for
+     * @param requestor
+     *            identifies a user who is searching for a particular book
+     * @return         {@ListDescritpor<BookDescriptor>
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * } with all the matched books
+     * @throws ResourceException
+     *             thrown if the required book is not in the db
+     */
     public static ListDescriptor<BookDescriptor> lookupConcreteBooks(
             String detailId, UserResource requestor) throws ResourceException {
         DetailedBook detail;
@@ -163,15 +199,14 @@ public class BookResource {
         return DescriptorFactory.createBookListDescriptor(books);
     }
 
-    // Book that this instance is managing
-    private ConcreteBook decoratedBook;
-
-    // Instance Methods
-    BookResource(ConcreteBook book) {
-        this.decoratedBook = book;
-    }
-
-    // Public methods
+    /**
+     * Verifies if a user is the owner of a concrete book.
+     * 
+     * @param user
+     *            the user to be verified
+     * @return true if the user matches with the owner of the concrete book,
+     *         false otherwise.
+     */
     public boolean isOwner(UserResource user) {
         if (user == null) {
             return false;
@@ -201,7 +236,7 @@ public class BookResource {
     }
 
     /**
-     * Change book privacy.
+     * Changes book privacy.
      * 
      * @param newPrivacy
      *            - the new privacy level.
@@ -219,6 +254,7 @@ public class BookResource {
     }
 
     /**
+     * 
      * Adds the owner review to the book.
      * 
      * @param author
@@ -228,7 +264,10 @@ public class BookResource {
      *            - the review text.
      * @param intMark
      *            - the review mark.
-     * */
+     * @throws ResourceException
+     *             occurs when there is a unauthorized action or the passed
+     *             parameter has a wrong format or a review is already present
+     */
     public void addReview(UserResource author, String text, int intMark)
             throws ResourceException {
         Mark mark;
@@ -270,14 +309,16 @@ public class BookResource {
     }
 
     /**
+     * 
      * Adds a comment on the book review;
      * 
      * @param author
      *            - the comment author.
      * @param text
-     *            - the comment text. throws {@link ResourceException} when
-     *            trying to comment to an unexsisting review.
-     * */
+     *            - the comment text.
+     * @throws {@link ResourceException} when trying to comment to an
+     *         unexsisting review.
+     */
     public void addComment(UserResource author, String text)
             throws ResourceException {
         Review bookReview = decoratedBook.getReview();
@@ -290,7 +331,7 @@ public class BookResource {
         }
 
         if (bookReview == null) {
-            String message = "book doesn't have a review";
+            String message = "Book doesn't have a review";
             throw new ResourceException(ResourceErrorType.NOT_FOUND, message);
         }
 
@@ -359,10 +400,23 @@ public class BookResource {
             .canBorrow(decoratedBook);
     }
 
+    /**
+     * Retrieves the concrete book associated to the instance of this book.
+     * 
+     * @return the concrete book
+     */
     ConcreteBook getEntity() {
         return decoratedBook;
     }
 
+    /**
+     * Verifies whether a user is logged in.
+     * 
+     * @param user
+     *            the user to be verified
+     * @throws ResourceException
+     *             if the user is not logged in.
+     */
     private static void assertLoggedIn(UserResource user)
             throws ResourceException {
         if (user == null) {
