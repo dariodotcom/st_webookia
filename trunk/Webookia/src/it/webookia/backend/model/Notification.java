@@ -13,12 +13,19 @@ import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Model;
 import org.slim3.datastore.ModelRef;
 
+/**
+ * This class manages notifications sent to two users in a loan context when the
+ * loan status is updated or when a feedback or a message is inserted.
+ * 
+ */
 @Model(schemaVersion = 1)
 public class Notification implements Serializable, Storable {
 
     private static final long serialVersionUID = 1L;
 
-    // Default constructor
+    /**
+     * Default constructor
+     */
     public Notification() {
         this.date = new Date();
         this.senderRef = new ModelRef<UserEntity>(UserEntity.class);
@@ -79,7 +86,24 @@ public class Notification implements Serializable, Storable {
     public void setRead(boolean read) {
         this.read = read;
     }
+    
+    public Key getKey() {
+        return key;
+    }
 
+    public void setKey(Key key) {
+        this.key = key;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
+    //Relationships getters and setters
     public ModelRef<UserEntity> getSenderRef() {
         return senderRef;
     }
@@ -88,7 +112,6 @@ public class Notification implements Serializable, Storable {
         return receiverRef;
     }
 
-    // Relationships setters and getters
     public UserEntity getReceiver() {
         return receiverRef.getModel();
     }
@@ -105,43 +128,6 @@ public class Notification implements Serializable, Storable {
         senderRef.setModel(sender);
     }
 
-    /**
-     * Returns the key.
-     * 
-     * @return the key
-     */
-    public Key getKey() {
-        return key;
-    }
-
-    /**
-     * Sets the key.
-     * 
-     * @param key
-     *            the key
-     */
-    public void setKey(Key key) {
-        this.key = key;
-    }
-
-    /**
-     * Returns the version.
-     * 
-     * @return the version
-     */
-    public Long getVersion() {
-        return version;
-    }
-
-    /**
-     * Sets the version.
-     * 
-     * @param version
-     *            the version
-     */
-    public void setVersion(Long version) {
-        this.version = version;
-    }
 
     @Override
     public int hashCode() {

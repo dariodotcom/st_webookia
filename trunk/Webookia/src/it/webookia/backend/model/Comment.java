@@ -12,16 +12,23 @@ import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Model;
 import org.slim3.datastore.ModelRef;
 
+/**
+ * This class manages the comments that a user can release on a book review made
+ * by another user.
+ * 
+ */
 @Model(schemaVersion = 1)
 public class Comment implements Serializable, Storable {
 
     private static final long serialVersionUID = 1L;
 
-    // Default constructor
+    /**
+     * Default constructor
+     */
     public Comment() {
         this.date = new Date();
-        this.reviewRef = new ModelRef<Review>(Review.class);
-        this.authorRef = new ModelRef<UserEntity>(UserEntity.class);
+        this.reviewRef = new ModelRef<Review>(Review.class); //Relationship
+        this.authorRef = new ModelRef<UserEntity>(UserEntity.class); //Relationship
     }
 
     @Attribute(primaryKey = true)
@@ -60,7 +67,24 @@ public class Comment implements Serializable, Storable {
     public void setDate(Date date) {
         this.date = date;
     }
+    
+    public Key getKey() {
+        return key;
+    }
 
+    public void setKey(Key key) {
+        this.key = key;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
+    // Relationship getter and setters
     public ModelRef<Review> getReviewRef() {
         return reviewRef;
     }
@@ -68,8 +92,7 @@ public class Comment implements Serializable, Storable {
     public ModelRef<UserEntity> getAuthorRef() {
         return authorRef;
     }
-
-    // Relationship getter and setters
+    
     public Review getReview() {
         return reviewRef.getModel();
     }
@@ -86,49 +109,12 @@ public class Comment implements Serializable, Storable {
         authorRef.setModel(author);
     }
 
-    /**
-     * Returns the key.
-     * 
-     * @return the key
-     */
-    public Key getKey() {
-        return key;
-    }
-
-    /**
-     * Sets the key.
-     * 
-     * @param key
-     *            the key
-     */
-    public void setKey(Key key) {
-        this.key = key;
-    }
-
-    /**
-     * Returns the version.
-     * 
-     * @return the version
-     */
-    public Long getVersion() {
-        return version;
-    }
-
-    /**
-     * Sets the version.
-     * 
-     * @param version
-     *            the version
-     */
-    public void setVersion(Long version) {
-        this.version = version;
-    }
-
+    
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((key == null) ? 0 : key.hashCode());
+        result = prime * result + ((key == null) ? 0 : key.hashCode()); //key hashing
         return result;
     }
 

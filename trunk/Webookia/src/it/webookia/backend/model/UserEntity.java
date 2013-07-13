@@ -17,6 +17,10 @@ import org.slim3.datastore.InverseModelListRef;
 import org.slim3.datastore.Model;
 import org.slim3.datastore.Sort;
 
+/**
+ * This class manages a user of the platform.
+ * 
+ */
 @Model(schemaVersion = 1)
 public class UserEntity implements Serializable, Storable {
 
@@ -32,6 +36,7 @@ public class UserEntity implements Serializable, Storable {
     @Attribute(lob = true)
     private AccessToken token;
 
+    // Attributes
     private String userId;
     private String name;
     private String surname;
@@ -50,7 +55,9 @@ public class UserEntity implements Serializable, Storable {
     @Attribute(persistent = false)
     private InverseModelListRef<Notification, UserEntity> notificationsRef;
 
-    // Default constructor
+    /**
+     * Default constructor
+     */
     public UserEntity() {
         this.booksRef =
             new InverseModelListRef<ConcreteBook, UserEntity>(
@@ -123,14 +130,6 @@ public class UserEntity implements Serializable, Storable {
         this.location = userLocation;
     }
 
-    public InverseModelListRef<ConcreteBook, UserEntity> getBooksRef() {
-        return booksRef;
-    }
-
-    public InverseModelListRef<Notification, UserEntity> getNotificationsRef() {
-        return notificationsRef;
-    }
-
     public String getThumbnailUrl() {
         return thumbnailUrl;
     }
@@ -151,7 +150,31 @@ public class UserEntity implements Serializable, Storable {
         this.friendList = friendList;
     }
 
-    // Relationships getters
+    public Key getKey() {
+        return key;
+    }
+
+    public void setKey(Key key) {
+        this.key = key;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
+    // Relationships getters and setters
+    public InverseModelListRef<ConcreteBook, UserEntity> getBooksRef() {
+        return booksRef;
+    }
+
+    public InverseModelListRef<Notification, UserEntity> getNotificationsRef() {
+        return notificationsRef;
+    }
+
     public List<ConcreteBook> getOwnedBooks() {
         return booksRef.getModelList();
     }
@@ -160,10 +183,24 @@ public class UserEntity implements Serializable, Storable {
         return notificationsRef.getModelList();
     }
 
+    
+    /**
+     * Says if two users are friends.
+     * 
+     * @param otherUser
+     *            is a user checked to see if it is friend of the current user
+     * @return true if the two users are friends, otherwise false.
+     */
     public boolean isFriendWith(UserEntity otherUser) {
         return this.friendList.contains(otherUser.getUserId());
     }
 
+    /**
+     * Adds a user to the current user friend list.
+     * 
+     * @param friend
+     *            the user we want to add to the friend list
+     */
     public void addFriend(UserEntity friend) {
         String friendId = friend.getUserId();
 
@@ -173,11 +210,17 @@ public class UserEntity implements Serializable, Storable {
                 + friend.getUserId()
                 + "are already friends.");
         }
-        
+
         this.friendList.add(friendId);
     }
-    
-    public void removeFriend(UserEntity friend){
+
+    /**
+     * Removes a user from the current user friend list.
+     * 
+     * @param friend
+     *            the user we want to remove from the friend list
+     */
+    public void removeFriend(UserEntity friend) {
         String friendId = friend.getUserId();
 
         if (!this.friendList.contains(friendId)) {
@@ -186,46 +229,8 @@ public class UserEntity implements Serializable, Storable {
                 + friend.getUserId()
                 + "are not friends.");
         }
-        
+
         this.friendList.remove(friendId);
-    }
-
-    /**
-     * Returns the key.
-     * 
-     * @return the key
-     */
-    public Key getKey() {
-        return key;
-    }
-
-    /**
-     * Sets the key.
-     * 
-     * @param key
-     *            the key
-     */
-    public void setKey(Key key) {
-        this.key = key;
-    }
-
-    /**
-     * Returns the version.
-     * 
-     * @return the version
-     */
-    public Long getVersion() {
-        return version;
-    }
-
-    /**
-     * Sets the version.
-     * 
-     * @param version
-     *            the version
-     */
-    public void setVersion(Long version) {
-        this.version = version;
     }
 
     @Override

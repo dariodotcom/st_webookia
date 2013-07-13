@@ -12,12 +12,19 @@ import com.google.appengine.api.datastore.KeyFactory;
 import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Model;
 
+/**
+ * This class manages a book entity described independently by the existence of
+ * a user who owns it.
+ * 
+ */
 @Model(schemaVersion = 1)
 public class DetailedBook implements Serializable, Storable {
 
     private static final long serialVersionUID = 1L;
 
-    // Constructors
+    /**
+     * Default constructor
+     */
     public DetailedBook() {
         this.authors = new ArrayList<String>();
     }
@@ -95,44 +102,23 @@ public class DetailedBook implements Serializable, Storable {
         this.gBooksLink = gBooksLink;
     }
 
-    /**
-     * Returns the key.
-     * 
-     * @return the key
-     */
     public Key getKey() {
         return key;
     }
 
-    /**
-     * Sets the key.
-     * 
-     * @param key
-     *            the key
-     */
     public void setKey(Key key) {
         this.key = key;
     }
 
-    /**
-     * Returns the version.
-     * 
-     * @return the version
-     */
     public Long getVersion() {
         return version;
     }
 
-    /**
-     * Sets the version.
-     * 
-     * @param version
-     *            the version
-     */
     public void setVersion(Long version) {
         this.version = version;
     }
 
+    
     @Override
     public int hashCode() {
         final int prime = 31;

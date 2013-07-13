@@ -17,12 +17,18 @@ import org.slim3.datastore.Model;
 import org.slim3.datastore.ModelRef;
 import org.slim3.datastore.Sort;
 
+/**
+ * This class manages loans of concrete book between two users.
+ *
+ */
 @Model(schemaVersion = 1)
 public class Loan implements Serializable, Storable {
 
     private static final long serialVersionUID = 1L;
 
-    // Default constructor
+    /**
+     * Default constructor
+     */
     public Loan() {
 
         borrowerRef = new ModelRef<UserEntity>(UserEntity.class);
@@ -46,7 +52,7 @@ public class Loan implements Serializable, Storable {
     @Attribute(version = true)
     private Long version;
 
-    // Fields
+    // Attributes
     private LoanStatus status;
     private Date date;
 
@@ -82,7 +88,24 @@ public class Loan implements Serializable, Storable {
     public void setDate(Date date) {
         this.date = date;
     }
+    
+    public Key getKey() {
+        return key;
+    }
 
+    public void setKey(Key key) {
+        this.key = key;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
+    //Relationships getters and setters
     public ModelRef<ConcreteBook> getLentBookRef() {
         return lentBookRef;
     }
@@ -107,7 +130,6 @@ public class Loan implements Serializable, Storable {
         return ownerFeedbackRef;
     }
 
-    // Relationships getters and setters
     public UserEntity getBorrower() {
         return borrowerRef.getModel();
     }
@@ -152,44 +174,7 @@ public class Loan implements Serializable, Storable {
         ownerFeedbackRef.setModel(feedback);
     }
 
-    /**
-     * Returns the key.
-     * 
-     * @return the key
-     */
-    public Key getKey() {
-        return key;
-    }
-
-    /**
-     * Sets the key.
-     * 
-     * @param key
-     *            the key
-     */
-    public void setKey(Key key) {
-        this.key = key;
-    }
-
-    /**
-     * Returns the version.
-     * 
-     * @return the version
-     */
-    public Long getVersion() {
-        return version;
-    }
-
-    /**
-     * Sets the version.
-     * 
-     * @param version
-     *            the version
-     */
-    public void setVersion(Long version) {
-        this.version = version;
-    }
-
+    
     @Override
     public int hashCode() {
         final int prime = 31;
