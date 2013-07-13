@@ -16,13 +16,22 @@ import org.slim3.datastore.Model;
 import org.slim3.datastore.ModelRef;
 import org.slim3.datastore.Sort;
 
+/**
+ * 
+ * This class manages concrete instances of books, i.e. books owned by a user of
+ * the platform.
+ * 
+ */
 @Model(schemaVersion = 1)
 public class ConcreteBook implements Serializable, Storable {
 
     private static final long serialVersionUID = 1L;
 
-    // Default constructors
+    /**
+     * Default constructors
+     */
     public ConcreteBook() {
+        //Relationships
         detailedBookRef = new ModelRef<DetailedBook>(DetailedBook.class);
         reviewRef = new ModelRef<Review>(Review.class);
         ownerRef = new ModelRef<UserEntity>(UserEntity.class);
@@ -59,6 +68,7 @@ public class ConcreteBook implements Serializable, Storable {
         return KeyFactory.keyToString(key);
     }
 
+    //Getters and setters
     public PrivacyLevel getPrivacy() {
         return privacy;
     }
@@ -75,6 +85,23 @@ public class ConcreteBook implements Serializable, Storable {
         this.status = status;
     }
 
+    public Key getKey() {
+        return key;
+    }
+
+    public void setKey(Key key) {
+        this.key = key;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
+    // Relationship getters and setters
     public ModelRef<DetailedBook> getDetailedBookRef() {
         return detailedBookRef;
     }
@@ -91,7 +118,6 @@ public class ConcreteBook implements Serializable, Storable {
         return loansRef;
     }
 
-    // Relationships getters and setters
     public DetailedBook getDetailedBook() {
         return detailedBookRef.getModel();
     }
@@ -115,44 +141,7 @@ public class ConcreteBook implements Serializable, Storable {
     public void setReview(Review review) {
         reviewRef.setModel(review);
     }
-
-    /**
-     * Returns the key.
-     * 
-     * @return the key
-     */
-    public Key getKey() {
-        return key;
-    }
-
-    /**
-     * Sets the key.
-     * 
-     * @param key
-     *            the key
-     */
-    public void setKey(Key key) {
-        this.key = key;
-    }
-
-    /**
-     * Returns the version.
-     * 
-     * @return the version
-     */
-    public Long getVersion() {
-        return version;
-    }
-
-    /**
-     * Sets the version.
-     * 
-     * @param version
-     *            the version
-     */
-    public void setVersion(Long version) {
-        this.version = version;
-    }
+    
 
     @Override
     public int hashCode() {

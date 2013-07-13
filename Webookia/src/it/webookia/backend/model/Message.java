@@ -12,12 +12,19 @@ import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Model;
 import org.slim3.datastore.ModelRef;
 
+/**
+ * This class manages messages that can be exchanged by two users relatively to
+ * a loan.
+ * 
+ */
 @Model(schemaVersion = 1)
 public class Message implements Serializable, Storable {
 
     private static final long serialVersionUID = 1L;
 
-    // Default constructor
+    /**
+     * Default constructor
+     */
     public Message() {
         this.date = new Date();
         relativeLoanRef = new ModelRef<Loan>(Loan.class);
@@ -60,7 +67,24 @@ public class Message implements Serializable, Storable {
     public void setText(String text) {
         this.text = text;
     }
+    
+    public Key getKey() {
+        return key;
+    }
+    
+    public void setKey(Key key) {
+        this.key = key;
+    }
 
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
+    //Relationships getters and setters
     public ModelRef<Loan> getRelativeLoanRef() {
         return relativeLoanRef;
     }
@@ -69,7 +93,6 @@ public class Message implements Serializable, Storable {
         return authorRef;
     }
 
-    // Relationships getters and setters
     public Loan getRelativeLoan() {
         return relativeLoanRef.getModel();
     }
@@ -86,43 +109,6 @@ public class Message implements Serializable, Storable {
         authorRef.setModel(author);
     }
 
-    /**
-     * Returns the key.
-     * 
-     * @return the key
-     */
-    public Key getKey() {
-        return key;
-    }
-
-    /**
-     * Sets the key.
-     * 
-     * @param key
-     *            the key
-     */
-    public void setKey(Key key) {
-        this.key = key;
-    }
-
-    /**
-     * Returns the version.
-     * 
-     * @return the version
-     */
-    public Long getVersion() {
-        return version;
-    }
-
-    /**
-     * Sets the version.
-     * 
-     * @param version
-     *            the version
-     */
-    public void setVersion(Long version) {
-        this.version = version;
-    }
 
     @Override
     public int hashCode() {

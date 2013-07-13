@@ -12,30 +12,40 @@ import com.google.appengine.api.datastore.KeyFactory;
 import org.slim3.datastore.Attribute;
 import org.slim3.datastore.Model;
 
+/**
+ * This class manages feedback released at the end of the loan between two
+ * users.
+ * 
+ */
 @Model(schemaVersion = 1)
 public class Feedback implements Serializable, Storable {
 
     private static final long serialVersionUID = 1L;
 
-    public Feedback(){
+    /**
+     * Default constructor.
+     */
+    public Feedback() {
         this.date = new Date();
     }
-    
+
     @Attribute(primaryKey = true)
     private Key key;
 
     @Attribute(version = true)
     private Long version;
 
-    @Override
-    public String getId() {
-        return KeyFactory.keyToString(key);
-    }
-
+    //Attributes
     @Attribute(lob = true)
     private Mark mark;
     private Date date;
     private String text;
+    
+    //Storable
+    @Override
+    public String getId() {
+        return KeyFactory.keyToString(key);
+    }
 
     // Getters and setters
     public Date getDate() {
@@ -62,44 +72,23 @@ public class Feedback implements Serializable, Storable {
         this.mark = mark;
     }
 
-    /**
-     * Returns the key.
-     * 
-     * @return the key
-     */
     public Key getKey() {
         return key;
     }
 
-    /**
-     * Sets the key.
-     * 
-     * @param key
-     *            the key
-     */
     public void setKey(Key key) {
         this.key = key;
     }
 
-    /**
-     * Returns the version.
-     * 
-     * @return the version
-     */
     public Long getVersion() {
         return version;
     }
 
-    /**
-     * Sets the version.
-     * 
-     * @param version
-     *            the version
-     */
     public void setVersion(Long version) {
         this.version = version;
     }
 
+    
     @Override
     public int hashCode() {
         final int prime = 31;

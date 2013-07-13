@@ -17,12 +17,18 @@ import org.slim3.datastore.InverseModelRef;
 import org.slim3.datastore.Model;
 import org.slim3.datastore.Sort;
 
+/**
+ * This class manages the review of a book released by its owner.
+ * 
+ */
 @Model(schemaVersion = 1)
 public class Review implements Serializable, Storable {
 
     private static final long serialVersionUID = 1L;
 
-    // Default constructor
+    /**
+     * Default constructor
+     */
     public Review() {
         this.date = new Date();
 
@@ -90,6 +96,23 @@ public class Review implements Serializable, Storable {
         this.date = date;
     }
 
+    public Key getKey() {
+        return key;
+    }
+
+    public void setKey(Key key) {
+        this.key = key;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
+    //Relationships getters and setters 
     public InverseModelListRef<Comment, Review> getCommentsRef() {
         return commentsRef;
     }
@@ -98,7 +121,6 @@ public class Review implements Serializable, Storable {
         return reviewedBookRef;
     }
 
-    // Relationships getters and setters
     public List<Comment> getComments() {
         return commentsRef.getModelList();
     }
@@ -107,43 +129,6 @@ public class Review implements Serializable, Storable {
         return reviewedBookRef.getModel();
     }
 
-    /**
-     * Returns the key.
-     * 
-     * @return the key
-     */
-    public Key getKey() {
-        return key;
-    }
-
-    /**
-     * Sets the key.
-     * 
-     * @param key
-     *            the key
-     */
-    public void setKey(Key key) {
-        this.key = key;
-    }
-
-    /**
-     * Returns the version.
-     * 
-     * @return the version
-     */
-    public Long getVersion() {
-        return version;
-    }
-
-    /**
-     * Sets the version.
-     * 
-     * @param version
-     *            the version
-     */
-    public void setVersion(Long version) {
-        this.version = version;
-    }
 
     @Override
     public int hashCode() {
