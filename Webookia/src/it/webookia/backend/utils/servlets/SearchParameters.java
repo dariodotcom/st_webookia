@@ -6,6 +6,11 @@ import java.lang.reflect.Field;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * Manages search parameters when looking for a book. A book can be search by
+ * title, author or isbn.
+ * 
+ */
 public class SearchParameters {
 
     @ParamName("title")
@@ -17,6 +22,14 @@ public class SearchParameters {
     @ParamName("isbn")
     private String isbn;
 
+    /**
+     * Class constructor that parses a given request and after analysing it
+     * fills @{SearchParameters} fields.
+     * 
+     * @param req
+     *            the http request
+     * @return @{SearchParameters} the filled fields.
+     */
     public static SearchParameters createFrom(HttpServletRequest req) {
         SearchParameters parameters = new SearchParameters();
 
@@ -35,7 +48,6 @@ public class SearchParameters {
         return parameters;
     }
 
-    // Getters and setters
     public String getTitle() {
         return title;
     }
