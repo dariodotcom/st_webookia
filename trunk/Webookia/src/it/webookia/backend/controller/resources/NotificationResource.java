@@ -12,13 +12,26 @@ import it.webookia.backend.model.UserEntity;
 import it.webookia.backend.utils.storage.StorageException;
 import it.webookia.backend.utils.storage.StorageFacade;
 
+/**
+ * Class to manage notification entities.
+ * 
+ */
 public class NotificationResource {
 
     // Storage accessory
     private static StorageFacade<Notification> notificationStorage =
         new StorageFacade<Notification>(Notification.class);
 
-    // Class methods
+    private Notification decoratedNotification;
+
+    /**
+     * Class constructor
+     * @param notification
+     */
+    NotificationResource(Notification notification) {
+        this.decoratedNotification = notification;
+    }
+    
     /**
      * Creates a new notification.
      * 
@@ -92,13 +105,6 @@ public class NotificationResource {
         } else {
             return new NotificationResource(notification);
         }
-    }
-
-    private Notification decoratedNotification;
-
-    // Constructor
-    NotificationResource(Notification notification) {
-        this.decoratedNotification = notification;
     }
 
     /**

@@ -21,6 +21,10 @@ import it.webookia.backend.utils.storage.StorageException;
 import it.webookia.backend.utils.storage.StorageFacade;
 import it.webookia.backend.descriptor.LoanDescriptor;
 
+/**
+ * Class to manage loan entities.
+ * 
+ */
 public class LoanResource {
 
     private static StorageFacade<Loan> loanStorage = new StorageFacade<Loan>(
@@ -31,6 +35,17 @@ public class LoanResource {
         new StorageFacade<Feedback>(Feedback.class);
     private static StorageFacade<ConcreteBook> bookStorage =
         new StorageFacade<ConcreteBook>(ConcreteBook.class);
+
+    private Loan decoratedLoan;
+
+    /**
+     * Class constructor
+     * 
+     * @param loan
+     */
+    LoanResource(Loan loan) {
+        this.decoratedLoan = loan;
+    }
 
     // Class methods
     /**
@@ -109,15 +124,8 @@ public class LoanResource {
         return loanRes;
     }
 
-    private Loan decoratedLoan;
-
-    LoanResource(Loan loan) {
-        this.decoratedLoan = loan;
-    }
-
-    // Public methods
     /**
-     * Responds to a loan request. Only the book owner can perform this action.
+     * Replies to a loan request. Only the book owner can perform this action.
      * If he accepts, the {@link LoanStatus} is set to ACCEPTED and the
      * {@link BookStatus} is set to LENT, preventing further loans of the same
      * book as long as the book isn't returned. If the owner refuses, the loan
@@ -371,11 +379,26 @@ public class LoanResource {
         return DescriptorFactory.createFeedbackDescriptor(decoratedLoan);
     }
 
-    // Resource methods
+    /**
+     * Retrieves this Loan
+     * 
+     * @return {@decoratedLoan} which contains loan details
+     */
     Loan getEntity() {
         return decoratedLoan;
     }
 
+    /**
+     * Verifies if a given status is compliant with the status of the book
+     * present in the db.
+     * 
+     * @param book
+     *            a given book
+     * @param status
+     *            the status to be checked
+     * @throws {@ResourceException} if the status is not
+     *         compliant with a status format.
+     */
     private void assertBookStatus(ConcreteBook book, BookStatus status)
             throws ResourceException {
         BookStatus actualStatus = book.getStatus();
@@ -391,6 +414,17 @@ public class LoanResource {
         }
     }
 
+    /**
+     * Verifies if a given status is compliant with the status of the loan
+     * present in the db.
+     * 
+     * @param loan
+     *            a given loan
+     * @param status
+     *            the status to be checked
+     * @throws {@ResourceException} if the status is not
+     *         compliant with a status format.
+     */
     private void assertLoanStatus(Loan loan, LoanStatus status)
             throws ResourceException {
         LoanStatus actualStatus = loan.getStatus();
