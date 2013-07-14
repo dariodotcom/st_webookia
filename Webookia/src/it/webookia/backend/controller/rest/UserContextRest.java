@@ -53,11 +53,63 @@ public class UserContextRest {
                     ResourceErrorType.NOT_LOGGED_IN,
                     "No user logged in."));
             }
-            
+
             try {
-                Descriptor descriptor =
-                    UserResource.getUser(userid).getDescriptor();
-                return ResponseFactory.createFrom(descriptor);
+                UserResource user = UserResource.getUser(userid);
+                return ResponseFactory.createFrom(user.getDescriptor());
+            } catch (ResourceException e) {
+                return ResponseFactory.createFrom(e);
+            }
+        }
+
+        @Path("/books")
+        @GET
+        public Response getBooks() {
+            if (userid == null) {
+                return ResponseFactory.createFrom(new ResourceException(
+                    ResourceErrorType.NOT_LOGGED_IN,
+                    "No user logged in."));
+            }
+
+            String requestorId = ServletUtils.getAuthenticatedUserId(request);
+
+            try {
+                UserResource requestor = UserResource.getUser(requestorId);
+                UserResource target = UserResource.getUser(userid);
+                return ResponseFactory.createFrom(target
+                    .getVisibleBooks(requestor));
+            } catch (ResourceException e) {
+                return ResponseFactory.createFrom(e);
+            }
+        }
+
+        @Path("/feedbacks/borrower")
+        public Response getFeedbacksAsBorrower() {
+            if (userid == null) {
+                return ResponseFactory.createFrom(new ResourceException(
+                    ResourceErrorType.NOT_LOGGED_IN,
+                    "No user logged in."));
+            }
+
+            try {
+                UserResource user = UserResource.getUser(userid);
+                return ResponseFactory.createFrom(user.getFeedbacksAsBorrower());
+            } catch (ResourceException e) {
+                return ResponseFactory.createFrom(e);
+            }
+        }
+
+        @Path("/feedbacks/owner")
+        public Response getFeedbacksAsOwner() {
+            if (userid == null) {
+                return ResponseFactory.createFrom(new ResourceException(
+                    ResourceErrorType.NOT_LOGGED_IN,
+                    "No user logged in."));
+            }
+
+            try {
+                UserResource user = UserResource.getUser(userid);
+                return ResponseFactory.createFrom(user.getFeedbacksAsOwner());
             } catch (ResourceException e) {
                 return ResponseFactory.createFrom(e);
             }
@@ -88,17 +140,10 @@ public class UserContextRest {
         @Path("/notifications/unreadCount")
         @GET
         public Response unreadCount() {
-            if (userid == null) {
-                return ResponseFactory.createFrom(new ResourceException(
-                    ResourceErrorType.NOT_LOGGED_IN,
-                    "No user logged in."));
-            }
-
             try {
                 String requestorId =
                     ServletUtils.getAuthenticatedUserId(request);
                 UserResource requestor = UserResource.getUser(requestorId);
-
                 int count =
                     UserResource.getUser(userid).getUnreadNotificationCount(
                         requestor);
@@ -111,14 +156,11 @@ public class UserContextRest {
         @Path("/notification/{id}/read")
         @GET
         public Response markAsRead(@PathParam("id") String id) {
-            if (userid == null) {
-                return ResponseFactory.createFrom(new ResourceException(
-                    ResourceErrorType.NOT_LOGGED_IN,
-                    "No user logged in."));
-            }
-
             try {
-                NotificationResource.getNotification(id).markAsRead();
+                String requestorId =
+                    ServletUtils.getAuthenticatedUserId(request);
+                UserResource requestor = UserResource.getUser(requestorId);
+                NotificationResource.getNotification(id).markAsRead(requestor);
                 return ResponseFactory.ok();
             } catch (ResourceException e) {
                 return ResponseFactory.createFrom(e);
