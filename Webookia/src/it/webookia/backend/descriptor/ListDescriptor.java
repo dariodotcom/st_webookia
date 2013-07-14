@@ -8,6 +8,13 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+/**
+ * 
+ * This class manages descriptors behaviour with lists of generic elements.
+ * 
+ * @param <E>
+ *            the generic element of a list
+ */
 @XmlRootElement
 @XmlType(name = "list")
 public class ListDescriptor<E extends Descriptor> implements Descriptor,
@@ -15,6 +22,9 @@ public class ListDescriptor<E extends Descriptor> implements Descriptor,
 
     private List<E> elements;
 
+    /**
+     * Class constructor
+     */
     public ListDescriptor() {
         this.elements = new ArrayList<E>();
     }
@@ -36,8 +46,8 @@ public class ListDescriptor<E extends Descriptor> implements Descriptor,
     public Iterator<E> iterator() {
         return elements.iterator();
     }
-    
-    public int size(){
+
+    public int size() {
         return elements.size();
     }
 

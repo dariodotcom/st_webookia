@@ -7,13 +7,23 @@ import it.webookia.backend.utils.storage.Mark;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
+/**
+ * 
+ * This class provides a view over a feedback and acts like a bridge between
+ * model and servlets / rest interface.
+ * 
+ */
 @XmlType(name = "feedbackDescriptor")
 public class SingleFeedbackDescriptor implements Descriptor {
     private int mark;
     private String text;
     private String date;
 
-    /* Descriptor */
+    /**
+     * Class constructor
+     * 
+     * @param feedback
+     */
     SingleFeedbackDescriptor(Feedback feedback) {
         mark = Mark.valueOf(feedback.getMark());
         text = feedback.getText();

@@ -11,6 +11,13 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+/**
+ * 
+ * This class provides a view over the review of a book (released by the owner)
+ * and the relative comments (released by other users) and acts like a bridge
+ * between model and servlets / rest interface.
+ * 
+ */
 @XmlRootElement
 @XmlType(name = "review")
 public class ReviewDescriptor implements Descriptor {
@@ -20,7 +27,11 @@ public class ReviewDescriptor implements Descriptor {
     private String text;
     private List<CommentDescriptor> comments;
 
-    /* Constructor */
+    /**
+     * Class constructor
+     * 
+     * @param review
+     */
     ReviewDescriptor(Review review) {
         comments = new ArrayList<CommentDescriptor>();
         date = Settings.DATE_FORMAT.format(review.getDate());

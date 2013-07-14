@@ -8,6 +8,12 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+/**
+ * 
+ * This class provides a view over a concrete book and acts like a bridge
+ * between model and servlets / rest interface.
+ * 
+ */
 @XmlRootElement
 @XmlType(name = "book", propOrder = {
     "id",
@@ -27,7 +33,11 @@ public class BookDescriptor extends DetailedBookDescriptor {
     private PrivacyLevel privacy;
     private String gBookLink;
 
-    /* Constructor */
+    /**
+     * Class constructor
+     * 
+     * @param book
+     */
     BookDescriptor(ConcreteBook book) {
         super(book.getDetailedBook());
 
