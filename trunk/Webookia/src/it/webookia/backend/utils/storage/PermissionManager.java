@@ -88,9 +88,9 @@ public class PermissionManager {
      *            - the {@link DetailedBook} to share.
      * @return true if the user can share it.
      */
-    public boolean canShare(DetailedBook detailedBook) {
+    public boolean canShare(String isbn) {
         for (ConcreteBook book : user.getOwnedBooks()) {
-            if (book.getDetailedBook().equals(detailedBook)) {
+            if (book.getDetailedBook().getIsbn().equals(isbn)) {
                 return false;
             }
         }

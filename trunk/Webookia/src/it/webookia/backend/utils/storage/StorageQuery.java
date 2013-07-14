@@ -26,7 +26,9 @@ import it.webookia.backend.utils.Settings;
 import it.webookia.backend.utils.foreignws.facebook.FacebookConnector;
 import it.webookia.backend.utils.foreignws.gmaps.GMapsDistanceSorter;
 import it.webookia.backend.utils.servlets.SearchParameters;
+import it.webookia.backend.utils.storage.filters.BookOwnershipFilter;
 import it.webookia.backend.utils.storage.filters.BookSearchFilter;
+import it.webookia.backend.utils.storage.filters.BookVisibilityFilter;
 
 /**
  * Class that holds the logic behind queries to the storage so that specific
@@ -253,6 +255,16 @@ public class StorageQuery {
 
         query.filterInMemory(new BookSearchFilter(requestor, detail.getKey()));
         query.sortInMemory(new GMapsDistanceSorter(requestor.getLocation()));
+
+        return query.asList();
+    }
+    
+    public static List<ConcreteBook> getVisibleBooks(UserEntity owner, UserEntity requestor){
+        ConcreteBookMeta concreteBook = ConcreteBookMeta.get();
+        ModelQuery<ConcreteBook> query = Datastore.query(concreteBook);
+
+        query.filterInMemory(new BookOwnershipFilter(owner));
+        query.filterInMemory(new BookVisibilityFilter(requestor));
 
         return query.asList();
     }
