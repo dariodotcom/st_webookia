@@ -8,14 +8,23 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+/**
+ * This class manages the update notification giving them an object and
+ * associating a list of changes.
+ */
 @XmlRootElement
 public class UpdateNotification {
     private String object;
     private List<UpdateEntry> entry;
 
+    /**
+     * Class constructor
+     */
     public UpdateNotification() {
         this.entry = new ArrayList<UpdateEntry>();
     }
+
+    // Getter and setter
 
     @XmlElement(name = "object", required = true)
     public String getObject() {
@@ -35,6 +44,11 @@ public class UpdateNotification {
         this.entry = entry;
     }
 
+    /**
+     * This class manages directly the changed elements associating them to an
+     * identifier and a date.
+     * 
+     */
     @XmlType
     public static class UpdateEntry {
 
@@ -42,9 +56,14 @@ public class UpdateNotification {
         private List<String> changed_fields;
         private Date time;
 
+        /**
+         * Class constructor
+         */
         public UpdateEntry() {
             this.changed_fields = new ArrayList<String>();
         }
+
+        // Getter and setter
 
         @XmlElement(name = "uid", required = true)
         public String getUid() {
