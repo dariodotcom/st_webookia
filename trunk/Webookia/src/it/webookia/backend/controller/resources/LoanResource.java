@@ -326,7 +326,7 @@ public class LoanResource {
         feedback.setText(text);
 
         if (requestor.matches(borrower)) {
-            decoratedLoan.setBorrowerFeedback(feedback);
+            decoratedLoan.setBorrowerFeedback(feedback); //Feedback released by the borrower
         } else if (requestor.matches(owner)) {
             decoratedLoan.setOwnerFeedback(feedback);
         } else {
