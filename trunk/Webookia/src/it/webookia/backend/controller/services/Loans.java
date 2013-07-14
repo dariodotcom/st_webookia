@@ -16,6 +16,10 @@ import it.webookia.backend.controller.services.impl.ServiceServlet;
 import it.webookia.backend.controller.services.impl.Verb;
 import it.webookia.backend.utils.servlets.Context;
 
+/**
+ * This is the servlet which manages loans, allowing retrieving of the complete
+ * list of loans related to a user, loan's creation and its details.
+ */
 public class Loans extends ServiceServlet {
 
     private static final long serialVersionUID = 2335276930451134433L;
@@ -25,6 +29,9 @@ public class Loans extends ServiceServlet {
     public static final String SENT_LOANS = "SENT_LOANS";
     public static final String RECEIVED_LOANS = "RECEIVED_LOANS";
 
+    /**
+     * Class constructor
+     */
     public Loans() {
         super(Context.LOANS);
         registerDefaultService(Verb.GET, new LoanLanding());
@@ -32,6 +39,10 @@ public class Loans extends ServiceServlet {
         registerService(Verb.GET, "detail", new LoanDetail());
     }
 
+    /**
+     * This class implements the service that allows a user to create a loan.
+     * 
+     */
     public class LoanCreation implements Service {
         @Override
         public void service(ServiceContext context) throws ServletException,
@@ -60,6 +71,11 @@ public class Loans extends ServiceServlet {
         }
     }
 
+    /**
+     * This class implements the service that allows a user to retrieve a list
+     * of loans in which he is involved.
+     * 
+     */
     public class LoanLanding implements Service {
 
         @Override
@@ -90,6 +106,11 @@ public class Loans extends ServiceServlet {
         }
     }
 
+    /**
+     * This class implements the service that allows a user to open a specific
+     * loan in which he is involved.
+     * 
+     */
     public class LoanDetail implements Service {
 
         @Override
@@ -108,6 +129,4 @@ public class Loans extends ServiceServlet {
         }
     }
 
-    // richiesta prestito
-    // loan utente
 }
