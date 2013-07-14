@@ -61,6 +61,11 @@ public class Mark implements Serializable {
 
     private int mark;
 
+    /**
+     * Class constructor
+     * 
+     * @param mark
+     */
     private Mark(int mark) {
         this.mark = mark;
     }

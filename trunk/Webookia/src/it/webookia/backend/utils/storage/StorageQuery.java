@@ -129,6 +129,15 @@ public class StorageQuery {
         });
     }
 
+    /**
+     * Retrieves the list of notification associated to a given user.
+     * 
+     * @param user
+     *            the user we want to know the notification of
+     * @param limit
+     *            limit number of notification to be shown
+     * @return a {@link List} of notification
+     */
     public static List<Notification> getNotificationOf(UserEntity user,
             int limit) {
         Key userKey = user.getKey();
@@ -141,6 +150,13 @@ public class StorageQuery {
             .asList();
     }
 
+    /**
+     * Retrieves the number of unread notification associated to a given user.
+     * 
+     * @param user
+     *            the user we want to know the number of unread notifications
+     * @return the number of unread notifications.
+     */
     public static int getNotificationCount(UserEntity user) {
         Key userKey = user.getKey();
         NotificationMeta notification = NotificationMeta.get();
@@ -151,6 +167,15 @@ public class StorageQuery {
             .count();
     }
 
+    /**
+     * Retrieves all the received loans by a given user.
+     * 
+     * @param receiver
+     *            identifies the user that acts like owner
+     * @param page
+     *            maximum number of results in a page
+     * @return a {@List} of loans
+     */
     public static List<Loan> getUserReceivedLoans(UserEntity receiver, int page) {
         List<ConcreteBook> books = receiver.getOwnedBooks();
         List<Loan> loans = new ArrayList<Loan>();
@@ -160,6 +185,15 @@ public class StorageQuery {
         return loans; // TODO do it better :(
     }
 
+    /**
+     * Retrieves all the received loans by a given user.
+     * 
+     * @param sender
+     *            identifies the user that acts like borrower
+     * @param page
+     *            maximum number of results in a page
+     * @return a {@List} of loans
+     */
     public static List<Loan> getUserSentLoans(UserEntity sender, int page) {
         LoanMeta loan = LoanMeta.get();
         ModelQuery<Loan> query = Datastore.query(loan);
@@ -171,6 +205,15 @@ public class StorageQuery {
         return query.asList();
     }
 
+    /**
+     * Retrieves a list of detailed books (eventually empty) matching with all
+     * the inserted search parameters.
+     * 
+     * @param params
+     *            search parameters including title, author and isbn (at least
+     *            one must be filled)
+     * @return a {@List} of detailed books
+     */
     public static List<DetailedBook> lookUpDetailedBook(SearchParameters params) {
         DetailedBookMeta detailedBook = DetailedBookMeta.get();
         ModelQuery<DetailedBook> query = Datastore.query(detailedBook);
@@ -193,6 +236,16 @@ public class StorageQuery {
         return query.asList();
     }
 
+    /**
+     * Retrieves a list of concrete books corresponding to a given detailed book
+     * and a given requestor in according to set privacy policy.
+     * 
+     * @param detail
+     *            a detailed book
+     * @param requestor
+     *            the user who made the request
+     * @return a {@List} of concrete books.
+     */
     public static List<ConcreteBook> getConcreteBooksByDetail(
             DetailedBook detail, UserEntity requestor) {
         ConcreteBookMeta concreteBook = ConcreteBookMeta.get();
