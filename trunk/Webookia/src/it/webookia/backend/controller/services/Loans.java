@@ -47,7 +47,7 @@ public class Loans extends ServiceServlet {
         @Override
         public void service(ServiceContext context) throws ServletException,
                 IOException {
-            String bookId = null;
+            String bookId = context.getRequestParameter("bookId");
 
             if (!context.isUserLoggedIn()) {
                 context.sendError(new ResourceException(
