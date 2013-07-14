@@ -7,7 +7,6 @@ import com.restfb.types.NamedFacebookType;
  * Class to handle response to queries to retrieve customer picture from
  * Facebook
  * 
- * @author Chiara
  * 
  */
 public class Picture extends NamedFacebookType {
