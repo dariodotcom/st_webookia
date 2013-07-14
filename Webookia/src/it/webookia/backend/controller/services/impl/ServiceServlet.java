@@ -17,9 +17,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.datanucleus.util.StringUtils;
 
+/**
+ * Manages to invoke services using Http requests and responses
+ * 
+ */
 public class ServiceServlet extends HttpServlet {
-
+    /**
+     * Defines the context where a request is made
+     */
     public static final String CONTEXT = "CONTEXT";
+    /**
+     * Defines the error that occurs
+     */
     public static final String ERROR = "ERROR";
 
     private static final long serialVersionUID = -6364544534456443497L;
@@ -33,12 +42,27 @@ public class ServiceServlet extends HttpServlet {
     private Service defaultGetService;
     private Service defaultPostService;
 
+    /**
+     * Class constructor
+     * 
+     * @param context
+     *            - is the context in which a request is made
+     */
     protected ServiceServlet(Context context) {
         this.getServices = new HashMap<String, Service>();
         this.postServices = new HashMap<String, Service>();
         this.context = context;
     }
 
+    /**
+     * Sets the default behavior when the passed {@service} is invoked,
+     * associating the {@verb} to the {@service}.
+     * 
+     * @param verb
+     *            - indicates which kind of action is required (GET or POST)
+     * @param service
+     *            - it's a service availables
+     */
     protected final void registerDefaultService(Verb verb, Service service) {
         if (verb.equals(Verb.GET)) {
             this.defaultGetService = service;
@@ -47,6 +71,18 @@ public class ServiceServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Registers a service, associating a {@service} to an {@action} and to a
+     * {@verb}.
+     * 
+     * @param verb
+     *            - indicates which kind of action is allowed to the user, hence
+     *            if retrieving data or showing data (GET or POST)
+     * @param action
+     *            - indicates the action a user wants to perform with that service
+     * @param service
+     *            - indicates a service 
+     */
     protected final void registerService(Verb verb, String action,
             Service service) {
         Map<String, Service> target =
