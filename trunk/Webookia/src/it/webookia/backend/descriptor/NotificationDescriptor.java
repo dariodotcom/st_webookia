@@ -8,6 +8,12 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+/**
+ * 
+ * This class provides a view over a notification and acts like a bridge between
+ * model and servlets / rest interface.
+ * 
+ */
 @XmlRootElement
 @XmlType(name = "notificationDescriptor")
 public class NotificationDescriptor implements Descriptor {
@@ -19,7 +25,11 @@ public class NotificationDescriptor implements Descriptor {
     private String contextId;
     private boolean read;
 
-    /* Constructor */
+    /**
+     * Class constructor
+     * 
+     * @param notification
+     */
     NotificationDescriptor(Notification notification) {
         id = notification.getId();
         type = notification.getType();

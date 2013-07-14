@@ -5,13 +5,23 @@ import it.webookia.backend.utils.Settings;
 
 import javax.xml.bind.annotation.XmlElement;
 
+/**
+ * 
+ * This class provides a view over a message in the context of a loan and acts
+ * like a bridge between model and servlets / rest interface.
+ * 
+ */
 public class MessageDescriptor implements Descriptor {
 
     private String authorId;
     private String date;
     private String text;
 
-    /* Constructor */
+    /**
+     * Class constructor
+     * 
+     * @param message
+     */
     MessageDescriptor(Message message) {
         authorId = message.getAuthor().getUserId();
         date = Settings.DATE_FORMAT.format(message.getDate());

@@ -7,6 +7,12 @@ import javax.xml.bind.annotation.XmlType;
 import it.webookia.backend.model.DetailedBook;
 import it.webookia.backend.utils.CollectionUtils;
 
+/**
+ * 
+ * This class provides a view over a detailed book and acts like a bridge
+ * between model and servlets / rest interface.
+ * 
+ */
 @XmlRootElement
 @XmlType(name = "bookDetailDescriptor")
 public class DetailedBookDescriptor implements Descriptor {
@@ -19,6 +25,11 @@ public class DetailedBookDescriptor implements Descriptor {
     private String thumbnail;
     private String gBooksLink;
 
+    /**
+     * Class constructor
+     * 
+     * @param detailedBook
+     */
     public DetailedBookDescriptor(DetailedBook detailedBook) {
         detailId = detailedBook.getId();
         isbn = detailedBook.getIsbn();

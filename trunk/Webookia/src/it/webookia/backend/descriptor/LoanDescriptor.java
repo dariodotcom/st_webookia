@@ -8,6 +8,12 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+/**
+ * 
+ * This class provides a view over a loan and acts like a bridge between model
+ * and servlets / rest interface.
+ * 
+ */
 @XmlRootElement
 @XmlType(name = "loanDescriptor", propOrder = {
     "id",
@@ -25,6 +31,11 @@ public class LoanDescriptor implements Descriptor {
     private LoanStatus status;
     private String startDate;
 
+    /**
+     * Class constructor
+     * 
+     * @param loan
+     */
     LoanDescriptor(Loan loan) {
         this.id = loan.getId();
         this.bookId = loan.getLentBook().getId();

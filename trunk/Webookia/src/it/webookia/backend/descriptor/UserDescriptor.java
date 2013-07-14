@@ -9,6 +9,12 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+/**
+ * 
+ * This class provides a view over a user and acts like a bridge between model
+ * and servlets / rest interface.
+ * 
+ */
 @XmlRootElement
 @XmlType(name = "user", propOrder = { "userId", "name", "surname", "location" })
 public class UserDescriptor implements Descriptor {
@@ -21,6 +27,11 @@ public class UserDescriptor implements Descriptor {
     private List<String> friendsIds;
     private String picture;
 
+    /**
+     * Class constructor
+     * 
+     * @param user
+     */
     UserDescriptor(UserEntity user) {
         userId = user.getUserId();
         name = user.getName();

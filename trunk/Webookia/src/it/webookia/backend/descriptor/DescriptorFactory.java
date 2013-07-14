@@ -11,6 +11,11 @@ import it.webookia.backend.model.Notification;
 import it.webookia.backend.model.Review;
 import it.webookia.backend.model.UserEntity;
 
+/**
+ * This class is useful because it manages the creation of all the kinds of
+ * descriptor.
+ * 
+ */
 public class DescriptorFactory {
 
     /* USERS */
@@ -115,7 +120,7 @@ public class DescriptorFactory {
             new ListDescriptor<SingleFeedbackDescriptor>();
 
         for (Feedback f : input) {
-            if(f == null){
+            if (f == null) {
                 continue;
             }
             output.addDescriptor(new SingleFeedbackDescriptor(f));
