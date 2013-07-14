@@ -18,6 +18,11 @@ import com.google.api.services.books.BooksRequestInitializer;
 
 import it.webookia.backend.model.DetailedBook;
 
+/**
+ * This class manages the detailed book informations retrieving basing on the
+ * inserted isbn using google books apis.
+ * 
+ */
 public class GoogleBooksIsbnResolver {
 
     private final static String APPLICATION_KEY =
@@ -26,10 +31,22 @@ public class GoogleBooksIsbnResolver {
 
     private String isbn;
 
+    /**
+     * Class constructor
+     * 
+     * @param isbn
+     */
     public GoogleBooksIsbnResolver(String isbn) {
         this.isbn = isbn;
     }
 
+    /**
+     * Retrieves a detailed book basing on a isbn
+     * 
+     * @return a {@DetailedBook} corresponding to the given isbn
+     * @throws IsbnResolverException
+     *             if an error in isbn resolving occours
+     */
     public DetailedBook resolve() throws IsbnResolverException {
         Books booksRequestor = initializeRequest();
         Volume result = executeQuery(booksRequestor);
@@ -63,12 +80,9 @@ public class GoogleBooksIsbnResolver {
         List<Volume> results;
 
         try {
-            Volumes volumes = requestor
-                    .volumes()
-                    .list(query)
-                    .set("country", "IT")
-                    .execute();
-            
+            Volumes volumes =
+                requestor.volumes().list(query).set("country", "IT").execute();
+
             results = volumes.getItems();
         } catch (IOException e) {
             throw new IsbnResolverException("Error executing query " + query, e);
@@ -87,7 +101,7 @@ public class GoogleBooksIsbnResolver {
 
         VolumeInfo infos = result.getVolumeInfo();
         ImageLinks images = infos.getImageLinks();
-        
+
         // Set details
         book.setAuthors(infos.getAuthors());
         book.setGBooksLink(infos.getPreviewLink());
@@ -95,7 +109,7 @@ public class GoogleBooksIsbnResolver {
         book.setPublisher(infos.getPublisher());
         book.setThumbnail(images == null ? null : images.getThumbnail());
         book.setTitle(infos.getTitle());
-        
+
         return book;
     }
 }
