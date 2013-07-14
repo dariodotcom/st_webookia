@@ -4,7 +4,6 @@ package it.webookia.backend.utils.foreignws.facebook;
  * Exception that represents errors that may happen while connecting to
  * Facebook.
  * 
- * @author Chiara
  * 
  */
 public class FacebookConnectorException extends Exception {
