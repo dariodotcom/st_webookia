@@ -55,7 +55,10 @@ public class ServiceContext {
     public void setAuthenticatedUserId(String userID) {
         ServletUtils.setAuthenticatedUserId(request, userID);
     }
-
+    /**
+     * Checks if a user is logged in.
+     * @return a boolean that indicates if the user is logged in
+     */
     public boolean isUserLoggedIn(){
         return getAuthenticatedUserId() != null;
     }

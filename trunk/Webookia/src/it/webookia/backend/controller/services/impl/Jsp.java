@@ -1,5 +1,8 @@
 package it.webookia.backend.controller.services.impl;
-
+/**
+ *  Lists all the type of pages a user can display.
+ *
+ */
 public enum Jsp {
 
     HOME("/home.jsp"),
