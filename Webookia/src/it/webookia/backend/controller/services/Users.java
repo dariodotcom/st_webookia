@@ -13,19 +13,31 @@ import it.webookia.backend.utils.servlets.Context;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
-
+/**
+ * This is the servlet which manages users in Webookia, allowing a user to display his personal page and other users' personal pages.
+ *
+ */
 public class Users extends ServiceServlet {
 
     private static final long serialVersionUID = 351675044359094818L;
-
+    /**
+     * Indicates a context where the user is logged in and can display personal information.
+     */
     public static String SHOW_USER = "SHOW_USER";
-
+   
+    /**
+     * Class constructor
+     */
     public Users() {
         super(Context.USERS);
         registerDefaultService(Verb.GET, new UserLanding());
         registerService(Verb.GET, "profile", new UserProfileService());
     }
     
+    /**
+     * This service allows a user to jump on its personal homepage after his first authentication.
+     *
+     */
     public static class UserLanding implements Service {
         @Override
         public void service(ServiceContext context) throws ServletException,
@@ -48,7 +60,10 @@ public class Users extends ServiceServlet {
             }
         }
     }
-
+    /**
+     * This service allows a user to visualize his personal homepage.
+     *
+     */
     public static class SelfProfileService implements Service {
         @Override
         public void service(ServiceContext context) throws ServletException,
@@ -71,7 +86,10 @@ public class Users extends ServiceServlet {
             }
         }
     }
-
+    /**
+     * This service allows a user to visualize another user personal homepage.
+     *
+     */
     public static class UserProfileService implements Service {
         @Override
         public void service(ServiceContext context) throws ServletException,
