@@ -16,10 +16,17 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
+/**
+ * Registers login and logout services which allow user authentication.
+ * 
+ */
 public class Authentication extends ServiceServlet {
 
     private static final long serialVersionUID = 4703628228514306116L;
 
+    /**
+     * Class constructor
+     */
     public Authentication() {
         super(Context.AUTHENTICATION);
         super.registerService(Verb.GET, "login", new LoginService());
@@ -45,7 +52,7 @@ public class Authentication extends ServiceServlet {
                 return;
             }
 
-            // If an error exsists in response, send it to the client
+            // If an error exists in response, send it to the client
             if (error != null) {
                 context.sendError(connectorException("Error from facebook: "
                     + error));
@@ -94,8 +101,6 @@ public class Authentication extends ServiceServlet {
 
     /**
      * Implements logout service.
-     * 
-     * @author Dario
      * 
      */
     private class LogoutService implements Service {

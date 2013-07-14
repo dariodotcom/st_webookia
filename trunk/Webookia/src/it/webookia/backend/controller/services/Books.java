@@ -17,8 +17,8 @@ import javax.servlet.ServletException;
 
 /**
  * 
- * This is the servlet which manages the books, allowing the creation, search,
- * detail.
+ * This is the servlet which manages the books, allowing book's creation and
+ * retrieve of details from an external service.
  * 
  */
 public class Books extends ServiceServlet {
@@ -37,10 +37,13 @@ public class Books extends ServiceServlet {
         super(Context.BOOKS);
         registerDefaultService(Verb.GET, new BookLanding());
         registerService(Verb.POST, "create", new BookCreation());
-        registerService(Verb.GET, "search", new BookSearch());
         registerService(Verb.GET, "detail", new BookDetail());
     }
 
+    /**
+     * This class manages to retrieve of books owned by the authenticated user.
+     * 
+     */
     public class BookLanding implements Service {
 
         @Override
@@ -97,23 +100,7 @@ public class Books extends ServiceServlet {
 
     /**
      * 
-     * This class manages the search of a book, depending on its isbn either its
-     * title or its author.
-     * 
-     */
-    public class BookSearch implements Service {
-
-        @Override
-        public void service(ServiceContext context) throws ServletException,
-                IOException {
-            // TODO Auto-generated method stub
-
-        }
-    }
-
-    /**
-     * 
-     * This class creates a book , taking as information its isbn and owner and
+     * This class creates a book, taking as information its isbn and owner and
      * redirects the user to the book page.
      * 
      */
