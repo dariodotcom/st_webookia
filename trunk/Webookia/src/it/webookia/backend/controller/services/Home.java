@@ -10,7 +10,10 @@ import it.webookia.backend.utils.servlets.Context;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
-
+/**
+ * 
+ *
+ */
 public class Home extends ServiceServlet {
 
     private static final long serialVersionUID = 6199421201754122052L;
