@@ -486,7 +486,8 @@ h2.sectionTitle{
 	padding: 0 4px;
 }
 
-a.submitInput,
+button.button,
+.submitInput,
 a.button{
 	display: inline-block;
 	background-color: #3b5998;

@@ -170,12 +170,17 @@ var $doc = document.getElementById.bind(document);
 	// Book UI
 	Webookia.Initializer.plugin(function() {
 		if ($doc("bookUI")) {
-			var book = new Book($(".detailContainer .id").text());
+			var id = $(".detailContainer .id").text();
+			var book = new Book(id);
 			var defaultOnSuccess = location.reload.bind(location);
 			var defaultOnError = function(resp) {
 				console.log(resp);
 			}
 
+			$(".button.askLoan").click(function(){
+				ConcreteUI.createLoan(id);
+			});
+			
 			$("#bookPrivacy").change(function(event) {
 				var privacy = $(event.target).val();
 				book.privacy(privacy, defaultOnSuccess, defaultOnError);
