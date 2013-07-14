@@ -43,7 +43,7 @@
 				<h1 class="sectionTitle">Dettaglio libro</h1>
 				<div class="sectionContent">
 					<div id="bookUI">
-						<div class="details shadowBox clearfix">
+						<div class="details shadowBox narrow clearfix">
 							<div class="pictureContainer left">
 								<img class="bookPicture"
 									src="<%=contextBookDescriptor.getThumbnail()%>" />

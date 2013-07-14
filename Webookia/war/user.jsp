@@ -47,7 +47,7 @@
 			<div class="contentSection">
 				<h1 class="sectionTitle">Profilo utente</h1>
 				<div class="sectionContent">
-					<div class="details shadowBox clearfix">
+					<div class="details shadowBox narrow clearfix">
 						<div class="pictureContainer left">
 							<div class="userThumb big">
 								<img class="profilePicture" src="<%=descriptor.getPicture()%>">
