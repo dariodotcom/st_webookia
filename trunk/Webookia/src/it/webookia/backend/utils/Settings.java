@@ -3,6 +3,10 @@ package it.webookia.backend.utils;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+/**
+ * Class containing some useful settings, useful in debug phases.
+ * 
+ */
 public class Settings {
 
     public final static String CURRENT_HOST = "http://webookia.appspot.com";
