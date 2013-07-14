@@ -9,6 +9,11 @@ import it.webookia.backend.model.Loan;
 import it.webookia.backend.model.UserEntity;
 import it.webookia.backend.utils.DebugLogger;
 
+/**
+ * This class manages all the permission kinds in the application, for example
+ * in books visibility and research.
+ * 
+ */
 public class PermissionManager {
 
     private static DebugLogger logger = new DebugLogger("Permission Manager");;
@@ -26,6 +31,11 @@ public class PermissionManager {
 
     private UserEntity user;
 
+    /**
+     * Class constructor
+     * 
+     * @param user
+     */
     private PermissionManager(UserEntity user) {
         this.user = user;
     }
@@ -48,7 +58,7 @@ public class PermissionManager {
             return false;
         } else if (user.equals(owner)) {
             return true;
-        } else if (privacy.equals(PrivacyLevel.FRIENDS_ONLY)){
+        } else if (privacy.equals(PrivacyLevel.FRIENDS_ONLY)) {
             return this.user.isFriendWith(owner);
         } else {
             return false;

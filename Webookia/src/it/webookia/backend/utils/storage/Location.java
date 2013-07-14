@@ -5,8 +5,6 @@ import java.io.Serializable;
 /**
  * Represents the location of a user.
  * 
- * @author Chiara
- * 
  */
 public class Location implements Serializable {
 
