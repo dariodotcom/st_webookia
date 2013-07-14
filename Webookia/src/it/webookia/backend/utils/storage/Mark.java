@@ -16,7 +16,7 @@ public class Mark implements Serializable {
     /**
      * Minimal value that marks can have.
      */
-    public static final int MIN_VALUE = 0;
+    public static final int MIN_VALUE = 1;
 
     /**
      * Maximal value that marks can have.

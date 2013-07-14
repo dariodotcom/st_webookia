@@ -17,6 +17,7 @@ import com.google.api.services.books.model.Volumes;
 import com.google.api.services.books.BooksRequestInitializer;
 
 import it.webookia.backend.model.DetailedBook;
+import it.webookia.backend.utils.Settings;
 
 /**
  * This class manages the detailed book informations retrieving basing on the
@@ -28,6 +29,7 @@ public class GoogleBooksIsbnResolver {
     private final static String APPLICATION_KEY =
         "AIzaSyD6MjFT4O-ST5_8TiO0xKF9xnznAOWateI";
     private final static String APPLICATION_NAME = "Webookia/1.0";
+    private static final String NULL_IMAGE = Settings.CURRENT_HOST + "/resources/noimage.png";
 
     private String isbn;
 
@@ -88,9 +90,16 @@ public class GoogleBooksIsbnResolver {
             throw new IsbnResolverException("Error executing query " + query, e);
         }
 
+        if (results == null) {
+            throw new IsbnResolverException("No results found");
+        }
+
         if (results.size() != 1) {
-            throw new IsbnResolverException(
-                "Query resulted in more (or less) than 1 result: " + results);
+            System.err.println("[WARNING] Isbn query ["
+                + isbn
+                + "] resulted in "
+                + results.size()
+                + " results");
         }
 
         return results.get(0);
@@ -107,7 +116,7 @@ public class GoogleBooksIsbnResolver {
         book.setGBooksLink(infos.getPreviewLink());
         book.setIsbn(isbn);
         book.setPublisher(infos.getPublisher());
-        book.setThumbnail(images == null ? null : images.getThumbnail());
+        book.setThumbnail(images == null ? NULL_IMAGE : images.getThumbnail());
         book.setTitle(infos.getTitle());
 
         return book;
