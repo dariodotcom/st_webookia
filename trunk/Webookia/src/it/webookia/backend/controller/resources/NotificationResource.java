@@ -26,12 +26,13 @@ public class NotificationResource {
 
     /**
      * Class constructor
+     * 
      * @param notification
      */
     NotificationResource(Notification notification) {
         this.decoratedNotification = notification;
     }
-    
+
     /**
      * Creates a new notification.
      * 
@@ -109,8 +110,23 @@ public class NotificationResource {
 
     /**
      * Marks the request as read.
+     * 
+     * @throws ResourceException
+     *             if an error occurs
      */
-    public void markAsRead() {
+    public void markAsRead(UserResource requestor) throws ResourceException {
+        if (requestor == null) {
+            throw new ResourceException(
+                ResourceErrorType.NOT_LOGGED_IN,
+                "You need to be logged in");
+        }
+
+        if (!requestor.matches(decoratedNotification.getReceiver())) {
+            throw new ResourceException(
+                ResourceErrorType.UNAUTHORIZED_ACTION,
+                "You cannot see this user's notifications");
+        }
+
         decoratedNotification.setRead(true);
         notificationStorage.persist(decoratedNotification);
     }
