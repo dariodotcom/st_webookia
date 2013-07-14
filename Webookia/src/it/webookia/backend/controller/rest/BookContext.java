@@ -1,12 +1,10 @@
 package it.webookia.backend.controller.rest;
 
 import it.webookia.backend.controller.resources.BookResource;
-import it.webookia.backend.controller.resources.LoanResource;
 import it.webookia.backend.controller.resources.UserResource;
 import it.webookia.backend.controller.resources.exception.ResourceErrorType;
 import it.webookia.backend.controller.resources.exception.ResourceException;
 import it.webookia.backend.controller.rest.requests.BookCreationRequest;
-import it.webookia.backend.controller.rest.requests.LoanCreationRequest;
 import it.webookia.backend.controller.rest.responses.ResponseFactory;
 import it.webookia.backend.enums.PrivacyLevel;
 import it.webookia.backend.utils.ServletUtils;
@@ -26,25 +24,6 @@ public class BookContext {
 
     @Context
     HttpServletRequest request;
-
-    @POST
-    @Path("newLoan")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response createLoan(LoanCreationRequest creationRequest) {
-
-        String requestorId = ServletUtils.getAuthenticatedUserId(request);
-        String bookId = creationRequest.getBookId();
-
-        try {
-            UserResource requestor = UserResource.getUser(requestorId);
-            BookResource book = BookResource.getBook(bookId, requestor);
-            LoanResource Loan = LoanResource.createLoan(requestor, book);
-            return ResponseFactory.createFrom(Loan.getDescriptor());
-        } catch (ResourceException e) {
-            return ResponseFactory.createFrom(e);
-        }
-    }
 
     @POST
     @Path("new")
