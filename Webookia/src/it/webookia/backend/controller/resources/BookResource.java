@@ -73,6 +73,10 @@ public class BookResource {
             throws ResourceException {
         assertLoggedIn(user);
 
+        if (!PermissionManager.user(user.getEntity()).canShare(isbn)) {
+            throw new ResourceException(ResourceErrorType.ALREADY_OWNED, "");
+        }
+
         // Verifies first if the book is already in the db
         DetailedBook details = StorageQuery.getDetailedBookByISBN(isbn);
         // if not, looks for it on Google Books
@@ -80,7 +84,9 @@ public class BookResource {
             try {
                 details = new GoogleBooksIsbnResolver(isbn).resolve();
             } catch (IsbnResolverException e) {
-                throw new ResourceException(ResourceErrorType.NOT_FOUND, e);
+                throw new ResourceException(
+                    ResourceErrorType.ISBN_RESOLVER_ERROR,
+                    e);
             }
             detailedBookStorage.persist(details);
         }
@@ -112,7 +118,6 @@ public class BookResource {
      * */
     public static BookResource getBook(String id, UserResource requestor)
             throws ResourceException {
-        assertLoggedIn(requestor);
         ConcreteBook book;
 
         try {
@@ -166,18 +171,7 @@ public class BookResource {
      *            is the book id a user is looking for
      * @param requestor
      *            identifies a user who is searching for a particular book
-     * @return         {@ListDescritpor<BookDescriptor>
-     * 
-     * 
-     * 
-     * 
-     * 
-     * 
-     * 
-     * 
-     * 
-     * 
-     * } with all the matched books
+     * @return {@ListDescritpor} with all the matched books
      * @throws ResourceException
      *             thrown if the required book is not in the db
      */
@@ -229,6 +223,13 @@ public class BookResource {
             throw new ResourceException(
                 ResourceErrorType.UNAUTHORIZED_ACTION,
                 "You need to be the book owner to do this");
+        }
+
+        if (newStatus == BookStatus.LENT
+            || decoratedBook.getStatus() == BookStatus.LENT) {
+            throw new ResourceException(
+                ResourceErrorType.BAD_REQUEST,
+                "Cannot change status from/to lent");
         }
 
         decoratedBook.setStatus(newStatus);

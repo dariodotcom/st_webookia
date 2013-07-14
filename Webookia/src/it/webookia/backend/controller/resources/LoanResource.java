@@ -63,6 +63,8 @@ public class LoanResource {
      */
     public static LoanResource createLoan(UserResource requestor,
             BookResource bookRes) throws ResourceException {
+        assertLoggedIn(requestor);
+
         ConcreteBook book = bookRes.getEntity();
         String bookId = book.getId();
 
@@ -102,6 +104,8 @@ public class LoanResource {
      */
     public static LoanResource getLoan(UserResource requestor, String id)
             throws ResourceException {
+        assertLoggedIn(requestor);
+
         Loan loan;
         try {
             loan = loanStorage.get(id);
@@ -115,7 +119,7 @@ public class LoanResource {
         }
 
         LoanResource loanRes = new LoanResource(loan);
-        if (!PermissionManager.user(requestor.getEntity()).canAccess(loan)) {
+        if (!PermissionManager.user(getEntityFrom(requestor)).canAccess(loan)) {
             String message = "Cannot access loan " + id;
             throw new ResourceException(
                 ResourceErrorType.UNAUTHORIZED_ACTION,
@@ -159,7 +163,7 @@ public class LoanResource {
 
         // Modify resource statuses
         if (response == true) {
-            changeBookStatus(lentBook, BookStatus.AVAILABLE);
+            changeBookStatus(lentBook, BookStatus.LENT);
             decoratedLoan.setStatus(LoanStatus.ACCEPTED);
 
             // Send notification
@@ -326,8 +330,20 @@ public class LoanResource {
         feedback.setText(text);
 
         if (requestor.matches(borrower)) {
-            decoratedLoan.setBorrowerFeedback(feedback); //Feedback released by the borrower
+            if (decoratedLoan.getBorrowerFeedback() != null) {
+                throw new ResourceException(
+                    ResourceErrorType.ALREADY_EXSISTING,
+                    "Already has borrower's feedback.");
+            }
+
+            decoratedLoan.setBorrowerFeedback(feedback); // Feedback released by
+                                                         // the borrower
         } else if (requestor.matches(owner)) {
+            if (decoratedLoan.getOwnerFeedback() != null) {
+                throw new ResourceException(
+                    ResourceErrorType.ALREADY_EXSISTING,
+                    "Already has borrower's feedback.");
+            }
             decoratedLoan.setOwnerFeedback(feedback);
         } else {
             String message = "You must be involved in the load to do this";
@@ -440,7 +456,8 @@ public class LoanResource {
         }
     }
 
-    private void assertLoggedIn(UserResource user) throws ResourceException {
+    private static void assertLoggedIn(UserResource user)
+            throws ResourceException {
         if (user == null) {
             throw new ResourceException(
                 ResourceErrorType.NOT_LOGGED_IN,
@@ -451,5 +468,9 @@ public class LoanResource {
     private void changeBookStatus(ConcreteBook book, BookStatus status) {
         book.setStatus(status);
         bookStorage.persist(book);
+    }
+
+    private static UserEntity getEntityFrom(UserResource res) {
+        return res == null ? null : res.getEntity();
     }
 }

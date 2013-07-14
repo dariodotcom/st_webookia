@@ -11,6 +11,7 @@ import it.webookia.backend.descriptor.ListDescriptor;
 import it.webookia.backend.descriptor.LoanDescriptor;
 import it.webookia.backend.descriptor.SingleFeedbackDescriptor;
 import it.webookia.backend.descriptor.UserDescriptor;
+import it.webookia.backend.model.ConcreteBook;
 import it.webookia.backend.model.Feedback;
 import it.webookia.backend.model.Loan;
 import it.webookia.backend.model.Notification;
@@ -120,7 +121,7 @@ public class UserResource {
      * @return an instance of UserResource which allows to manage selected user,
      *         null if user doesn't exist.
      * @throws ResourceException
-     *             if an user with given username doesn't exist.
+     *             if malformed user id is given
      * */
     public static UserResource getUser(String userId) throws ResourceException {
         if (userId == null) {
@@ -196,6 +197,23 @@ public class UserResource {
     }
 
     /**
+     * Retrieves a list of {@link Descriptor} of books belonging to the managed
+     * user that are visible to requestor.
+     * 
+     * @param requestor
+     *            - the requestor.
+     * @return a {@link Descriptor} of books.
+     */
+    public ListDescriptor<BookDescriptor> getVisibleBooks(UserResource requestor) {
+        UserEntity requestorEntity =
+            requestor == null ? null : requestor.getEntity();
+        List<ConcreteBook> visibleBooks =
+            StorageQuery.getVisibleBooks(decoratedUser, requestorEntity);
+
+        return DescriptorFactory.createBookListDescriptor(visibleBooks);
+    }
+
+    /**
      * Retrieves a list of {@link Descriptor} of feedback belonging to the
      * managed user as owner.
      * 
@@ -231,6 +249,12 @@ public class UserResource {
      */
     public Descriptor getNotifications(UserResource requestor)
             throws ResourceException {
+        if (requestor == null) {
+            throw new ResourceException(
+                ResourceErrorType.NOT_LOGGED_IN,
+                "You need to be logged in");
+        }
+
         if (!requestor.matches(decoratedUser)) {
             throw new ResourceException(
                 ResourceErrorType.UNAUTHORIZED_ACTION,
@@ -253,6 +277,12 @@ public class UserResource {
      */
     public int getUnreadNotificationCount(UserResource requestor)
             throws ResourceException {
+        if (requestor == null) {
+            throw new ResourceException(
+                ResourceErrorType.NOT_LOGGED_IN,
+                "You need to be logged in");
+        }
+
         if (!requestor.matches(decoratedUser)) {
             throw new ResourceException(
                 ResourceErrorType.UNAUTHORIZED_ACTION,
