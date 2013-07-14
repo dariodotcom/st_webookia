@@ -15,7 +15,7 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 
 /**
- * Class to sort books according to their distance from the position of a user
+ * Class to sort books according to their distance from the position of a user.
  */
 public class GMapsDistanceSorter implements InMemorySortCriterion {
 
@@ -53,6 +53,7 @@ public class GMapsDistanceSorter implements InMemorySortCriterion {
         return getDistance(book1).compareTo(getDistance(book2));
     }
 
+    // Retrieves distances whether in cache or not
     private Float getDistance(ConcreteBook b) {
         if (distanceCache.containsKey(b)) {
             return distanceCache.get(b);
@@ -63,6 +64,7 @@ public class GMapsDistanceSorter implements InMemorySortCriterion {
         return distance;
     }
 
+    // Computate the distance between two locations
     private float distanceTo(Location otherLocation) {
         Client c = Client.create();
         WebResource res =
@@ -71,7 +73,8 @@ public class GMapsDistanceSorter implements InMemorySortCriterion {
         return res.get(GMapsResponse.class).getDistanceInMetres();
     }
 
-    // Jackson classes.
+    /* Jackson classes.*/
+    
     @XmlRootElement
     public static class GMapsResponse {
 
@@ -94,15 +97,16 @@ public class GMapsDistanceSorter implements InMemorySortCriterion {
                     .split(" ");
 
             boolean isKilometres = result[1].equals("km");
-            
+
             System.out.println(result[0]);
-            
-            Float distance = Float.parseFloat(result[0].replace(",",""))
-                * (isKilometres ? 1000 : 1);
-            
+
+            Float distance =
+                Float.parseFloat(result[0].replace(",", ""))
+                    * (isKilometres ? 1000 : 1);
+
             System.out.println(distance);
-            
-            return distance; 
+
+            return distance;
         }
 
         public static class Row {
