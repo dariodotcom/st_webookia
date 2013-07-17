@@ -2,6 +2,8 @@ package it.webookia.backend.controller.resources;
 
 import java.util.List;
 
+import org.datanucleus.util.StringUtils;
+
 import it.webookia.backend.controller.resources.exception.ResourceErrorType;
 import it.webookia.backend.controller.resources.exception.ResourceException;
 import it.webookia.backend.descriptor.BookDescriptor;
@@ -20,8 +22,8 @@ import it.webookia.backend.model.Review;
 import it.webookia.backend.model.UserEntity;
 import it.webookia.backend.utils.foreignws.facebook.FacebookConnector;
 import it.webookia.backend.utils.foreignws.facebook.FacebookConnector.BookActivity;
-import it.webookia.backend.utils.foreignws.isbndb.GoogleBooksIsbnResolver;
-import it.webookia.backend.utils.foreignws.isbndb.IsbnResolverException;
+import it.webookia.backend.utils.foreignws.gbooks.GoogleBooksIsbnResolver;
+import it.webookia.backend.utils.foreignws.gbooks.IsbnResolverException;
 import it.webookia.backend.utils.servlets.SearchParameters;
 import it.webookia.backend.utils.storage.Mark;
 import it.webookia.backend.utils.storage.PermissionManager;
@@ -73,6 +75,10 @@ public class BookResource {
             throws ResourceException {
         assertLoggedIn(user);
 
+        if(StringUtils.isEmpty(isbn )){
+            throw new ResourceException(ResourceErrorType.BAD_REQUEST, "Isbn is missing");
+        }
+        
         if (!PermissionManager.user(user.getEntity()).canShare(isbn)) {
             throw new ResourceException(ResourceErrorType.ALREADY_OWNED, "");
         }

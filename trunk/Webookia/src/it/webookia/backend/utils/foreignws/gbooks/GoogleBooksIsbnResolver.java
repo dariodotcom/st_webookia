@@ -1,4 +1,4 @@
-package it.webookia.backend.utils.foreignws.isbndb;
+package it.webookia.backend.utils.foreignws.gbooks;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
