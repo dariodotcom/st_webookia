@@ -84,6 +84,7 @@ public class UserContextRest {
         }
 
         @Path("/feedbacks/borrower")
+        @GET
         public Response getFeedbacksAsBorrower() {
             if (userid == null) {
                 return ResponseFactory.createFrom(new ResourceException(
@@ -100,6 +101,7 @@ public class UserContextRest {
         }
 
         @Path("/feedbacks/owner")
+        @GET
         public Response getFeedbacksAsOwner() {
             if (userid == null) {
                 return ResponseFactory.createFrom(new ResourceException(
