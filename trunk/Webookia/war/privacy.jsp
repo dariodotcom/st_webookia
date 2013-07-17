@@ -18,26 +18,20 @@
 	<%@ include file="shared/header.jsp"%>
 	<div id="contentContainer">
 		<div id="userUI" class="content topWidthElement">
-			<h1 class="sectionTitle">Benvenuto su WeBookia!</h1>
-			<div class="sectionContent clearfix">
+			<h1 class="sectionTitle">Normativa sulla privacy</h1>
+			<div class="sectionContent">
 				<div class="welcomeText left">
-					WeBookia &egrave; una vera e propria biblioteca virtuale in cui
-					potrai cercare online il libro che desideri ed ottenerlo in
-					prestito dagli utenti della comunit&agrave; di WeBookia presenti o
-					meno tra i tuoi contatti di Facebook.<br> Inoltre, sfruttando
-					le funzionalit&agrave; offerte da Facebook e GoogleMaps WeBookia ti
-					garantisce di trovare sempre la soluzione migliore per le tue
-					esigenze. <br> Inizia subito a scambiare libri con WeBookia
-					premendo il pulsante "Login" in alto a destra di questa pagina! <br>
-					Per rimanere sempre aggiornato seguici sulla nostra pagina Facebook
-					<a href="http://www.facebook.com/WebookiaCommunity">WeBookia
-						Community</a>.
-					<br>
+					Acconsentendo i termini di utilizzo di WeBookia verranno forniti i
+					permessi necessari per accedere ai dati riguardanti la tua
+					citt&agrave; attuale e i tuoi amici. <br> Solo in questo modo
+					sar&agrave; infatti possibile trovare il libro a te pi&ugrave;
+					vicino e/o filtrare le ricerche solo tra gli utenti appartenenti
+					alla tua lista di contatti.
 				</div>
 				<img class="welcomeImage right" src="/resources/snoopy.png">
 			</div>
+
 		</div>
 	</div>
-	<%@ include file="shared/footer.jsp"%>
 </body>
 </html>

@@ -11,9 +11,10 @@
 <div class="footer">
 	<div id="footerContainer">
 		<div class="footer topWidthElement">
-			&copy; Webookia 2013 - <a href="/home/privacy">Normativa Privacy</a> - <a
+			&copy; Webookia 2013 - Developed by D. Archetti, C. Cerletti, C. Colella - <a href="/home/privacy">Normativa Privacy</a> - <a
 				href="https://www.facebook.com/WebookiaCommunity" target="_blank">Pagina
-				Facebook</a>
+				Facebook</a> 
+				
 		</div>
 	</div>
 </div>
