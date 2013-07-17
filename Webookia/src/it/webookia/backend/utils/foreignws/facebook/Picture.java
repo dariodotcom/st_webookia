@@ -5,9 +5,7 @@ import com.restfb.types.NamedFacebookType;
 
 /**
  * Class to handle response to queries to retrieve customer picture from
- * Facebook
- * 
- * 
+ * Facebook.
  */
 public class Picture extends NamedFacebookType {
 
@@ -16,6 +14,10 @@ public class Picture extends NamedFacebookType {
     @Facebook("data")
     private ImageData data;
 
+    /**
+     * This class manages responses from Facebook about user's profile images.
+     * 
+     */
     public static class ImageData {
         @Facebook
         private String url;
