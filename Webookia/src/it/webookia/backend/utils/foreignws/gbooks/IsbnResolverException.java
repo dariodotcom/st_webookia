@@ -1,4 +1,4 @@
-package it.webookia.backend.utils.foreignws.isbndb;
+package it.webookia.backend.utils.foreignws.gbooks;
 
 /**
  * The Class {@code IsbnDBException} represents an error occurred while
