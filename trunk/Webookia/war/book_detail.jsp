@@ -104,7 +104,7 @@
 						<!-- Settings -->
 						<div class="contentSection">
 							<h2 class="sectionTitle">Impostazioni</h2>
-							<div class="sectionContent">
+							<div class="sectionContent settings">
 								<label for="bookPrivacy" class="privacyLabel">Mostra
 									questo libro a: </label><select name="privacy" id="bookPrivacy">
 									<%

@@ -692,6 +692,10 @@ a.button:visited{
     font-size: 15px;
 }
 
+.elemList .elem .property:first-child{
+	width: 40%;
+}
+
 .elemList .listHead .property{
 	color: #3b5998;
 	border-bottom: 1px solid rgba(0,0,0,.2);
@@ -1048,6 +1052,13 @@ a.button.select{
 	width: 50%;
 }
 
+.mapPanel .map{
+	width: 648px;
+	height: 400px;
+	display: block;
+	z-index: 2;
+}
+
 /** FOOTER **/
 #footerContainer .footer{
 	background: white;
@@ -1056,5 +1067,5 @@ a.button.select{
 				0 1px 0 1px rgba(0,0,0,.15);
 	padding: 15px;
 	border-radius: 2px;
-	margin-top: 40px;
+	margin: 40px auto;
 }

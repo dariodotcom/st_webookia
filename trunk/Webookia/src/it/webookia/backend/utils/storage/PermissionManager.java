@@ -1,8 +1,13 @@
 package it.webookia.backend.utils.storage;
 
+import java.util.List;
+
+import org.slim3.datastore.Datastore;
+
 import it.webookia.backend.enums.BookStatus;
 import it.webookia.backend.enums.LoanStatus;
 import it.webookia.backend.enums.PrivacyLevel;
+import it.webookia.backend.meta.LoanMeta;
 import it.webookia.backend.model.ConcreteBook;
 import it.webookia.backend.model.DetailedBook;
 import it.webookia.backend.model.Loan;
@@ -127,6 +132,19 @@ public class PermissionManager {
             return false;
         }
 
+        LoanMeta loans = LoanMeta.get();
+        List<Loan> exsistingLoans =
+            Datastore
+                .query(loans)
+                .filter(loans.lentBookRef.equal(concreteBook.getKey()))
+                .filter(loans.borrowerRef.equal(user.getKey()))
+                .filter(loans.status.notEqual(LoanStatus.GIVEN_BACK))
+                .asList();
+
+        if (exsistingLoans.size() != 0) {
+            return false;
+        }
+
         return true;
     }
 
@@ -194,6 +212,32 @@ public class PermissionManager {
         return false;
     }
 
+    public boolean canChangePrivacy(ConcreteBook book) {
+        LoanMeta loans = LoanMeta.get();
+        List<Loan> exsistingLoans =
+            Datastore
+                .query(loans)
+                .filter(loans.lentBookRef.equal(book.getKey()))
+                .filter(loans.status.notEqual(LoanStatus.GIVEN_BACK))
+                .asList();
+
+        return exsistingLoans.size() == 0;
+    }
+
+    public boolean canChangeStatus(ConcreteBook decoratedBook,
+            BookStatus newStatus) {
+        if (!decoratedBook.getOwner().equals(user)) {
+            return false;
+        }
+
+        if (newStatus == BookStatus.LENT
+            || decoratedBook.getStatus() == BookStatus.LENT) {
+            return false;
+        }
+
+        return true;
+    }
+
     private String borrowDeniedMsg(String resType, String resId) {
         return String.format(
             "User %s cannot borrow %s %s",
@@ -201,5 +245,4 @@ public class PermissionManager {
             resType,
             resId);
     }
-
 }

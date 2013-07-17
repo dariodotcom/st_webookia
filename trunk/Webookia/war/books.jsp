@@ -38,8 +38,7 @@
 				<h1 class="sectionTitle">I tuoi libri</h1>
 				<div class="sectionContent">
 					<%
-						List<BookDescriptor> bookList = books.getList();
-						if (bookList.isEmpty()) {
+						if (books.getElements().isEmpty()) {
 					%>
 					<p class="empty">Non hai inserito alcun libro.</p>
 					<%
@@ -47,7 +46,7 @@
 					%>
 					<div class="list bookList narrowList withBorder">
 						<%
-							for (BookDescriptor book : books.getList()) {
+							for (BookDescriptor book : books) {
 						%>
 						<div class="listElement clearfix">
 							<div class="pictureContainer left">

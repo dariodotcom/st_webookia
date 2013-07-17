@@ -75,10 +75,12 @@ public class BookResource {
             throws ResourceException {
         assertLoggedIn(user);
 
-        if(StringUtils.isEmpty(isbn )){
-            throw new ResourceException(ResourceErrorType.BAD_REQUEST, "Isbn is missing");
+        if (StringUtils.isEmpty(isbn)) {
+            throw new ResourceException(
+                ResourceErrorType.BAD_REQUEST,
+                "Isbn is missing");
         }
-        
+
         if (!PermissionManager.user(user.getEntity()).canShare(isbn)) {
             throw new ResourceException(ResourceErrorType.ALREADY_OWNED, "");
         }
@@ -225,17 +227,12 @@ public class BookResource {
      * */
     public void changeStatus(BookStatus newStatus, UserResource requestor)
             throws ResourceException {
-        if (!isOwner(requestor)) {
-            throw new ResourceException(
-                ResourceErrorType.UNAUTHORIZED_ACTION,
-                "You need to be the book owner to do this");
-        }
+        assertLoggedIn(requestor);
 
-        if (newStatus == BookStatus.LENT
-            || decoratedBook.getStatus() == BookStatus.LENT) {
-            throw new ResourceException(
-                ResourceErrorType.BAD_REQUEST,
-                "Cannot change status from/to lent");
+        if (!PermissionManager.user(requestor.getEntity()).canChangeStatus(
+            decoratedBook,
+            newStatus)) {
+
         }
 
         decoratedBook.setStatus(newStatus);
@@ -251,11 +248,15 @@ public class BookResource {
      * */
     public void changePrivacy(PrivacyLevel newPrivacy, UserResource requestor)
             throws ResourceException {
-        if (!isOwner(requestor)) {
+        assertLoggedIn(requestor);
+
+        if (!PermissionManager.user(requestor.getEntity()).canChangePrivacy(
+            decoratedBook)) {
             throw new ResourceException(
-                ResourceErrorType.UNAUTHORIZED_ACTION,
-                "You need to be the book owner to do this");
+                ResourceErrorType.BAD_REQUEST,
+                "Cannot change book privacy.");
         }
+
         decoratedBook.setPrivacy(newPrivacy);
         concreteBookStorage.persist(decoratedBook);
     }

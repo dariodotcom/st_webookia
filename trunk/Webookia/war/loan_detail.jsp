@@ -110,7 +110,9 @@
 						</div>
 						<div class="detailContainer left">
 							<!-- Book details -->
-							<div class="heading"><%=bookDesc.getTitle()%></div>
+							<div class="heading">
+								<a href="/books/detail?id=<%=bookDesc.getId()%>"><%=bookDesc.getTitle()%></a>
+							</div>
 							<div class="detail clearfix">
 								<div class="detailName">Autore</div>
 								<div class="detailValue"><%=bookDesc.getAuthors()%></div>
@@ -246,7 +248,7 @@
 				<h2 class="sectionTitle">Messaggi</h2>
 				<div class="sectionContent">
 					<%
-						List<MessageDescriptor> messages = loanRes.getMessages().getList();
+						List<MessageDescriptor> messages = loanRes.getMessages().getElements();
 
 						if (messages.isEmpty()) {
 					%>

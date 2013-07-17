@@ -94,10 +94,10 @@ public class Loans extends ServiceServlet {
                 UserResource user = UserResource.getUser(userId);
                 context.setRequestAttribute(SENT_LOANS, user
                     .getSentLoanRequest(-1)
-                    .getList());
+                    .getElements());
                 context.setRequestAttribute(RECEIVED_LOANS, user
                     .getReceivedLoanRequest(-1)
-                    .getList());
+                    .getElements());
                 context.forwardToJsp(Jsp.LOAN_JSP);
             } catch (ResourceException e) {
                 context.sendError(e);
