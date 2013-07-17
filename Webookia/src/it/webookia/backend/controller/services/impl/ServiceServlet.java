@@ -33,7 +33,7 @@ public class ServiceServlet extends HttpServlet {
 
     private static final long serialVersionUID = -6364544534456443497L;
     private static final Pattern requestPattern = Pattern
-        .compile("/(([a-z|A-Z]+)/([a-z|A-Z]*)[.]*)?");
+        .compile("/([a-z|A-Z]+)/([a-z|A-Z]*).*");
 
     private Context context;
 
@@ -79,9 +79,10 @@ public class ServiceServlet extends HttpServlet {
      *            - indicates which kind of action is allowed to the user, hence
      *            if retrieving data or showing data (GET or POST)
      * @param action
-     *            - indicates the action a user wants to perform with that service
+     *            - indicates the action a user wants to perform with that
+     *            service
      * @param service
-     *            - indicates a service 
+     *            - indicates a service
      */
     protected final void registerService(Verb verb, String action,
             Service service) {
@@ -166,8 +167,8 @@ public class ServiceServlet extends HttpServlet {
             throw new IllegalArgumentException("Bad request: " + relativePath);
         }
 
-        String context = (m.group(2) == null ? "" : m.group(2));
-        String action = (m.group(3) == null ? "" : m.group(3));
+        String context = (m.group(1) == null ? "" : m.group(1));
+        String action = (m.group(2) == null ? "" : m.group(2));
 
         if (!context.equals(this.context.getContextName())) {
             throw new IllegalArgumentException("Service context error: "
