@@ -30,11 +30,11 @@ public class ListDescriptor<E extends Descriptor> implements Descriptor,
     }
 
     @XmlElement(name = "elements")
-    public List<E> getList() {
+    public List<E> getElements() {
         return elements;
     }
 
-    public void setList(List<E> internalList) {
+    public void setElements(List<E> internalList) {
         this.elements = internalList;
     }
 

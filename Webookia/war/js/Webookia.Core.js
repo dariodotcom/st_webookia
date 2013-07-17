@@ -156,14 +156,20 @@ var $doc = document.getElementById.bind(document);
 
 	var Error = Webookia.Error = {
 		append : function _append(errorMsg, parent) {
-			var error = $("<div class=\"error clearfix\"></div>").prependTo(
-					(parent ? parent : errorContainer));
+			parent = parent || errorContainer;
+
+			parent.find(".error").fadeOut().remove();
+
+			var error = $("<div class=\"error clearfix\"></div>").hide()
+					.prependTo(parent);
 
 			$("<div class=\"errorText\"></div>").text(errorMsg).appendTo(error);
 
 			$("<div class=\"close\"></div>").text("x").click(function() {
-				error.remove()
+				error.fadeOut().remove()
 			}).appendTo(error);
+
+			error.fadeIn();
 		}
 	}
 
@@ -174,23 +180,29 @@ var $doc = document.getElementById.bind(document);
 			var book = new Book(id);
 			var defaultOnSuccess = location.reload.bind(location);
 			var defaultOnError = function(resp) {
-				console.log(resp);
+				Webookia.Error.append(resp.responseJSON.descriptor.message);
 			}
 
-			$(".button.askLoan").click(function(){
+			var changeSettingsError = function(resp) {
+				Webookia.Error.append(resp.responseJSON.descriptor.message,
+						$(".settings"));
+			}
+
+			$(".button.askLoan").click(function() {
 				ConcreteUI.createLoan(id);
 			});
-			
+
 			$("#bookPrivacy").change(function(event) {
 				var privacy = $(event.target).val();
-				book.privacy(privacy, defaultOnSuccess, defaultOnError);
+				book.privacy(privacy, defaultOnSuccess, changeSettingsError);
 			});
 
 			$("#bookStatus").change(
 					function(event) {
 						var status = event.target.checked ? "AVAILABLE"
 								: "NOT_AVAILABLE";
-						book.status(status, defaultOnSuccess, defaultOnError)
+						book.status(status, defaultOnSuccess,
+								changeSettingsError)
 					});
 
 			$("#commentSubmit").click(function() {
@@ -403,7 +415,7 @@ var $doc = document.getElementById.bind(document);
 	// Notifications
 	function textFor(notification) {
 		var message;
-		
+
 		switch (notification.type) {
 		case "NEW_LOAN_REQUEST":
 			message = " ti ha chiesto un prestito";
@@ -448,52 +460,71 @@ var $doc = document.getElementById.bind(document);
 			location.href = context + notification.contextId;
 		}
 
-		Api.get("/user/self/notification/" + notification.id + "/read", goAway, goAway);
+		Api.get("/user/self/notification/" + notification.id + "/read", goAway,
+				goAway);
 
 	}
 
 	Webookia.Initializer
 			.plugin(function() {
-				if(!$doc("notificationContainer")){
+				if (!$doc("notificationContainer")) {
 					return;
 				}
-				
+
 				var container = $("#notificationContainer");
 				var panel = container.find(".notificationPanel");
 				var button = container.find(".notificationButton");
 				var body = panel.find(".calloutBody");
 
-				Api.get("/user/self/notifications/unreadCount", function(count){
-					if(count == 0){
-						return;
-					}
-					button.append($("<div class=\"unreadCount\"></div>").text(count));
-				}, function(){});
-				
-				
+				Api
+						.get(
+								"/user/self/notifications/unreadCount",
+								function(count) {
+									if (count == 0) {
+										return;
+									}
+									button
+											.append($(
+													"<div class=\"unreadCount\"></div>")
+													.text(count));
+								}, function() {
+								});
+
 				var populate = function(response) {
 					notifications = response.descriptor.elements;
 					body.empty();
 
+					console.log(response);
+					
 					if (notifications.length == 0) {
 						body
 								.append($("<div class=\"empty\">Non hai notifiche.</div>"));
 						return;
 					}
 
-					$(notifications).each(
-							function(index, notification) {
-								var notif = $("<div class=\"notification\"></div>")
-										.text(textFor(notification))
-										.click(notificationClick.bind(window,notification))
-										.append($("<div>").addClass("date").text(notification.date));
+					$(notifications)
+							.each(
+									function(index, notification) {
+										var notif = $(
+												"<div class=\"notification\"></div>")
+												.text(textFor(notification))
+												.click(
+														notificationClick.bind(
+																window,
+																notification))
+												.append(
+														$("<div>")
+																.addClass(
+																		"date")
+																.text(
+																		notification.date));
 
-								if (!notification.read) {
-									notif.addClass("unread");
-								}
+										if (!notification.read) {
+											notif.addClass("unread");
+										}
 
-								notif.appendTo(body);
-							});
+										notif.appendTo(body);
+									});
 				}
 
 				var onError = function() {
@@ -594,7 +625,7 @@ var $doc = document.getElementById.bind(document);
 		}
 	};
 
-	// TABS
+	// Tabbed panels
 	function TabbedPanel(container) {
 		var tabs = this.tabs = container.find(".tabs .tab"), panels = this.panels = container
 				.find(".panels .panel"), selectedIndex = 0, self = this;
@@ -618,7 +649,6 @@ var $doc = document.getElementById.bind(document);
 		});
 
 		this.selectTab(selectedIndex);
-		console.log(this);
 	}
 
 	TabbedPanel.prototype = {
@@ -634,12 +664,14 @@ var $doc = document.getElementById.bind(document);
 		}
 	}
 
+	// Load tabbed panels
 	Webookia.Initializer.plugin(function() {
 		$(".tabbedContainer").each(function(index, elem) {
 			new TabbedPanel($(elem));
 		});
 	});
 
+	// Load markers
 	Webookia.Initializer
 			.plugin(function() {
 				var markers = document.querySelectorAll(".markerPlaceholder");
@@ -653,4 +685,29 @@ var $doc = document.getElementById.bind(document);
 					placeholder.replaceWith(marker._div);
 				}
 			});
+
+	Webookia.Initializer
+			.plugin(function() {
+				var panel = $(".mapPanel"), mapContainer = document
+						.querySelector('.mapPanel > .map'), map, position = toCoords(panel
+						.find(".location"));
+
+				if (mapContainer == null) {
+					return;
+				}
+
+				var mapOptions = {
+					zoom : 8,
+					center : position,
+					mapTypeId : google.maps.MapTypeId.ROADMAP
+				};
+
+				map = new google.maps.Map(mapContainer, mapOptions);
+
+				var marker = new google.maps.Marker({
+					position : position,
+					map : map
+				});
+			});
+
 })();

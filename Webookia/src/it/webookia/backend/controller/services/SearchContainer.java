@@ -125,7 +125,7 @@ public class SearchContainer extends ServiceServlet {
          * @param desc
          */
         public DetailedResultBox(ListDescriptor<DetailedBookDescriptor> desc) {
-            this.list = desc.getList();
+            this.list = desc.getElements();
         }
 
         // Getter
@@ -148,7 +148,7 @@ public class SearchContainer extends ServiceServlet {
          * @param desc
          */
         public ConcreteResultBox(ListDescriptor<BookDescriptor> desc) {
-            this.list = desc.getList();
+            this.list = desc.getElements();
         }
 
         // Getter

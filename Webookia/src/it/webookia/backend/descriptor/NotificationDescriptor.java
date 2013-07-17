@@ -67,12 +67,12 @@ public class NotificationDescriptor implements Descriptor {
     }
 
     @XmlElement(name = "author")
-    public String getAuthorId() {
+    public String getAuthor() {
         return author;
     }
 
-    public void setAuthorId(String authorId) {
-        this.author = authorId;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     @XmlElement(name = "contextId")

@@ -31,9 +31,9 @@
 	UserResource viewer = ServletUtils.getAuthenticatedUser(request);
 
 	List<SingleFeedbackDescriptor> feedbacksAsOwner = userToShow
-			.getFeedbacksAsOwner().getList();
+			.getFeedbacksAsOwner().getElements();
 	List<SingleFeedbackDescriptor> feedbacksAsBorrower = userToShow
-			.getFeedbacksAsBorrower().getList();
+			.getFeedbacksAsBorrower().getElements();
 	int ownerFeedbackSize = feedbacksAsOwner.size();
 	int borrowerFeedbackSize = feedbacksAsBorrower.size();
 %>
@@ -81,10 +81,13 @@
 						</div>
 					</div>
 
+	
+
 					<div class="tabbedContainer">
 						<div class="tabs">
-							<div class="tab selected">Libreria</div>
-							<%
+							<div class="tab selected">Mappa</div>
+							<div class="tab">Libreria</div>
+														<%
 								String ownerFeedbackCount = " (" + ownerFeedbackSize + ")";
 							%>
 							<div class="tab">
@@ -98,6 +101,10 @@
 							</div>
 						</div>
 						<div class="panels animate">
+							<div class="panel mapPanel">
+								<div class="location hidden"><%=descriptor.getLocation()%></div>
+								<div class="map"></div>
+							</div>
 							<div class="panel animate">
 								<div class="list bookList">
 									<%
@@ -132,7 +139,7 @@
 									%>
 								</div>
 							</div>
-							<div class="panel feedbackList list">
+						<div class="panel feedbackList list">
 								<%
 									if (ownerFeedbackSize == 0) {
 								%>
