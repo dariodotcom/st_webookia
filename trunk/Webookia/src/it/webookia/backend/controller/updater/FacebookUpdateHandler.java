@@ -6,15 +6,22 @@ import it.webookia.backend.controller.updater.UpdateNotification.UpdateEntry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+/**
+ * This class manages the exchange of informations between facebook and webookia
+ * in order to be syncronized.
+ * 
+ */
 @Path("update")
 public class FacebookUpdateHandler {
 
+    // To verify the authenticity of a request
     private static final String MODE = "subscribe";
     private static final String MODE_PARAM = "hub.mode";
     private static final String CHALLENGE_PARAM = "hub.challenge";
@@ -24,6 +31,7 @@ public class FacebookUpdateHandler {
     @Context
     private HttpServletRequest request;
 
+    // Verifies if the update service works properly
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public Response get() {
@@ -52,6 +60,8 @@ public class FacebookUpdateHandler {
 
     }
 
+    // Facebook sends to webookia the update of the modified fields of a user
+    @POST
     public Response post(UpdateNotification notification) {
         if (!notification.getObject().equals("user")) {
             return Response.status(Response.Status.BAD_REQUEST).build();
